@@ -6,8 +6,8 @@ import javax.swing.*;
 public class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
-    static final int width = 100;
-    static final int height = 100;
+    static final int width = 1200;
+    static final int height = 800;
     static final Dimension SCREEN_SIZE = new Dimension(width, height);
     BufferedImage background;
 
