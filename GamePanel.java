@@ -1,14 +1,17 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 public class GamePanel extends JPanel implements Runnable {
-public GamePanel() {
+
+    Thread gameThread;
+    static final int width = 100;
+    static final int height = 100;
+    static final Dimension SCREEN_SIZE = new Dimension(width, height);
+    BufferedImage background;
+
+    public GamePanel() {
         this.setFocusable(true);
         AL listener = new AL();
         this.addKeyListener(listener);
@@ -18,38 +21,37 @@ public GamePanel() {
         gameThread = new Thread(this);
         gameThread.start();
 
-        try {
-            background = ImageIO.read(new File("Photos/chess-board.png"));
-        } catch (IOException e) {
-        }
+        /*
+         * try {
+         * //background = ImageIO.read(new File("Photos/chess-board.png"));
+         * } catch (IOException e) {
+         * }
+         */
 
     }
 
-
-
-  public void draw(Graphics g) {
+    public void draw(Graphics g) {
 
         if (background != null) {
             g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
         }
-/*
-        for (Piece elem : pieceList) {
-            elem.draw(g);
-        }
-        for (MoveOption elem : selectedPieceMovesList) {
-            elem.draw(g);
-        }
-        if (showPsuedoMoves) {
-            for (MoveOption elem : psuedoLegalMovesList) {
-                elem.draw(g);
-            }
-        }
-    */
+        /*
+         * for (Piece elem : pieceList) {
+         * elem.draw(g);
+         * }
+         * for (MoveOption elem : selectedPieceMovesList) {
+         * elem.draw(g);
+         * }
+         * if (showPsuedoMoves) {
+         * for (MoveOption elem : psuedoLegalMovesList) {
+         * elem.draw(g);
+         * }
+         * }
+         */
 
     }
 
-
-  @Override
+    @Override
     public void run() {
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
@@ -66,8 +68,7 @@ public GamePanel() {
         }
     }
 
-
-  public class AL implements KeyListener, MouseListener, MouseMotionListener {
+    public class AL implements KeyListener, MouseListener, MouseMotionListener {
 
         @Override
         public void keyPressed(KeyEvent e) {
