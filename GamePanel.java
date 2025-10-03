@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.*;
+import javax.imageio.*;
 import javax.swing.*;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -21,12 +23,10 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
 
-        /*
-         * try {
-         * //background = ImageIO.read(new File("Photos/chess-board.png"));
-         * } catch (IOException e) {
-         * }
-         */
+        try {
+            background = ImageIO.read(new File("photos/platformerBackground.jpg"));
+        } catch (IOException e) {
+        }
 
     }
 
@@ -49,6 +49,12 @@ public class GamePanel extends JPanel implements Runnable {
          * }
          */
 
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        draw(g);
     }
 
     @Override
