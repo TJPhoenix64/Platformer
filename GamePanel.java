@@ -12,8 +12,11 @@ public class GamePanel extends JPanel implements Runnable {
     static final int height = 800;
     static final Dimension SCREEN_SIZE = new Dimension(width, height);
     BufferedImage background;
+    BufferedImage plainBackground;
+    static Player tyler;
 
     public GamePanel() {
+        makePlayer();
         this.setFocusable(true);
         AL listener = new AL();
         this.addKeyListener(listener);
@@ -25,30 +28,21 @@ public class GamePanel extends JPanel implements Runnable {
 
         try {
             background = ImageIO.read(new File("photos/platformerBackground.jpg"));
+            plainBackground = ImageIO.read(new File("photos/blueBackground.png"));
         } catch (IOException e) {
         }
 
     }
 
+    public void makePlayer() {
+        tyler = new Player();
+    }
+
     public void draw(Graphics g) {
-
-        if (background != null) {
-            g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+        if (plainBackground != null) {
+            g.drawImage(plainBackground, 0, 0, getWidth(), getHeight(), null);
         }
-        /*
-         * for (Piece elem : pieceList) {
-         * elem.draw(g);
-         * }
-         * for (MoveOption elem : selectedPieceMovesList) {
-         * elem.draw(g);
-         * }
-         * if (showPsuedoMoves) {
-         * for (MoveOption elem : psuedoLegalMovesList) {
-         * elem.draw(g);
-         * }
-         * }
-         */
-
+        tyler.draw(g);
     }
 
     @Override
