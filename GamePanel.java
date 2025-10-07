@@ -68,6 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = now;
             if (delta >= 1) {
                 repaint();
+                tyler.updatePosition();
                 delta--;
             }
         }
@@ -78,10 +79,35 @@ public class GamePanel extends JPanel implements Runnable {
         @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
+            if (key == KeyEvent.VK_UP && !tyler.isJumping) {
+                tyler.jump(System.nanoTime());
+            }
+
+            if (key == KeyEvent.VK_RIGHT) {
+                tyler.moveRight();
+            }
+
+            if (key == KeyEvent.VK_LEFT) {
+                tyler.moveLeft();
+            }
+
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
+            int key = e.getKeyCode();
+
+            if (key == KeyEvent.VK_UP && !tyler.isJumping) {
+                tyler.jumpReleased(System.nanoTime());
+            }
+
+            if (key == KeyEvent.VK_RIGHT) {
+                tyler.moveRightReleased(System.nanoTime());
+            }
+
+            if (key == KeyEvent.VK_LEFT) {
+                tyler.moveLeftReleased(System.nanoTime());
+            }
         }
 
         @Override

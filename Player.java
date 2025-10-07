@@ -1,6 +1,7 @@
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Player extends Rectangle {
@@ -8,10 +9,20 @@ public class Player extends Rectangle {
     int height;
     int x;
     int y;
-    Color color = new Color(105, 68, 13);
-    boolean isFalling;
     boolean isJumping;
+    boolean jumpReleased = true;
     Image image;
+    Long startJumpTime;
+    Long endJumpTime;
+    double gravity = -0.05;
+    double initialVeloY;
+    boolean moveLeftPressed;
+    boolean moveRightPressed;
+    boolean moveLeftReleased;
+    boolean moveRightReleased;
+    Long endLeftTime;
+    Long endRightTime;
+    int initialVeloX = 10;
 
     public Player() {
         this.width = 100;
@@ -20,11 +31,122 @@ public class Player extends Rectangle {
         this.y = 100;
         try {
             image = ImageIO.read(new File("photos/redImage.jpg"));
-        } catch (Exception e) {
+        } catch (IOException e) {
         }
     }
 
-    public void jump() {
+    public void moveLeft() {
+        this.moveLeftPressed = true;
+        this.moveLeftReleased = false;
+        this.moveRightPressed = false;
+        this.moveRightReleased = false;
+    }
+
+    public void moveRight() {
+        this.moveRightPressed = true;
+        this.moveRightReleased = false;
+        this.moveLeftReleased = false;
+        this.moveLeftPressed = false;
+    }
+
+    public void moveLeftReleased(Long timeReleased) {
+        this.endLeftTime = timeReleased;
+        this.moveLeftPressed = false;
+        this.moveLeftReleased = true;
+        this.endRightTime = 0L;
+    }
+
+    public void moveRightReleased(Long timeReleased) {
+        this.endRightTime = timeReleased;
+        this.moveRightPressed = false;
+        this.moveRightReleased = true;
+        this.endLeftTime = 0L;
+    }
+
+    public void jump(Long startTime) {
+        // System.out.println("Jump");
+        startJumpTime = startTime;
+        isJumping = true;
+        jumpReleased = false;
+        endJumpTime = 0L;
+    }
+
+    public void jumpReleased(Long time) {
+        endJumpTime = time;
+        jumpReleased = true;
+    }
+
+    public double getInitialVeloY() {
+        double num = 10;
+        double diffMilis;
+        if (jumpReleased) {
+            diffMilis = getDiffMillis(startJumpTime, endJumpTime);
+        } else {
+            Long currentTime = System.nanoTime();
+            diffMilis = getDiffMillis(startJumpTime, currentTime);
+        }
+        // System.out.println("diffMilis " + diffMilis);
+        double diffSmall = diffMilis / 10.0;
+        num += diffSmall * 1.2;
+        if (num > 40) {
+            num = 40;
+        }
+
+        return num;
+    }
+
+    public int getDiffMillis(Long startTime, Long endTime) {
+        Long diff = endTime - startTime;
+        int diffMilis = (int) (diff / 1000000);
+        return diffMilis;
+    }
+
+    public void updatePosition() {
+        Long currentTime = System.nanoTime();
+        if (isJumping) {
+            int timeSinceJumpStarted = getDiffMillis(startJumpTime, currentTime);
+            initialVeloY = getInitialVeloY();
+            int dy = (int) (gravity * timeSinceJumpStarted + initialVeloY);
+            // ensures the block does not go below 500
+            if (this.y - dy > 500) {
+                this.y = 500;
+            } else {
+                this.y -= dy;
+            }
+        }
+        // change this to the y of the proper block, not 500
+        if (this.y >= 500) {
+            isJumping = false;
+        }
+
+        if (moveLeftPressed) {
+            this.x -= initialVeloX;
+        }
+
+        // add it so that if moveLeftReleased, check how long its been since released,
+        // decrease velo by set amount
+
+        if (moveRightPressed) {
+            this.x += initialVeloX;
+        }
+
+        if (moveLeftReleased) {
+            int timeSinceReleased = getDiffMillis(endLeftTime, currentTime);
+            if (timeSinceReleased < 500) {
+                this.x -= (initialVeloX - (timeSinceReleased / 50));
+            } else {
+                moveLeftReleased = false;
+            }
+        }
+
+        if (moveRightReleased) {
+            int timeSinceReleased = getDiffMillis(endRightTime, currentTime);
+            if (timeSinceReleased < 500) {
+                this.x += (initialVeloX - (timeSinceReleased / 50));
+            } else {
+                moveLeftReleased = false;
+            }
+        }
 
     }
 
