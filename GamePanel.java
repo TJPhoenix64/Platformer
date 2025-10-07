@@ -46,6 +46,8 @@ public class GamePanel extends JPanel implements Runnable {
             g.drawImage(plainBackground, 0, 0, getWidth(), getHeight(), null);
         }
         tyler.draw(g);
+        g.drawRect(0, 500 + tyler.height, width, 1);
+
     }
 
     @Override
