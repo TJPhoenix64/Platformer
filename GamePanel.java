@@ -15,6 +15,8 @@ public class GamePanel extends JPanel implements Runnable {
     BufferedImage plainBackground;
     static Player tyler;
 
+    // final Long startTime;
+
     public GamePanel() {
         makePlayer();
         this.setFocusable(true);
@@ -25,6 +27,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setPreferredSize(SCREEN_SIZE);
         gameThread = new Thread(this);
         gameThread.start();
+        // startTime = System.nanoTime();
 
         try {
             background = ImageIO.read(new File("photos/platformerBackground.jpg"));
