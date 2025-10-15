@@ -239,6 +239,16 @@ public class GamePanel extends JPanel implements Runnable {
 
         @Override
         public void mousePressed(MouseEvent e) {
+            int x = e.getPoint().x;
+            int y = e.getPoint().y;
+            int row = y / tileSize;
+            int col = x / tileSize;
+            if (editingLevel.contains(new Tile(row, col, true))) {
+                editingLevel.remove(new Tile(row, col, true));
+            }
+            if (!editingLevel.contains(new Tile(row, col, false))) {
+                editingLevel.add(new Tile(row, col, false));
+            }
         }
 
         @Override
