@@ -55,6 +55,14 @@ public class GamePanel extends JPanel implements Runnable {
         tyler = new Player();
     }
 
+    public void generateLevel() {
+        currentLevel.add(new Tile(5, 5, false));
+    }
+
+    public void generateMenu() {
+        playButton = new Rectangle(300, 200, 200, 80);
+    }
+
     public void draw(Graphics g) {
         if (plainBackground != null) {
             g.drawImage(plainBackground, 0, 0, getWidth(), getHeight(), null);
