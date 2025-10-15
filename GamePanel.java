@@ -158,11 +158,35 @@ public class GamePanel extends JPanel implements Runnable {
 
     public class AL implements KeyListener, MouseListener, MouseMotionListener {
 
+        int prevRow;
+        int prevCol;
+
         @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
-            if (key == KeyEvent.VK_UP && !tyler.isJumping) {
-                tyler.jump(System.nanoTime());
+
+            if (state == GameState.PLAYING) {
+
+                if (key == KeyEvent.VK_UP && !tyler.isJumping) {
+                    tyler.jump(System.nanoTime());
+                }
+
+                if (key == KeyEvent.VK_RIGHT) {
+                    tyler.moveRight();
+                }
+
+                if (key == KeyEvent.VK_LEFT) {
+                    tyler.moveLeft();
+                }
+
+            } else if (state == GameState.EDITING) {
+                if (key == KeyEvent.VK_N) {
+                    System.out.println("numTiles: " + editingLevel.size());
+                }
+
+                if (key == KeyEvent.VK_D) {
+                    editingLevel.clear();
+                }
             }
 
             if (key == KeyEvent.VK_RIGHT) {
