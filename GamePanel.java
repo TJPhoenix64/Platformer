@@ -213,16 +213,18 @@ public class GamePanel extends JPanel implements Runnable {
         public void keyReleased(KeyEvent e) {
             int key = e.getKeyCode();
 
-            if (key == KeyEvent.VK_UP && !tyler.isJumping) {
-                tyler.jumpReleased(System.nanoTime());
-            }
+            if (state == GameState.EDITING) {
+                if (key == KeyEvent.VK_UP && tyler.isJumping) {
+                    tyler.jumpReleased(System.nanoTime());
+                }
 
-            if (key == KeyEvent.VK_RIGHT) {
-                tyler.moveRightReleased(System.nanoTime());
-            }
+                if (key == KeyEvent.VK_RIGHT) {
+                    tyler.moveRightReleased(System.nanoTime());
+                }
 
-            if (key == KeyEvent.VK_LEFT) {
-                tyler.moveLeftReleased(System.nanoTime());
+                if (key == KeyEvent.VK_LEFT) {
+                    tyler.moveLeftReleased(System.nanoTime());
+                }
             }
         }
 
