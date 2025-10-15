@@ -64,11 +64,41 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void draw(Graphics g) {
-        if (plainBackground != null) {
+        if (plainBackground != null && state == GameState.MENU) {
             g.drawImage(plainBackground, 0, 0, getWidth(), getHeight(), null);
         }
-        tyler.draw(g);
-        g.drawRect(0, 500 + tyler.height, width, 1);
+        if (platformerBackground != null && state == GameState.PLAYING) {
+            g.drawImage(platformerBackground, 0, 0, getWidth(), getHeight(), null);
+        }
+        if (greyBackground != null && state == GameState.EDITING) {
+            g.drawImage(greyBackground, 0, 0, getWidth(), getHeight(), null);
+        }
+        if (null != state)
+            switch (state) {
+                case PLAYING -> {
+                    for (Tile tile : currentLevel) {
+                        tile.draw(g);
+                    } // line
+                    g.drawRect(0, 500 + tyler.height, width, 1);
+                    // player
+                    tyler.draw(g);
+                }
+                case EDITING -> {
+                    for (Tile tile : editingLevel) {
+                        tile.draw(g);
+                    }
+                    drawGrid(width, height, g);
+                }
+                case MENU -> {
+                    generateMenu();
+                }
+                case PAUSED -> {
+                }
+                default -> {
+                }
+            }
+
+    }
 
     }
 
