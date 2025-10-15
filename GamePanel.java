@@ -43,8 +43,9 @@ public class GamePanel extends JPanel implements Runnable {
         // startTime = System.nanoTime();
 
         try {
-            background = ImageIO.read(new File("photos/platformerBackground.jpg"));
+            platformerBackground = ImageIO.read(new File("photos/platformerBackground.jpg"));
             plainBackground = ImageIO.read(new File("photos/blueBackground.png"));
+            greyBackground = ImageIO.read(new File("photos/greyBackground.jpg"));
         } catch (IOException e) {
         }
 
