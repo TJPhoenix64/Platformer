@@ -91,6 +91,7 @@ public class GamePanel extends JPanel implements Runnable {
                 }
                 case MENU -> {
                     generateMenu();
+                    g.drawRect(playButton.x, playButton.y, playButton.width, playButton.height);
                 }
                 case PAUSED -> {
                 }
