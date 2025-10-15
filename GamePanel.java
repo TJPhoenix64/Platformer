@@ -100,6 +100,36 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
+    public void drawGrid(int width, int height, Graphics g) {
+        for (int i = 0; i < width; i += tileSize) {
+            g.drawLine(i, 0, i, height);
+        }
+
+        for (int i = 0; i < height; i += tileSize) {
+            g.drawLine(0, i, width, i);
+        }
+    }
+
+    public void printLevel(String fileName) {
+        ArrayList<Tile> list;
+        if (state == GameState.EDITING) {
+            list = editingLevel;
+        } else {
+            list = currentLevel;
+        }
+
+        try {
+            FileWriter writer = new FileWriter(fileName + ".txt");
+            StringBuilder s = new StringBuilder();
+            for (Tile tile : list) {
+                s.append("(").append(tile).append(")_");
+            }
+            s.deleteCharAt(s.length() - 1);
+            writer.write(s.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
