@@ -249,9 +249,11 @@ public class GamePanel extends JPanel implements Runnable {
             int x = e.getPoint().x;
             int y = e.getPoint().y;
 
-            for (ImageRect rect : menuButtons) {
-                if (rect.contains(x, y)) {
-                    state = GameState.PLAYING;
+            if (state == GameState.MENU) {
+                for (ImageRect rect : menuButtons) {
+                    if (rect.contains(x, y)) {
+                        state = GameState.PLAYING;
+                    }
                 }
             }
         }
