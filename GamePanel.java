@@ -266,6 +266,22 @@ public class GamePanel extends JPanel implements Runnable {
         // MouseMotionListener methods
         @Override
         public void mouseMoved(MouseEvent e) {
+            if (state == GameState.PLAYING) {
+                return;
+            }
+
+            int x = e.getPoint().x;
+            int y = e.getPoint().y;
+            int row = y / tileSize;
+            int col = x / tileSize;
+            editingLevel.remove(new Tile(prevRow, prevCol, true));
+            if (!editingLevel.contains(new Tile(row, col, false))) {
+                editingLevel.add(new Tile(row, col, true));
+            }
+
+            prevRow = row;
+            prevCol = col;
+
         }
 
         @Override
