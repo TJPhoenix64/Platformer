@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable {
     static Player tyler;
     ArrayList<Tile> currentLevel = new ArrayList<>();
     ArrayList<Tile> editingLevel = new ArrayList<>();
-    private Rectangle playButton;
+    ArrayList<ImageRect> menuButtons = new ArrayList<>();
 
     private GameState state = GameState.PLAYING;
 
@@ -60,7 +60,14 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void generateMenu() {
-        playButton = new Rectangle(300, 200, 200, 80);
+        Image playButton = null;
+        try {
+            playButton = ImageIO.read(new File("photos/PlayButton.png"));
+        } catch (IOException e) {
+        }
+        if (playButton != null) {
+            menuButtons.add(new ImageRect(playButton, 300, 200, 342, 152));
+        }
     }
 
     public void draw(Graphics g) {
@@ -90,8 +97,11 @@ public class GamePanel extends JPanel implements Runnable {
                     drawGrid(width, height, g);
                 }
                 case MENU -> {
+                    menuButtons.clear();
                     generateMenu();
-                    g.drawRect(playButton.x, playButton.y, playButton.width, playButton.height);
+                    for (ImageRect rect : menuButtons) {
+                        rect.draw(g, this);
+                    }
                 }
                 case PAUSED -> {
                 }
@@ -236,6 +246,14 @@ public class GamePanel extends JPanel implements Runnable {
         // MouseListener methods
         @Override
         public void mouseClicked(MouseEvent e) {
+            int x = e.getPoint().x;
+            int y = e.getPoint().y;
+
+            for (ImageRect rect : menuButtons) {
+                if (rect.contains(x, y)) {
+                    state = GameState.PLAYING;
+                }
+            }
         }
 
         @Override
