@@ -189,12 +189,22 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
 
-            if (key == KeyEvent.VK_RIGHT) {
-                tyler.moveRight();
+            // change this to the filename that you want the program to make
+            if (key == KeyEvent.VK_P) {
+                printLevel("HELLO");
             }
 
-            if (key == KeyEvent.VK_LEFT) {
-                tyler.moveLeft();
+            if (key == KeyEvent.VK_E) {
+                state = GameState.EDITING;
+            }
+            if (key == KeyEvent.VK_SPACE) {
+                state = GameState.PLAYING;
+            }
+            if (key == KeyEvent.VK_ESCAPE) {
+                state = GameState.PAUSED;
+            }
+            if (key == KeyEvent.VK_M) {
+                state = GameState.MENU;
             }
 
         }
