@@ -2,8 +2,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.ArrayList;
 import javax.imageio.*;
 import javax.swing.*;
+
+enum GameState {
+    MENU, PLAYING, PAUSED, EDITING
+}
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -11,14 +16,22 @@ public class GamePanel extends JPanel implements Runnable {
     static final int width = 1200;
     static final int height = 800;
     static final Dimension SCREEN_SIZE = new Dimension(width, height);
-    BufferedImage background;
+    static final int tileSize = 50;
+    BufferedImage platformerBackground;
     BufferedImage plainBackground;
+    BufferedImage greyBackground;
     static Player tyler;
+    ArrayList<Tile> currentLevel = new ArrayList<>();
+    ArrayList<Tile> editingLevel = new ArrayList<>();
+    private Rectangle playButton;
+
+    private GameState state = GameState.PLAYING;
 
     // final Long startTime;
 
     public GamePanel() {
         makePlayer();
+        generateLevel();
         this.setFocusable(true);
         AL listener = new AL();
         this.addKeyListener(listener);
