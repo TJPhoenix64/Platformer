@@ -64,7 +64,6 @@ public class Player extends Rectangle {
     }
 
     public void jump(Long startTime) {
-        // System.out.println("Jump");
         startJumpTime = startTime;
         isJumping = true;
         jumpReleased = false;
@@ -85,11 +84,9 @@ public class Player extends Rectangle {
             Long currentTime = System.nanoTime();
             diffMilis = getDiffMillis(startJumpTime, currentTime);
         }
-        // System.out.println("diffMilis " + diffMilis);
-        double diffSmall = diffMilis / 10.0;
-        num += diffSmall * 1.2;
-        if (num > 40) {
-            num = 40;
+        num += diffMilis / 10.0;
+        if (num > 30) {
+            num = 30;
         }
 
         return num;
@@ -107,6 +104,7 @@ public class Player extends Rectangle {
             int timeSinceJumpStarted = getDiffMillis(startJumpTime, currentTime);
             initialVeloY = getInitialVeloY();
             int dy = (int) (gravity * timeSinceJumpStarted + initialVeloY);
+            // System.out.println("dy: " + dy);
             // ensures the block does not go below 500
             if (this.y - dy > 500) {
                 this.y = 500;
