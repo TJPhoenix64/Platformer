@@ -224,7 +224,7 @@ public class GamePanel extends JPanel implements Runnable {
         public void keyReleased(KeyEvent e) {
             int key = e.getKeyCode();
 
-            if (state == GameState.EDITING) {
+            if (state == GameState.PLAYING) {
                 if (key == KeyEvent.VK_UP && tyler.isJumping) {
                     tyler.jumpReleased(System.nanoTime());
                 }
