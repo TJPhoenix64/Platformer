@@ -25,7 +25,7 @@ public class GamePanel extends JPanel implements Runnable {
     ArrayList<Tile> editingLevel = new ArrayList<>();
     ArrayList<ImageRect> menuButtons = new ArrayList<>();
 
-    private GameState state = GameState.PLAYING;
+    private static GameState state = GameState.PLAYING;
 
     // final Long startTime;
 
