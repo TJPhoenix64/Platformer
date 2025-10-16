@@ -131,7 +131,12 @@ public class Player extends Rectangle {
         if (moveLeftReleased) {
             int timeSinceReleased = getDiffMillis(endLeftTime, currentTime);
             if (timeSinceReleased < 500) {
-                this.x -= (initialVeloX - (timeSinceReleased / 50));
+                if (this.isJumping) {
+                    this.x -= initialVeloX;
+                    endLeftTime = System.nanoTime();
+                } else {
+                    this.x -= (initialVeloX - (timeSinceReleased / 50));
+                }
             } else {
                 moveLeftReleased = false;
             }
@@ -140,9 +145,14 @@ public class Player extends Rectangle {
         if (moveRightReleased) {
             int timeSinceReleased = getDiffMillis(endRightTime, currentTime);
             if (timeSinceReleased < 500) {
-                this.x += (initialVeloX - (timeSinceReleased / 50));
+                if (this.isJumping) {
+                    this.x += initialVeloX;
+                    endRightTime = System.nanoTime();
+                } else {
+                    this.x += (initialVeloX - (timeSinceReleased / 50));
+                }
             } else {
-                moveLeftReleased = false;
+                moveRightReleased = false;
             }
         }
 
