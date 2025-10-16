@@ -22,9 +22,10 @@ public class GamePanel extends JPanel implements Runnable {
     BufferedImage greyBackground;
     BufferedImage heart;
     static Player tyler;
-    ArrayList<Tile> currentLevel = new ArrayList<>();
-    ArrayList<Tile> editingLevel = new ArrayList<>();
+    Level currentLevel = new Level();
+    Level editingLevel = new Level();
     ArrayList<ImageRect> menuButtons = new ArrayList<>();
+    ArrayList<Level> levels = new ArrayList<>();
     static int numHearts = 3;
 
     private static GameState state = GameState.PLAYING;
@@ -95,16 +96,15 @@ public class GamePanel extends JPanel implements Runnable {
         if (null != state)
             switch (state) {
                 case PLAYING -> {
-                    for (Tile tile : currentLevel) {
-                        tile.draw(g);
-                    } // line
+                    currentLevel.draw(g);
+                    // line
                     g.drawRect(0, 500 + tyler.height, width, 1);
                     // player
                     tyler.draw(g);
                     drawHearts(g);
                 }
                 case EDITING -> {
-                    for (Tile tile : editingLevel) {
+                    for (Tile tile : editingLevel.getBlocks()) {
                         tile.draw(g);
                     }
                     drawGrid(width, height, g);
@@ -135,17 +135,18 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void printLevel(String fileName) {
-        ArrayList<Tile> list;
+        Level level;
         if (state == GameState.EDITING) {
-            list = editingLevel;
+            level = editingLevel;
         } else {
-            list = currentLevel;
+            level = currentLevel;
         }
 
         try {
             FileWriter writer = new FileWriter(fileName + ".txt");
             StringBuilder s = new StringBuilder();
-            for (Tile tile : list) {
+
+            for (Tile tile : level.getBlocks()) {
                 s.append("(").append(tile).append(")_");
             }
             s.deleteCharAt(s.length() - 1);
@@ -209,11 +210,11 @@ public class GamePanel extends JPanel implements Runnable {
 
             } else if (state == GameState.EDITING) {
                 if (key == KeyEvent.VK_N) {
-                    System.out.println("numTiles: " + editingLevel.size());
+                    System.out.println("numTiles: " + editingLevel.getBlocks().size());
                 }
 
                 if (key == KeyEvent.VK_D) {
-                    editingLevel.clear();
+                    editingLevel.getBlocks().clear();
                 }
             }
 
@@ -281,10 +282,10 @@ public class GamePanel extends JPanel implements Runnable {
             int y = e.getPoint().y;
             int row = y / tileSize;
             int col = x / tileSize;
-            if (editingLevel.contains(new Tile(row, col, true))) {
-                editingLevel.remove(new Tile(row, col, true));
+            if (editingLevel.getBlocks().contains(new Tile(row, col, true))) {
+                editingLevel.getBlocks().remove(new Tile(row, col, true));
             }
-            if (!editingLevel.contains(new Tile(row, col, false))) {
+            if (!editingLevel.getBlocks().contains(new Tile(row, col, false))) {
                 editingLevel.add(new Tile(row, col, false));
             }
         }
@@ -312,8 +313,8 @@ public class GamePanel extends JPanel implements Runnable {
             int y = e.getPoint().y;
             int row = y / tileSize;
             int col = x / tileSize;
-            editingLevel.remove(new Tile(prevRow, prevCol, true));
-            if (!editingLevel.contains(new Tile(row, col, false))) {
+            editingLevel.getBlocks().remove(new Tile(prevRow, prevCol, true));
+            if (!editingLevel.getBlocks().contains(new Tile(row, col, false))) {
                 editingLevel.add(new Tile(row, col, true));
             }
 
@@ -328,10 +329,10 @@ public class GamePanel extends JPanel implements Runnable {
             int y = e.getPoint().y;
             int row = y / tileSize;
             int col = x / tileSize;
-            if (editingLevel.contains(new Tile(row, col, true))) {
-                editingLevel.remove(new Tile(row, col, true));
+            if (editingLevel.getBlocks().contains(new Tile(row, col, true))) {
+                editingLevel.getBlocks().remove(new Tile(row, col, true));
             }
-            if (!editingLevel.contains(new Tile(row, col, false))) {
+            if (!editingLevel.getBlocks().contains(new Tile(row, col, false))) {
                 editingLevel.add(new Tile(row, col, false));
             }
         }
