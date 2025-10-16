@@ -20,10 +20,12 @@ public class GamePanel extends JPanel implements Runnable {
     BufferedImage platformerBackground;
     BufferedImage plainBackground;
     BufferedImage greyBackground;
+    BufferedImage heart;
     static Player tyler;
     ArrayList<Tile> currentLevel = new ArrayList<>();
     ArrayList<Tile> editingLevel = new ArrayList<>();
     ArrayList<ImageRect> menuButtons = new ArrayList<>();
+    static int numHearts = 3;
 
     private static GameState state = GameState.PLAYING;
 
@@ -46,6 +48,8 @@ public class GamePanel extends JPanel implements Runnable {
             platformerBackground = ImageIO.read(new File("photos/platformerBackground.jpg"));
             plainBackground = ImageIO.read(new File("photos/blueBackground.png"));
             greyBackground = ImageIO.read(new File("photos/greyBackground.jpg"));
+            heart = ImageIO.read(new File("photos/heart.png"));
+
         } catch (IOException e) {
         }
 
@@ -70,6 +74,14 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public void drawHearts(Graphics g) {
+        int x = 50;
+        int y = 100;
+        for (int i = 0; i < numHearts; i++) {
+            g.drawImage(heart, x + i * 50, y, this);
+        }
+    }
+
     public void draw(Graphics g) {
         if (plainBackground != null && state == GameState.MENU) {
             g.drawImage(plainBackground, 0, 0, getWidth(), getHeight(), null);
@@ -89,6 +101,7 @@ public class GamePanel extends JPanel implements Runnable {
                     g.drawRect(0, 500 + tyler.height, width, 1);
                     // player
                     tyler.draw(g);
+                    drawHearts(g);
                 }
                 case EDITING -> {
                     for (Tile tile : editingLevel) {
@@ -188,6 +201,10 @@ public class GamePanel extends JPanel implements Runnable {
 
                 if (key == KeyEvent.VK_LEFT) {
                     tyler.moveLeft();
+                }
+
+                if (key == KeyEvent.VK_H) {
+                    numHearts--;
                 }
 
             } else if (state == GameState.EDITING) {
