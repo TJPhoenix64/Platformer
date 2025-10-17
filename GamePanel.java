@@ -216,6 +216,7 @@ public class GamePanel extends JPanel implements Runnable {
                 }
 
                 if (key == KeyEvent.VK_H) {
+                    MusicPlayer.playSound("music/hurt.wav");
                     numHearts--;
                 }
 
