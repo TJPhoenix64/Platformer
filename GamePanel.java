@@ -30,11 +30,14 @@ public class GamePanel extends JPanel implements Runnable {
 
     private static GameState state = GameState.PLAYING;
 
+    MusicPlayer bgMusic = new MusicPlayer();
+
     // final Long startTime;
 
     public GamePanel() {
         makePlayer();
         generateLevel();
+        playMusic();
         this.setFocusable(true);
         AL listener = new AL();
         this.addKeyListener(listener);
@@ -181,6 +184,14 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public void playMusic() {
+        if (state == GameState.PLAYING) {
+            bgMusic.playMusic("music/background.wav", true);
+        } else {
+            bgMusic.stopMusic();
+        }
+    }
+
     public class AL implements KeyListener, MouseListener, MouseMotionListener {
 
         int prevRow;
@@ -223,17 +234,23 @@ public class GamePanel extends JPanel implements Runnable {
                 printLevel("HELLO");
             }
 
+            if (key == KeyEvent.VK_SPACE && state != GameState.PLAYING) {
+                state = GameState.PLAYING;
+                bgMusic.playMusic("music/background.wav", true);
+            }
             if (key == KeyEvent.VK_E) {
                 state = GameState.EDITING;
-            }
-            if (key == KeyEvent.VK_SPACE) {
-                state = GameState.PLAYING;
+                bgMusic.stopMusic();
             }
             if (key == KeyEvent.VK_ESCAPE) {
                 state = GameState.PAUSED;
+                bgMusic.stopMusic();
+
             }
             if (key == KeyEvent.VK_M) {
                 state = GameState.MENU;
+                bgMusic.stopMusic();
+
             }
 
         }
