@@ -64,7 +64,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void generateLevel() {
-        currentLevel.add(new Tile(5, 5, false));
+        currentLevel.addTile(new Tile(5, 5, false));
+        currentLevel.addSpike(new Spike(100, 400, 200, 400, 150, 300, "photos/grass.png"));
     }
 
     public void generateMenu() {
@@ -304,7 +305,7 @@ public class GamePanel extends JPanel implements Runnable {
                 editingLevel.getBlocks().remove(new Tile(row, col, true));
             }
             if (!editingLevel.getBlocks().contains(new Tile(row, col, false))) {
-                editingLevel.add(new Tile(row, col, false));
+                editingLevel.addTile(new Tile(row, col, false));
             }
         }
 
@@ -333,7 +334,7 @@ public class GamePanel extends JPanel implements Runnable {
             int col = x / tileSize;
             editingLevel.getBlocks().remove(new Tile(prevRow, prevCol, true));
             if (!editingLevel.getBlocks().contains(new Tile(row, col, false))) {
-                editingLevel.add(new Tile(row, col, true));
+                editingLevel.addTile(new Tile(row, col, true));
             }
 
             prevRow = row;
@@ -351,7 +352,7 @@ public class GamePanel extends JPanel implements Runnable {
                 editingLevel.getBlocks().remove(new Tile(row, col, true));
             }
             if (!editingLevel.getBlocks().contains(new Tile(row, col, false))) {
-                editingLevel.add(new Tile(row, col, false));
+                editingLevel.addTile(new Tile(row, col, false));
             }
         }
     }
