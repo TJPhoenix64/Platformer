@@ -1,12 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LevelGenerator {
-    static ArrayList<Tile> tileList = new ArrayList<>();
+    static Level level = new Level();
 
-    public ArrayList<Tile> getContentsOfFile(String fileName) {
+    public Level getContentsOfFile(String fileName) {
         Scanner sc;
         try {
             sc = new Scanner(new File(fileName));
@@ -20,12 +19,12 @@ public class LevelGenerator {
                 x = Integer.parseInt(items[0]);
                 y = Integer.parseInt(items[1]);
                 Tile tile = new Tile(x, y, false);
-                tileList.add(tile);
+                level.addTile(tile);
             }
         } catch (FileNotFoundException e) {
             System.out.println("Oh No! something went wrong with the file");
         }
-        return tileList;
+        return level;
     }
 
 }
