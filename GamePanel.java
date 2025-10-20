@@ -22,7 +22,7 @@ public class GamePanel extends JPanel implements Runnable {
     BufferedImage greyBackground;
     BufferedImage heart;
     static Player tyler;
-    Level currentLevel = new Level();
+    static Level currentLevel = new Level();
     Level editingLevel = new Level();
     ArrayList<ImageRect> menuButtons = new ArrayList<>();
     ArrayList<Level> levels = new ArrayList<>();
@@ -80,9 +80,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    // TODO: change from the tyler position to the position of the checkpoint
-    public void passCheckpoint() {
-        tyler.updateCheckpointPos(tyler.x, tyler.y);
+    public static void passCheckpoint(Checkpoint c) {
+        tyler.updateCheckpointPos(c.x, c.y);
+        MusicPlayer.playSound("music/ding.wav");
     }
 
     public void drawHearts(Graphics g) {
@@ -100,6 +100,7 @@ public class GamePanel extends JPanel implements Runnable {
         MusicPlayer.playSound("music/hurt.wav");
         numHearts--;
         tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
+        tyler.passedCheckpointSinceButtonPress = true;
     }
 
     public void draw(Graphics g) {
@@ -225,10 +226,12 @@ public class GamePanel extends JPanel implements Runnable {
 
                 if (key == KeyEvent.VK_RIGHT) {
                     tyler.moveRight();
+                    tyler.passedCheckpointSinceButtonPress = false;
                 }
 
                 if (key == KeyEvent.VK_LEFT) {
                     tyler.moveLeft();
+                    tyler.passedCheckpointSinceButtonPress = false;
                 }
 
                 if (key == KeyEvent.VK_H) {
