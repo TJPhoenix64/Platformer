@@ -2,6 +2,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import javax.imageio.ImageIO;
 
 public class Checkpoint {
@@ -23,5 +24,25 @@ public class Checkpoint {
         if (image != null) {
             g.drawImage(image, this.x, this.y, GamePanel.tileSize, GamePanel.tileSize, null);
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true; // Same object reference
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false; // Null or different class
+        }
+        Checkpoint object = (Checkpoint) obj;
+
+        return (object.x == this.x && object.y == this.y);
+    }
+
+    @Override
+    public int hashCode() {
+        // It's crucial to override hashCode() whenever equals() is overridden
+        return Objects.hash(x, y);
     }
 }
