@@ -28,8 +28,8 @@ public class Player extends Rectangle {
     boolean passedCheckpointSinceButtonPress = false;
 
     public Player() {
-        this.width = 50;
-        this.height = 50;
+        this.width = GamePanel.tileSize;
+        this.height = GamePanel.tileSize;
         this.x = 100;
         this.y = 100;
         this.lastCheckpointX = this.x;
