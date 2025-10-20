@@ -25,6 +25,7 @@ public class Player extends Rectangle {
     int initialVeloX = 10;
     int lastCheckpointX;
     int lastCheckpointY;
+    boolean passedCheckpointSinceButtonPress = false;
 
     public Player() {
         this.width = 50;
@@ -43,6 +44,15 @@ public class Player extends Rectangle {
     public void updateCheckpointPos(int x, int y) {
         this.lastCheckpointX = x;
         this.lastCheckpointY = y;
+    }
+
+    public void checkCheckpoints() {
+        int col = x / GamePanel.tileSize;
+        int row = y / GamePanel.tileSize;
+        if (GamePanel.currentLevel.getCheckpoints().contains(new Checkpoint(row, col))) {
+            GamePanel.passCheckpoint(new Checkpoint(row, col));
+        }
+
     }
 
     /**
@@ -121,6 +131,7 @@ public class Player extends Rectangle {
     }
 
     public void updatePosition() {
+        checkCheckpoints();
         Long currentTime = System.nanoTime();
         if (isJumping) {
             int timeSinceJumpStarted = getDiffMillis(startJumpTime, currentTime);
@@ -150,7 +161,7 @@ public class Player extends Rectangle {
             this.x += initialVeloX;
         }
 
-        if (moveLeftReleased) {
+        if (moveLeftReleased && !passedCheckpointSinceButtonPress) {
             int timeSinceReleased = getDiffMillis(endLeftTime, currentTime);
             if (timeSinceReleased < 500) {
                 if (this.isJumping) {
@@ -164,7 +175,7 @@ public class Player extends Rectangle {
             }
         }
 
-        if (moveRightReleased) {
+        if (moveRightReleased && !passedCheckpointSinceButtonPress) {
             int timeSinceReleased = getDiffMillis(endRightTime, currentTime);
             if (timeSinceReleased < 500) {
                 if (this.isJumping) {
