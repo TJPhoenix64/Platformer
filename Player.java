@@ -191,6 +191,21 @@ public class Player extends Rectangle {
 
     }
 
+    /**
+     * this method will handle changing the players position, it will handle
+     * collisions
+     * 
+     * @param delta number of pixels to be changed
+     * @param isX   true if changing x, false if changing y
+     */
+    public void changePosition(int delta, boolean isX) {
+        int leftTile = this.x / GamePanel.tileSize; // left edge of player
+        int rightTile = (this.x + this.width) / GamePanel.tileSize; // right edge of player
+        int topTile = this.y / GamePanel.tileSize; // top edge of player
+        int bottomTile = (this.y + this.height) / GamePanel.tileSize; // bottom edge of player
+
+    }
+
     public void draw(Graphics g) {
         if (image != null) {
             g.drawImage(image, this.x, this.y, width, height, null);
