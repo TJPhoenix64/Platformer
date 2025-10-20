@@ -23,16 +23,38 @@ public class Player extends Rectangle {
     Long endLeftTime;
     Long endRightTime;
     int initialVeloX = 10;
+    int lastCheckpointX;
+    int lastCheckpointY;
 
     public Player() {
-        this.width = 100;
-        this.height = 100;
+        this.width = 50;
+        this.height = 50;
         this.x = 100;
         this.y = 100;
+        this.lastCheckpointX = this.x;
+        this.lastCheckpointY = this.y;
+
         try {
             image = ImageIO.read(new File("photos/redImage.jpg"));
         } catch (IOException e) {
         }
+    }
+
+    public void updateCheckpointPos(int x, int y) {
+        this.lastCheckpointX = x;
+        this.lastCheckpointY = y;
+    }
+
+    /**
+     * this teleports the player, it should only be used for when they take damage
+     * and reset back to the last checkpoint
+     * 
+     * @param x the x-pos
+     * @param y the y-pos
+     */
+    public void teleport(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public void moveLeft() {
