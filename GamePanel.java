@@ -66,6 +66,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void generateLevel() {
         currentLevel.addTile(new Tile(5, 5, false));
         currentLevel.addSpike(new Spike(100, 400, 200, 400, 150, 300, "photos/grass.png"));
+        currentLevel.addCheckpoint(new Checkpoint(10, 10));
     }
 
     public void generateMenu() {
@@ -79,12 +80,26 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    // TODO: change from the tyler position to the position of the checkpoint
+    public void passCheckpoint() {
+        tyler.updateCheckpointPos(tyler.x, tyler.y);
+    }
+
     public void drawHearts(Graphics g) {
         int x = 50;
         int y = 100;
         for (int i = 0; i < numHearts; i++) {
             g.drawImage(heart, x + i * 50, y, this);
         }
+    }
+
+    /**
+     * this should be run whenever the player gets hurt
+     */
+    public void playerHurt() {
+        MusicPlayer.playSound("music/hurt.wav");
+        numHearts--;
+        tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
     }
 
     public void draw(Graphics g) {
@@ -217,8 +232,7 @@ public class GamePanel extends JPanel implements Runnable {
                 }
 
                 if (key == KeyEvent.VK_H) {
-                    MusicPlayer.playSound("music/hurt.wav");
-                    numHearts--;
+                    playerHurt();
                 }
 
             } else if (state == GameState.EDITING) {
