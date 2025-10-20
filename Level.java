@@ -4,10 +4,12 @@ import java.util.ArrayList;
 public class Level {
     private ArrayList<Tile> blocks;
     private ArrayList<Spike> spikes;
+    private ArrayList<Checkpoint> checkpoints;
 
     public Level() {
         blocks = new ArrayList<>();
         spikes = new ArrayList<>();
+        checkpoints = new ArrayList<>();
     }
 
     public void addTile(Tile tile) {
@@ -18,12 +20,20 @@ public class Level {
         spikes.add(spike);
     }
 
+    public void addCheckpoint(Checkpoint checkpoint) {
+        checkpoints.add(checkpoint);
+    }
+
     public ArrayList<Tile> getBlocks() {
         return blocks;
     }
 
     public ArrayList<Spike> getSpikes() {
         return spikes;
+    }
+
+    public ArrayList<Checkpoint> getCheckpoints() {
+        return checkpoints;
     }
 
     // Additional logic for your level
@@ -34,6 +44,9 @@ public class Level {
         }
         for (Spike s : spikes) {
             s.draw(g2d);
+        }
+        for (Checkpoint c : checkpoints) {
+            c.draw(g);
         }
     }
 }
