@@ -2,6 +2,7 @@
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Player extends Rectangle {
@@ -14,7 +15,7 @@ public class Player extends Rectangle {
     Image image;
     Long startJumpTime;
     Long endJumpTime;
-    double gravity = -0.05;
+    double gravity = 0.05;
     double initialVeloY;
     boolean moveLeftPressed;
     boolean moveRightPressed;
@@ -53,6 +54,10 @@ public class Player extends Rectangle {
             GamePanel.passCheckpoint(new Checkpoint(row, col));
         }
 
+    }
+
+    public Rectangle getPlayerRect() {
+        return new Rectangle(this.x, this.y, this.width, this.height);
     }
 
     /**
@@ -121,7 +126,7 @@ public class Player extends Rectangle {
             num = 30;
         }
 
-        return num;
+        return -num;
     }
 
     public int getDiffMillis(Long startTime, Long endTime) {
@@ -131,44 +136,36 @@ public class Player extends Rectangle {
     }
 
     public void updatePosition() {
+        int deltaX = 0;
+        int deltaY = 0;
         checkCheckpoints();
         Long currentTime = System.nanoTime();
         if (isJumping) {
             int timeSinceJumpStarted = getDiffMillis(startJumpTime, currentTime);
             initialVeloY = getInitialVeloY();
-            int dy = (int) (gravity * timeSinceJumpStarted + initialVeloY);
+            deltaY = (int) (gravity * timeSinceJumpStarted + initialVeloY);
             // System.out.println("dy: " + dy);
             // ensures the block does not go below 500
-            if (this.y - dy > 500) {
-                this.y = 500;
-            } else {
-                this.y -= dy;
+            if (this.y + deltaY > 500) {
+                deltaY = 500 - this.y;
+                isJumping = false; // mark player as landed
             }
-        }
-        // change this to the y of the proper block, not 500
-        if (this.y >= 500) {
-            isJumping = false;
         }
 
         if (moveLeftPressed) {
-            this.x -= initialVeloX;
-        }
-
-        // add it so that if moveLeftReleased, check how long its been since released,
-        // decrease velo by set amount
-
-        if (moveRightPressed) {
-            this.x += initialVeloX;
+            deltaX = -initialVeloX;
+        } else if (moveRightPressed) {
+            deltaX = initialVeloX;
         }
 
         if (moveLeftReleased && !passedCheckpointSinceButtonPress) {
             int timeSinceReleased = getDiffMillis(endLeftTime, currentTime);
             if (timeSinceReleased < 500) {
                 if (this.isJumping) {
-                    this.x -= initialVeloX;
+                    deltaX = -initialVeloX;
                     endLeftTime = System.nanoTime();
                 } else {
-                    this.x -= (initialVeloX - (timeSinceReleased / 50));
+                    deltaX = -(initialVeloX - (timeSinceReleased / 50));
                 }
             } else {
                 moveLeftReleased = false;
@@ -179,32 +176,75 @@ public class Player extends Rectangle {
             int timeSinceReleased = getDiffMillis(endRightTime, currentTime);
             if (timeSinceReleased < 500) {
                 if (this.isJumping) {
-                    this.x += initialVeloX;
+                    deltaX = initialVeloX;
                     endRightTime = System.nanoTime();
                 } else {
-                    this.x += (initialVeloX - (timeSinceReleased / 50));
+                    deltaX = (initialVeloX - (timeSinceReleased / 50));
                 }
             } else {
                 moveRightReleased = false;
             }
         }
 
+        changePosition(deltaX, deltaY);
+
     }
 
     /**
-     * this method will handle changing the players position, it will handle
-     * collisions
+     * this handles changing the position, it also handles collisions too
      * 
-     * @param delta number of pixels to be changed
-     * @param isX   true if changing x, false if changing y
+     * @param dX
+     * @param dY
      */
-    public void changePosition(int delta, boolean isX) {
-        int leftTile = this.x / GamePanel.tileSize; // left edge of player
-        int rightTile = (this.x + this.width) / GamePanel.tileSize; // right edge of player
-        int topTile = this.y / GamePanel.tileSize; // top edge of player
-        int bottomTile = (this.y + this.height) / GamePanel.tileSize; // bottom edge of player
-
+    public void changePosition(int dX, int dY) {
+        /*
+         * int leftTile = this.x / GamePanel.tileSize; // left edge of player
+         * int rightTile = (this.x + this.width) / GamePanel.tileSize; // right edge of
+         * player
+         * int topTile = this.y / GamePanel.tileSize; // top edge of player
+         * int bottomTile = (this.y + this.height) / GamePanel.tileSize; // bottom edge
+         * of player
+         * int TILE_SIZE = GamePanel.tileSize;
+         * ArrayList<Tile> nearbyTiles = new ArrayList<>();
+         * for (int yPos = topTile - 1; yPos <= bottomTile + 1; yPos++) {
+         * for (int xPos = leftTile - 1; xPos <= rightTile + 1; xPos++) {
+         * if (isSolidTile(xPos, yPos)) {
+         * nearbyTiles.add(new Tile(yPos, xPos, false));
+         * }
+         * }
+         * }
+         * 
+         * for (Tile tile : nearbyTiles) {
+         * 
+         * }
+         * Rectangle tileBounds = new Rectangle(x * TILE_SIZE,
+         * y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+         * if (getPlayerRect().getBounds().intersects(tileBounds)) {
+         * 
+         * }
+         */
+        this.x += dX;
+        this.y += dY;
     }
+
+    public boolean isSolidTile(int col, int row) {
+        ArrayList<Tile> list = GamePanel.currentLevel.getBlocks();
+        if (!list.isEmpty()) {
+            return list.contains(new Tile(row, col, isJumping));
+        }
+        return false;
+    }
+
+    /*
+     * int leftTile = player.x / TILE_SIZE; int rightTile = (player.x +
+     * player.width) / TILE_SIZE; int topTile = player.y / TILE_SIZE; int bottomTile
+     * = (player.y + player.height) / TILE_SIZE; for (int y = topTile - 1; y <=
+     * bottomTile + 1; y++) { for (int x = leftTile - 1; x <= rightTile + 1; x++) {
+     * if (isSolidTile(x, y)) { Rectangle tileBounds = new Rectangle(x * TILE_SIZE,
+     * y * TILE_SIZE, TILE_SIZE, TILE_SIZE); if
+     * (player.getBounds().intersects(tileBounds)) { // Handle collision here } } }
+     * }
+     */
 
     public void draw(Graphics g) {
         if (image != null) {
