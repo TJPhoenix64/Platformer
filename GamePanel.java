@@ -20,24 +20,29 @@ public class GamePanel extends JPanel implements Runnable {
     BufferedImage platformerBackground;
     BufferedImage plainBackground;
     BufferedImage greyBackground;
+    BufferedImage pausedBackground;
     BufferedImage heart;
     static Player tyler;
     static Level currentLevel = new Level();
     Level editingLevel = new Level();
-    ArrayList<ImageRect> menuButtons = new ArrayList<>();
+    ArrayList<ImageRect> mainMenuButtons = new ArrayList<>();
+    ArrayList<ImageRect> pauseMenuButtons = new ArrayList<>();
     ArrayList<Level> levels = new ArrayList<>();
     static int numHearts = 3;
+    boolean playMusic;
+    static float musicVolume = 0.5f;
 
-    private static GameState state = GameState.PLAYING;
+    private static GameState state = GameState.MENU;
 
-    MusicPlayer bgMusic = new MusicPlayer();
+    static MusicPlayer bgMusic = new MusicPlayer();
 
     // final Long startTime;
 
     public GamePanel() {
         makePlayer();
         generateLevel();
-        playMusic();
+        playMusic = (state == GameState.PLAYING);
+        playMusic(playMusic);
         this.setFocusable(true);
         AL listener = new AL();
         this.addKeyListener(listener);
@@ -53,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
             plainBackground = ImageIO.read(new File("photos/blueBackground.png"));
             greyBackground = ImageIO.read(new File("photos/greyBackground.jpg"));
             heart = ImageIO.read(new File("photos/heart.png"));
-
+            pausedBackground = ImageIO.read(new File("photos/redImage.jpg"));
         } catch (IOException e) {
         }
 
@@ -69,15 +74,24 @@ public class GamePanel extends JPanel implements Runnable {
         currentLevel.addCheckpoint(new Checkpoint(10, 10));
     }
 
-    public void generateMenu() {
+    public void generateMainMenu() {
         Image playButton = null;
+        Image settingsButton = null;
         try {
             playButton = ImageIO.read(new File("photos/PlayButton.png"));
+            settingsButton = ImageIO.read(new File("photos/redImage.jpg"));
         } catch (IOException e) {
         }
         if (playButton != null) {
-            menuButtons.add(new ImageRect(playButton, 300, 200, 342, 152));
+            mainMenuButtons.add(new ImageRect(playButton, 300, 200, 342, 152));
         }
+        if (settingsButton != null) {
+            mainMenuButtons.add(new ImageRect(settingsButton, 300, 400, 342, 152));
+        }
+    }
+
+    public void generatePauseMenu() {
+
     }
 
     public static void passCheckpoint(Checkpoint c) {
@@ -97,7 +111,12 @@ public class GamePanel extends JPanel implements Runnable {
      * this should be run whenever the player gets hurt
      */
     public void playerHurt() {
-        MusicPlayer.playSound("music/hurt.wav");
+        double num = Math.random();
+        if (num > 0.5) {
+            MusicPlayer.playSound("music/hurt.wav");
+        } else {
+            SayExample.sayPhrase("wow, you make this game look really hard");
+        }
         numHearts--;
         tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
         tyler.passedCheckpointSinceButtonPress = true;
@@ -113,6 +132,10 @@ public class GamePanel extends JPanel implements Runnable {
         if (greyBackground != null && state == GameState.EDITING) {
             g.drawImage(greyBackground, 0, 0, getWidth(), getHeight(), null);
         }
+        if (pausedBackground != null && state == GameState.PAUSED) {
+            g.drawImage(pausedBackground, 0, 0, getWidth(), getHeight(), null);
+        }
+
         if (null != state)
             switch (state) {
                 case PLAYING -> {
@@ -130,14 +153,20 @@ public class GamePanel extends JPanel implements Runnable {
                     drawGrid(width, height, g);
                 }
                 case MENU -> {
-                    menuButtons.clear();
-                    generateMenu();
-                    for (ImageRect rect : menuButtons) {
+                    mainMenuButtons.clear();
+                    generateMainMenu();
+                    for (ImageRect rect : mainMenuButtons) {
                         rect.draw(g, this);
                     }
                 }
                 case PAUSED -> {
+                    pauseMenuButtons.clear();
+                    generateMainMenu();
+                    for (ImageRect rect : pauseMenuButtons) {
+                        rect.draw(g, this);
+                    }
                 }
+
                 default -> {
                 }
             }
@@ -201,9 +230,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void playMusic() {
-        if (state == GameState.PLAYING) {
-            bgMusic.playMusic("music/background.wav", true);
+    public static void playMusic(boolean playMusic) {
+        if (playMusic) {
+            bgMusic.playMusic("music/background.wav", true, musicVolume);
         } else {
             bgMusic.stopMusic();
         }
@@ -255,7 +284,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             if (key == KeyEvent.VK_SPACE && state != GameState.PLAYING) {
                 state = GameState.PLAYING;
-                bgMusic.playMusic("music/background.wav", true);
+                playMusic(playMusic);
             }
             if (key == KeyEvent.VK_E) {
                 state = GameState.EDITING;
@@ -270,6 +299,15 @@ public class GamePanel extends JPanel implements Runnable {
                 state = GameState.MENU;
                 bgMusic.stopMusic();
 
+            }
+
+            if (key == KeyEvent.VK_X) {
+                playMusic = !playMusic;
+                if (playMusic) {
+                    bgMusic.stopMusic();
+                } else {
+                    playMusic(playMusic);
+                }
             }
 
         }
@@ -304,7 +342,27 @@ public class GamePanel extends JPanel implements Runnable {
             int y = e.getPoint().y;
 
             if (state == GameState.MENU) {
-                for (ImageRect rect : menuButtons) {
+                for (ImageRect rect : mainMenuButtons) {
+                    if (rect.contains(x, y)) {
+                        Image playButton = null;
+                        try {
+                            playButton = ImageIO.read(new File("photos/PlayButton.png"));
+                        } catch (IOException a) {
+                        }
+                        if (playButton != null) {
+                            if (rect.getBounds().equals(mainMenuButtons.get(0).getBounds())) {
+                                state = GameState.PLAYING;
+                            }
+                            if (rect.getBounds().equals(mainMenuButtons.get(1).getBounds())) {
+                                state = GameState.PAUSED;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (state == GameState.PAUSED) {
+                for (ImageRect rect : pauseMenuButtons) {
                     if (rect.contains(x, y)) {
                         state = GameState.PLAYING;
                     }
