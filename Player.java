@@ -223,6 +223,8 @@ public class Player extends Rectangle {
          * 
          * }
          */
+
+        // TODO: find out why this code loop makes the program run super slowly
         this.x += dX;
         this.y += dY;
     }
