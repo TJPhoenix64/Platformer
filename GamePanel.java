@@ -33,6 +33,10 @@ public final class GamePanel extends JPanel implements Runnable {
     static int numHearts = 3;
     boolean playMusic;
     static float musicVolume = 0.5f;
+    Long lastTimeEffectStarted;
+    double invincibilitySeconds = 1.5;
+
+    static boolean playerHurt = false;
 
     private static GameState state = GameState.MENU;
 
@@ -43,6 +47,7 @@ public final class GamePanel extends JPanel implements Runnable {
     public GamePanel() {
         makePlayer();
         generateLevel();
+        lastTimeEffectStarted = System.currentTimeMillis();
         playMusic = (state == GameState.PLAYING);
         playMusic(playMusic);
         this.setFocusable(true);
@@ -133,14 +138,20 @@ public final class GamePanel extends JPanel implements Runnable {
      */
     public void playerHurt() {
         double num = Math.random();
-        if (num > 0.5) {
-            MusicPlayer.playSound("music/hurt.wav");
-        } else {
-            SayExample.sayPhrase("wow, you make this game look really hard");
+        Long currentTime = System.currentTimeMillis();
+
+        if (currentTime - lastTimeEffectStarted > invincibilitySeconds * 1000) {
+            lastTimeEffectStarted = currentTime;
+            if (num > 0.5) {
+                MusicPlayer.playSound("music/hurt.wav");
+            } else {
+                SayExample.sayPhrase("wow, you make this game look really hard");
+            }
+            numHearts--;
+            tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
+            tyler.passedCheckpointSinceButtonPress = true;
+            System.out.println(tyler.getPlayerRect());
         }
-        numHearts--;
-        tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
-        tyler.passedCheckpointSinceButtonPress = true;
     }
 
     public void draw(Graphics g) {
@@ -249,6 +260,10 @@ public final class GamePanel extends JPanel implements Runnable {
             if (delta >= 1) {
                 repaint();
                 tyler.updatePosition();
+                if (playerHurt) {
+                    playerHurt = false;
+                    playerHurt();
+                }
                 delta--;
             }
         }
@@ -288,7 +303,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
 
                 if (key == KeyEvent.VK_H) {
-                    playerHurt();
+                    playerHurt = true;
                 }
 
             } else if (state == GameState.EDITING) {
@@ -297,7 +312,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
 
                 if (key == KeyEvent.VK_D) {
-                    editingLevel.getBlocks().clear();
+                    editingLevel.clear();
                 }
             }
 
