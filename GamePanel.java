@@ -3,6 +3,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import javax.imageio.*;
 import javax.swing.*;
 
@@ -24,6 +25,7 @@ public class GamePanel extends JPanel implements Runnable {
     BufferedImage heart;
     static Player tyler;
     static Level currentLevel = new Level();
+    static HashSet<Point> solidTiles = new HashSet<>();
     Level editingLevel = new Level();
     ArrayList<ImageRect> mainMenuButtons = new ArrayList<>();
     ArrayList<ImageRect> pauseMenuButtons = new ArrayList<>();

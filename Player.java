@@ -230,9 +230,8 @@ public class Player extends Rectangle {
     }
 
     public boolean isSolidTile(int col, int row) {
-        ArrayList<Tile> list = GamePanel.currentLevel.getBlocks();
-        if (!list.isEmpty()) {
-            return list.contains(new Tile(row, col, isJumping));
+        if (!GamePanel.solidTiles.isEmpty()) {
+            return GamePanel.solidTiles.contains(new Point(col, row));
         }
         return false;
     }
