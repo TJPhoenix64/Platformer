@@ -37,7 +37,7 @@ public class Player extends Rectangle {
         this.lastCheckpointY = this.y;
 
         try {
-            image = ImageIO.read(new File("photos/redImage.jpg"));
+            image = ImageIO.read(new File("photos/orangeBackground.jpg"));
         } catch (IOException e) {
         }
     }
