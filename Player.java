@@ -28,6 +28,9 @@ public class Player extends Rectangle {
     int lastCheckpointY;
     boolean passedCheckpointSinceButtonPress = false;
 
+    ArrayList<Tile> nearbyTiles = new ArrayList<>();
+    ArrayList<Spike> nearbySpikes = new ArrayList<>();
+
     public Player() {
         this.width = GamePanel.TILE_SIZE;
         this.height = GamePanel.TILE_SIZE;
@@ -197,34 +200,48 @@ public class Player extends Rectangle {
      * @param dY
      */
     public void changePosition(int dX, int dY) {
-        /*
-         * int leftTile = this.x / GamePanel.tileSize; // left edge of player
-         * int rightTile = (this.x + this.width) / GamePanel.tileSize; // right edge of
-         * player
-         * int topTile = this.y / GamePanel.tileSize; // top edge of player
-         * int bottomTile = (this.y + this.height) / GamePanel.tileSize; // bottom edge
-         * of player
-         * int TILE_SIZE = GamePanel.tileSize;
-         * ArrayList<Tile> nearbyTiles = new ArrayList<>();
-         * for (int yPos = topTile - 1; yPos <= bottomTile + 1; yPos++) {
-         * for (int xPos = leftTile - 1; xPos <= rightTile + 1; xPos++) {
-         * if (isSolidTile(xPos, yPos)) {
-         * nearbyTiles.add(new Tile(yPos, xPos, false));
-         * }
-         * }
-         * }
-         * 
-         * for (Tile tile : nearbyTiles) {
-         * 
-         * }
-         * Rectangle tileBounds = new Rectangle(x * TILE_SIZE,
-         * y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-         * if (getPlayerRect().getBounds().intersects(tileBounds)) {
-         * 
-         * }
-         */
+        int tileSize = GamePanel.TILE_SIZE;
+        int leftTile = this.x / tileSize; // left edge of player
+        int rightTile = (this.x + this.width) / tileSize; // right edge of player
+        int topTile = this.y / tileSize; // top edge of player
+        int bottomTile = (this.y + this.height) / tileSize; // bottom edge of player
 
-        // TODO: find out why this code loop makes the program run super slowly
+        for (int yPos = topTile - 1; yPos <= bottomTile + 1; yPos++) {
+            for (int xPos = leftTile - 1; xPos <= rightTile + 1; xPos++) {
+                if (isSolidTile(xPos, yPos)) {
+                    nearbySpikes.clear();
+                    nearbyTiles.clear();
+                    if (GamePanel.currentLevel.getBlocks()[xPos][yPos] != null) {
+                        nearbyTiles.add(new Tile(yPos, xPos, false));
+                    }
+                    if (GamePanel.currentLevel.getSpikes()[xPos][yPos] != null) {
+                        nearbySpikes.add(new Spike(yPos, xPos));
+                    }
+                }
+            }
+        }
+
+        for (Tile tile : nearbyTiles) {
+            Rectangle tileBounds = new Rectangle(tile.col * tileSize,
+                    tile.row * tileSize, tileSize, tileSize);
+            if (getPlayerRect().getBounds().intersects(tileBounds)) {
+                if (dX > 0) {
+
+                }
+            }
+        }
+        /*
+         * if moving right and block is to the right
+         * make sure that it does not move too far
+         */
+        for (Spike spike : nearbySpikes) {
+            Rectangle tileBounds = new Rectangle(spike.col * tileSize,
+                    spike.row * tileSize, tileSize, tileSize);
+            if (getPlayerRect().getBounds().intersects(tileBounds)) {
+                GamePanel.playerHurt = true;
+            }
+        }
+
         this.x += dX;
         this.y += dY;
     }
@@ -235,17 +252,6 @@ public class Player extends Rectangle {
         }
         return false;
     }
-
-    /*
-     * int leftTile = player.x / TILE_SIZE; int rightTile = (player.x +
-     * player.width) / TILE_SIZE; int topTile = player.y / TILE_SIZE; int bottomTile
-     * = (player.y + player.height) / TILE_SIZE; for (int y = topTile - 1; y <=
-     * bottomTile + 1; y++) { for (int x = leftTile - 1; x <= rightTile + 1; x++) {
-     * if (isSolidTile(x, y)) { Rectangle tileBounds = new Rectangle(x * TILE_SIZE,
-     * y * TILE_SIZE, TILE_SIZE, TILE_SIZE); if
-     * (player.getBounds().intersects(tileBounds)) { // Handle collision here } } }
-     * }
-     */
 
     public void draw(Graphics g) {
         if (image != null) {
