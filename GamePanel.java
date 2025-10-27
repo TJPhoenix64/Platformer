@@ -76,6 +76,23 @@ public final class GamePanel extends JPanel implements Runnable {
         currentLevel.addSpike(new Spike(10, 6, 1, "photos/grass.png", 0));
         currentLevel.addSpike(new Spike(5, 5, 1, "photos/grass.png", 0));
         currentLevel.addCheckpoint(new Checkpoint(10, 10));
+        for (Tile[] tiles : currentLevel.getBlocks()) {
+            for (Tile t : tiles) {
+                if (t != null) {
+                    solidTiles.add(new Point(t.col, t.row));
+                }
+            }
+        }
+        for (Spike[] spikes : currentLevel.getSpikes()) {
+            for (Spike s : spikes) {
+                if (s != null) {
+                    if (!solidTiles.contains(new Point(s.col, s.row))) {
+                        solidTiles.add(new Point(s.col, s.row));
+                    }
+                }
+            }
+
+        }
     }
 
     public void generateMainMenu() {
@@ -151,8 +168,10 @@ public final class GamePanel extends JPanel implements Runnable {
                     drawHearts(g);
                 }
                 case EDITING -> {
-                    for (Tile tile : editingLevel.getBlocks()) {
-                        tile.draw(g);
+                    for (Tile[] tiles : editingLevel.getBlocks()) {
+                        for (Tile t : tiles) {
+                            t.draw(g);
+                        }
                     }
                     drawGrid(PANEL_WIDTH, PANEL_HEIGHT, g);
                 }
@@ -200,14 +219,14 @@ public final class GamePanel extends JPanel implements Runnable {
             FileWriter writer = new FileWriter(fileName + ".txt");
             StringBuilder s = new StringBuilder();
 
-            for (Tile tile : level.getBlocks()) {
-                s.append("(").append(tile).append(")_");
+            for (Tile[] tiles : level.getBlocks()) {
+                for (Tile t : tiles)
+                    s.append("(").append(t).append(")_");
             }
             s.deleteCharAt(s.length() - 1);
             writer.write(s.toString());
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -274,7 +293,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
             } else if (state == GameState.EDITING) {
                 if (key == KeyEvent.VK_N) {
-                    System.out.println("numTiles: " + editingLevel.getBlocks().size());
+                    System.out.println("numTiles: " + editingLevel.getNumTiles());
                 }
 
                 if (key == KeyEvent.VK_D) {
@@ -285,6 +304,16 @@ public final class GamePanel extends JPanel implements Runnable {
             // change this to the filename that you want the program to make
             if (key == KeyEvent.VK_P) {
                 printLevel("HELLO");
+            }
+
+            if (key == KeyEvent.VK_4) {
+                for (Spike[] spikes : currentLevel.getSpikes()) {
+                    for (Spike spike : spikes) {
+                        if (spike != null) {
+                            System.out.println(spike);
+                        }
+                    }
+                }
             }
 
             if (key == KeyEvent.VK_SPACE && state != GameState.PLAYING) {
@@ -379,12 +408,12 @@ public final class GamePanel extends JPanel implements Runnable {
         public void mousePressed(MouseEvent e) {
             int x = e.getPoint().x;
             int y = e.getPoint().y;
-            int row = y / tileSize;
-            int col = x / tileSize;
-            if (editingLevel.getBlocks().contains(new Tile(row, col, true))) {
-                editingLevel.getBlocks().remove(new Tile(row, col, true));
+            int row = y / TILE_SIZE;
+            int col = x / TILE_SIZE;
+            if (editingLevel.contains(new Tile(row, col, true))) {
+                editingLevel.remove(new Tile(row, col, true));
             }
-            if (!editingLevel.getBlocks().contains(new Tile(row, col, false))) {
+            if (!editingLevel.contains(new Tile(row, col, false))) {
                 editingLevel.addTile(new Tile(row, col, false));
             }
         }
@@ -410,10 +439,10 @@ public final class GamePanel extends JPanel implements Runnable {
 
             int x = e.getPoint().x;
             int y = e.getPoint().y;
-            int row = y / tileSize;
-            int col = x / tileSize;
-            editingLevel.getBlocks().remove(new Tile(prevRow, prevCol, true));
-            if (!editingLevel.getBlocks().contains(new Tile(row, col, false))) {
+            int row = y / TILE_SIZE;
+            int col = x / TILE_SIZE;
+            editingLevel.remove(new Tile(prevRow, prevCol, true));
+            if (!editingLevel.contains(new Tile(row, col, false))) {
                 editingLevel.addTile(new Tile(row, col, true));
             }
 
@@ -426,12 +455,12 @@ public final class GamePanel extends JPanel implements Runnable {
         public void mouseDragged(MouseEvent e) {
             int x = e.getPoint().x;
             int y = e.getPoint().y;
-            int row = y / tileSize;
-            int col = x / tileSize;
-            if (editingLevel.getBlocks().contains(new Tile(row, col, true))) {
-                editingLevel.getBlocks().remove(new Tile(row, col, true));
+            int row = y / TILE_SIZE;
+            int col = x / TILE_SIZE;
+            if (editingLevel.contains(new Tile(row, col, true))) {
+                editingLevel.remove(new Tile(row, col, true));
             }
-            if (!editingLevel.getBlocks().contains(new Tile(row, col, false))) {
+            if (!editingLevel.contains(new Tile(row, col, false))) {
                 editingLevel.addTile(new Tile(row, col, false));
             }
         }

@@ -2,33 +2,37 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Level {
-    private ArrayList<Tile> blocks;
-    private ArrayList<Spike> spikes;
+    private Tile[][] blocks;
+    private Spike[][] spikes;
     private ArrayList<Checkpoint> checkpoints;
 
     public Level() {
-        blocks = new ArrayList<>();
-        spikes = new ArrayList<>();
-        checkpoints = new ArrayList<>();
+        clear();
     }
 
     public void addTile(Tile tile) {
-        blocks.add(tile);
+        blocks[tile.col][tile.row] = tile;
+        numTiles++;
+        numObjects++;
     }
 
     public void addSpike(Spike spike) {
-        spikes.add(spike);
+        spikes[spike.col][spike.row] = spike;
+        numSpikes++;
+        numObjects++;
     }
 
     public void addCheckpoint(Checkpoint checkpoint) {
         checkpoints.add(checkpoint);
+        numCheckpoints++;
+        numObjects++;
     }
 
-    public ArrayList<Tile> getBlocks() {
+    public Tile[][] getBlocks() {
         return blocks;
     }
 
-    public ArrayList<Spike> getSpikes() {
+    public Spike[][] getSpikes() {
         return spikes;
     }
 
@@ -36,14 +40,106 @@ public class Level {
         return checkpoints;
     }
 
+    public int getNumObjects() {
+        return numObjects;
+    }
+
+    public int getNumTiles() {
+        return numTiles;
+    }
+
+    public int getNumCheckpoints() {
+        return numCheckpoints;
+    }
+
+    public int getNumSpikes() {
+        return numSpikes;
+    }
+
+    public final void clear() {
+
+        blocks = new Tile[cols][rows];
+        spikes = new Spike[cols][rows];
+        checkpoints = new ArrayList<>();
+
+    }
+
+    public boolean contains(Object obj) {
+        if (obj instanceof Tile tile) {
+            for (Tile[] tiles : blocks) {
+                for (Tile t : tiles) {
+                    if (t != null) {
+                        if (t.equals(tile)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } else if (obj instanceof Spike spike) {
+            for (Spike[] points : spikes) {
+                for (Spike s : points) {
+                    if (s != null) {
+                        if (s.equals(spike)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } else if (obj instanceof Checkpoint checkpoint) {
+            for (Checkpoint c : checkpoints) {
+                if (c.equals(checkpoint)) {
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+    public void remove(Object obj) {
+        if (obj instanceof Tile tile) {
+            for (Tile[] tiles : blocks) {
+                for (Tile t : tiles) {
+                    if (t != null) {
+                        if (t.equals(tile)) {
+                            blocks[tile.col][tile.row] = null;
+                            return;
+                        }
+                    }
+                }
+            }
+        } else if (obj instanceof Spike spike) {
+            for (Spike[] points : spikes) {
+                for (Spike s : points) {
+                    if (s != null) {
+                        if (s.equals(spike)) {
+                            spikes[spike.col][spike.row] = null;
+                            return;
+                        }
+                    }
+                }
+            }
+        } else if (obj instanceof Checkpoint checkpoint) {
+            checkpoints.remove(checkpoint);
+        }
+    }
+
     // Additional logic for your level
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        for (Tile b : blocks) {
-            b.draw(g);
+        for (Tile[] tiles : blocks) {
+            for (Tile t : tiles) {
+                if (t != null) {
+                    t.draw(g);
+                }
+            }
         }
-        for (Spike s : spikes) {
-            s.draw(g2d);
+        for (Spike[] points : spikes) {
+            for (Spike s : points) {
+                if (s != null) {
+                    s.draw(g2d);
+                }
+            }
         }
         for (Checkpoint c : checkpoints) {
             c.draw(g);
