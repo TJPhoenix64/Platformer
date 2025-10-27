@@ -17,8 +17,8 @@ public class Tile {
     public Tile(int row, int col, boolean isTemp) {
         this.row = row;
         this.col = col;
-        this.x = col * GamePanel.tileSize;
-        this.y = row * GamePanel.tileSize;
+        this.x = col * GamePanel.TILE_SIZE;
+        this.y = row * GamePanel.TILE_SIZE;
         this.isTemp = isTemp;
         try {
             if (isTemp) {
@@ -32,7 +32,7 @@ public class Tile {
 
     public void draw(Graphics g) {
         if (image != null) {
-            g.drawImage(image, this.x, this.y, GamePanel.tileSize, GamePanel.tileSize, null);
+            g.drawImage(image, this.x, this.y, GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
         }
     }
 

@@ -26,7 +26,7 @@ public class Enemy {
 
     public void draw(Graphics g) {
         if (image != null) {
-            g.drawImage(image, this.col * GamePanel.tileSize, this.row * GamePanel.tileSize, this.width, this.height,
+            g.drawImage(image, this.col * GamePanel.TILE_SIZE, this.row * GamePanel.TILE_SIZE, this.width, this.height,
                     null);
         }
     }
