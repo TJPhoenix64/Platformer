@@ -11,8 +11,8 @@ public class Checkpoint {
     Image image;
 
     public Checkpoint(int row, int col) {
-        x = col * GamePanel.tileSize;
-        y = row * GamePanel.tileSize;
+        x = col * GamePanel.TILE_SIZE;
+        y = row * GamePanel.TILE_SIZE;
         try {
             image = ImageIO.read(new File("photos/flag.png"));
         } catch (IOException e) {
@@ -22,7 +22,7 @@ public class Checkpoint {
 
     public void draw(Graphics g) {
         if (image != null) {
-            g.drawImage(image, this.x, this.y, GamePanel.tileSize, GamePanel.tileSize, null);
+            g.drawImage(image, this.x, this.y, GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
         }
     }
 
