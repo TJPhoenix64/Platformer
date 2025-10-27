@@ -6,6 +6,14 @@ public class Level {
     private Spike[][] spikes;
     private ArrayList<Checkpoint> checkpoints;
 
+    private int numTiles = 0;
+    private int numCheckpoints = 0;
+    private int numSpikes = 0;
+    private int numObjects = 0;
+
+    private final int cols = GamePanel.PANEL_WIDTH / GamePanel.TILE_SIZE;
+    private final int rows = GamePanel.PANEL_HEIGHT / GamePanel.TILE_SIZE;
+
     public Level() {
         clear();
     }
