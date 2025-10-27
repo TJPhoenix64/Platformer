@@ -11,13 +11,13 @@ enum GameState {
     MENU, PLAYING, PAUSED, EDITING
 }
 
-public class GamePanel extends JPanel implements Runnable {
+public final class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
-    static final int width = 1200;
-    static final int height = 800;
-    static final Dimension SCREEN_SIZE = new Dimension(width, height);
-    static final int tileSize = 50;
+    static final int PANEL_WIDTH = 1200;
+    static final int PANEL_HEIGHT = 800;
+    static final Dimension SCREEN_SIZE = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
+    static final int TILE_SIZE = 50;
     BufferedImage platformerBackground;
     BufferedImage plainBackground;
     BufferedImage greyBackground;
@@ -143,7 +143,7 @@ public class GamePanel extends JPanel implements Runnable {
                 case PLAYING -> {
                     currentLevel.draw(g);
                     // line
-                    g.drawRect(0, 500 + tyler.height, width, 1);
+                    g.drawRect(0, 500 + tyler.height, PANEL_WIDTH, 1);
                     // player
                     tyler.draw(g);
                     drawHearts(g);
@@ -152,7 +152,7 @@ public class GamePanel extends JPanel implements Runnable {
                     for (Tile tile : editingLevel.getBlocks()) {
                         tile.draw(g);
                     }
-                    drawGrid(width, height, g);
+                    drawGrid(PANEL_WIDTH, PANEL_HEIGHT, g);
                 }
                 case MENU -> {
                     mainMenuButtons.clear();
@@ -176,15 +176,16 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void drawGrid(int width, int height, Graphics g) {
-        for (int i = 0; i < width; i += tileSize) {
+        for (int i = 0; i < PANEL_WIDTH; i += TILE_SIZE) {
             g.drawLine(i, 0, i, height);
         }
 
-        for (int i = 0; i < height; i += tileSize) {
+        for (int i = 0; i < height; i += TILE_SIZE) {
             g.drawLine(0, i, width, i);
         }
     }
 
+    @SuppressWarnings("ConvertToTryWithResources")
     public void printLevel(String fileName) {
         Level level;
         if (state == GameState.EDITING) {

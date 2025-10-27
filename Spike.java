@@ -19,6 +19,9 @@ public class Spike {
         yArr[1] = y2;
         yArr[2] = y3;
 
+        this.col = x1 / GamePanel.TILE_SIZE;
+        this.row = y3 / GamePanel.TILE_SIZE;
+
         this.spike = new Polygon(xArr, yArr, 3);
         try {
             image = ImageIO.read(new File(imagePath));

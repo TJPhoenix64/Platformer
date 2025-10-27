@@ -29,8 +29,8 @@ public class Player extends Rectangle {
     boolean passedCheckpointSinceButtonPress = false;
 
     public Player() {
-        this.width = GamePanel.tileSize;
-        this.height = GamePanel.tileSize;
+        this.width = GamePanel.TILE_SIZE;
+        this.height = GamePanel.TILE_SIZE;
         this.x = 100;
         this.y = 100;
         this.lastCheckpointX = this.x;
@@ -48,8 +48,8 @@ public class Player extends Rectangle {
     }
 
     public void checkCheckpoints() {
-        int col = x / GamePanel.tileSize;
-        int row = y / GamePanel.tileSize;
+        int col = x / GamePanel.TILE_SIZE;
+        int row = y / GamePanel.TILE_SIZE;
         if (GamePanel.currentLevel.getCheckpoints().contains(new Checkpoint(row, col))) {
             GamePanel.passCheckpoint(new Checkpoint(row, col));
         }
