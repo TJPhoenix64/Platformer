@@ -72,7 +72,9 @@ public final class GamePanel extends JPanel implements Runnable {
 
     public void generateLevel() {
         currentLevel.addTile(new Tile(5, 5, false));
-        currentLevel.addSpike(new Spike(100, 400, 200, 400, 150, 300, "photos/grass.png"));
+        currentLevel.addSpike(new Spike(10, 6, 1, "photos/grass.png", 270.0));
+        currentLevel.addSpike(new Spike(10, 6, 1, "photos/grass.png", 0));
+        currentLevel.addSpike(new Spike(5, 5, 1, "photos/grass.png", 0));
         currentLevel.addCheckpoint(new Checkpoint(10, 10));
     }
 
