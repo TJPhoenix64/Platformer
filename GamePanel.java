@@ -85,12 +85,8 @@ public final class GamePanel extends JPanel implements Runnable {
         tyler = new Player();
     }
 
-    public void generateLevel() {
-        currentLevel.addTile(new Tile(5, 5, false));
-        currentLevel.addSpike(new Spike(10, 6, 1, "photos/grass.png", 270.0));
-        currentLevel.addSpike(new Spike(10, 6, 1, "photos/grass.png", 0));
-        currentLevel.addSpike(new Spike(5, 5, 1, "photos/grass.png", 0));
-        currentLevel.addCheckpoint(new Checkpoint(10, 10));
+    public void generateLevel(String fileName) {
+        currentLevel = generator.getContentsOfFile(fileName);
         for (Tile[] tiles : currentLevel.getBlocks()) {
             for (Tile t : tiles) {
                 if (t != null) {
@@ -107,6 +103,47 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
             }
 
+        }
+    }
+
+    public void generateLevels() {
+        levels.add(generator.getContentsOfFile("LEVEL1.txt"));
+        levels.add(generator.getContentsOfFile("LEVEL2.txt"));
+
+        // next do pattern of levels.add(generator.getContentsOfFile("LEVEL#.txt"));
+        // needs to be in order that you want to see them
+        currentLevel = levels.get(0);
+        updateSolidTiles(currentLevel);
+    }
+
+    /**
+     * updates the Hashset of solid tiles so that the isSolidTile method works
+     * 
+     * @param level the level that the hashset is based off of
+     */
+    public static void updateSolidTiles(Level level) {
+        for (Tile[] tiles : level.getBlocks()) {
+            for (Tile t : tiles) {
+                if (t != null) {
+                    solidTiles.add(new Point(t.col, t.row));
+                }
+            }
+        }
+        for (Spike[] spikes : level.getSpikes()) {
+            for (Spike s : spikes) {
+                if (s != null) {
+                    if (!solidTiles.contains(new Point(s.col, s.row))) {
+                        solidTiles.add(new Point(s.col, s.row));
+                    }
+                }
+            }
+        }
+        for (Checkpoint checkpoint : level.getCheckpoints()) {
+            if (!checkpoint.isTemp) {
+                if (!solidTiles.contains(new Point(checkpoint.col, checkpoint.row))) {
+                    solidTiles.add(new Point(checkpoint.col, checkpoint.row));
+                }
+            }
         }
     }
 
