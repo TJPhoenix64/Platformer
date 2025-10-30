@@ -189,11 +189,7 @@ public final class GamePanel extends JPanel implements Runnable {
                     drawHearts(g);
                 }
                 case EDITING -> {
-                    for (Tile[] tiles : editingLevel.getBlocks()) {
-                        for (Tile t : tiles) {
-                            t.draw(g);
-                        }
-                    }
+                    editingLevel.draw(g);
                     drawGrid(PANEL_WIDTH, PANEL_HEIGHT, g);
                 }
                 case MENU -> {
