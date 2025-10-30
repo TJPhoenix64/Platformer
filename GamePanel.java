@@ -59,7 +59,7 @@ public final class GamePanel extends JPanel implements Runnable {
         generateLevel();
         lastTimeEffectStarted = System.currentTimeMillis();
         playMusic = (state == GameState.PLAYING);
-        playMusic(playMusic);
+        playMusic();
         this.setFocusable(true);
         AL listener = new AL();
         this.addKeyListener(listener);
@@ -334,8 +334,8 @@ public final class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public static void playMusic(boolean playMusic) {
-        if (playMusic) {
+    public static void playMusic() {
+        if (state == GameState.PLAYING) {
             bgMusic.playMusic("music/background.wav", true, musicVolume);
         } else {
             bgMusic.stopMusic();
@@ -438,7 +438,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 if (playMusic) {
                     bgMusic.stopMusic();
                 } else {
-                    playMusic(playMusic);
+                    playMusic();
                 }
             }
 
@@ -484,6 +484,7 @@ public final class GamePanel extends JPanel implements Runnable {
                         if (playButton != null) {
                             if (rect.getBounds().equals(mainMenuButtons.get(0).getBounds())) {
                                 state = GameState.PLAYING;
+                                playMusic();
                             }
                             if (rect.getBounds().equals(mainMenuButtons.get(1).getBounds())) {
                                 state = GameState.PAUSED;
