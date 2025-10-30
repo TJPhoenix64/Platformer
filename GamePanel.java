@@ -395,6 +395,14 @@ public final class GamePanel extends JPanel implements Runnable {
                     playerHurt = true;
                 }
 
+                if (key == KeyEvent.VK_A) {
+                    if (currentLevelNum != levels.size() - 1) {
+                        currentLevelNum++;
+                        currentLevel = levels.get(currentLevelNum);
+                        updateSolidTiles(currentLevel);
+                    }
+                }
+
             } else if (state == GameState.EDITING) {
                 if (key == KeyEvent.VK_N) {
                     System.out.println("numTiles: " + editingLevel.getNumTiles());
