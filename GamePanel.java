@@ -368,8 +368,8 @@ public final class GamePanel extends JPanel implements Runnable {
 
     public class AL implements KeyListener, MouseListener, MouseMotionListener {
 
-        int prevRow;
-        int prevCol;
+        int prevRow = -1;
+        int prevCol = -1;
 
         @Override
         public void keyPressed(KeyEvent e) {
