@@ -504,15 +504,33 @@ public final class GamePanel extends JPanel implements Runnable {
 
         @Override
         public void mousePressed(MouseEvent e) {
+            if (state != GameState.EDITING) {
+                return;
+            }
+            System.out.println("MousePressed");
             int x = e.getPoint().x;
             int y = e.getPoint().y;
             int row = y / TILE_SIZE;
             int col = x / TILE_SIZE;
-            if (editingLevel.contains(new Tile(row, col, true))) {
-                editingLevel.remove(new Tile(row, col, true));
+            if (editingLevel.containsTemp(col, row)) {
+                editingLevel.remove(col, row);
             }
-            if (!editingLevel.contains(new Tile(row, col, false))) {
-                editingLevel.addTile(new Tile(row, col, false));
+            if (!isSolidTile(col, row)) {
+                switch (type) {
+                    case TILES:
+                        editingLevel.addObject(new Tile(col, row, false));
+                        break;
+                    case SPIKES:
+                        editingLevel.addObject(new Spike(col, row, tempSpikeRotation, false));
+                        break;
+                    case CHECKPOINTS:
+                        editingLevel.addObject(new Checkpoint(col, row, false));
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+            } else {
+                editingLevel.remove(col, row);
             }
         }
 
