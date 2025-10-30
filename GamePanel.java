@@ -41,7 +41,8 @@ public final class GamePanel extends JPanel implements Runnable {
     ArrayList<Level> levels = new ArrayList<>();
     static int numHearts = 3;
     boolean playMusic;
-    static float musicVolume = 0.5f;
+    static float musicVolume = 0.8f;
+    static float tempMusicVolume = 0.8f;
     Long lastTimeEffectStarted;
     double invincibilitySeconds = 1.5;
 
