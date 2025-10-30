@@ -48,6 +48,8 @@ public final class GamePanel extends JPanel implements Runnable {
     Long lastTimeEffectStarted;
     double invincibilitySeconds = 1.5;
 
+    static int tempSpikeRotation = 0;
+
     static boolean playerHurt = false;
 
     private static GameState state = GameState.MENU;
