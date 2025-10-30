@@ -426,7 +426,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
             // change this to the filename that you want the program to make
             if (key == KeyEvent.VK_P) {
-                printLevel("HELLO");
+                printLevel("LEVEL2");
             }
 
             if (key == KeyEvent.VK_4) {
