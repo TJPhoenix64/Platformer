@@ -152,4 +152,43 @@ public class Level {
             c.draw(g);
         }
     }
+
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+
+        s.append("Tiles:");
+        for (Tile[] tiles : this.getBlocks()) {
+            for (Tile t : tiles) {
+                if (t != null && !t.isTemp) {
+                    s.append(t).append("_");
+                }
+            }
+        }
+        if (s.toString().charAt(s.length() - 1) != ':') {
+            s.deleteCharAt(s.length() - 1);
+        }
+        s.append("\nSpikes:");
+        for (Spike[] spikes : this.getSpikes()) {
+            for (Spike spike : spikes) {
+                if (spike != null && !spike.isTemp) {
+                    s.append(spike).append("_");
+                }
+            }
+        }
+        if (s.toString().charAt(s.length() - 1) != ':') {
+            s.deleteCharAt(s.length() - 1);
+        }
+        s.append("\nCheckpoints:");
+        for (Checkpoint checkpoint : this.getCheckpoints()) {
+            if (!checkpoint.isTemp) {
+                s.append(checkpoint).append("_");
+            }
+        }
+        if (s.toString().charAt(s.length() - 1) != ':') {
+            s.deleteCharAt(s.length() - 1);
+        }
+
+        return s.toString();
+
+    }
 }
