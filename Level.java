@@ -103,32 +103,28 @@ public class Level {
         return false;
     }
 
-    public void remove(Object obj) {
-        if (obj instanceof Tile tile) {
-            for (Tile[] tiles : blocks) {
-                for (Tile t : tiles) {
-                    if (t != null) {
-                        if (t.equals(tile)) {
-                            blocks[tile.col][tile.row] = null;
-                            return;
-                        }
-                    }
-                }
-            }
-        } else if (obj instanceof Spike spike) {
-            for (Spike[] points : spikes) {
-                for (Spike s : points) {
-                    if (s != null) {
-                        if (s.equals(spike)) {
-                            spikes[spike.col][spike.row] = null;
-                            return;
-                        }
-                    }
-                }
-            }
-        } else if (obj instanceof Checkpoint checkpoint) {
-            checkpoints.remove(checkpoint);
+    public boolean contains(int col, int row) {
+        if (blocks[col][row] != null) {
+            return true;
         }
+        if (spikes[col][row] != null) {
+            return true;
+        }
+        return checkpoints.contains(new Checkpoint(col, row, false))
+                || checkpoints.contains(new Checkpoint(col, row, true));
+    }
+
+    /**
+     * removes any objects in that grid tile
+     * 
+     * @param col
+     * @param row
+     */
+    public void remove(int col, int row) {
+        blocks[col][row] = null;
+        spikes[col][row] = null;
+        checkpoints.remove(new Checkpoint(col, row));
+        checkpoints.remove(new Checkpoint(col, row, true));
     }
 
     // Additional logic for your level
