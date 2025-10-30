@@ -273,9 +273,31 @@ public final class GamePanel extends JPanel implements Runnable {
             FileWriter writer = new FileWriter(fileName + ".txt");
             StringBuilder s = new StringBuilder();
 
+            s.append("Tiles:");
             for (Tile[] tiles : level.getBlocks()) {
-                for (Tile t : tiles)
-                    s.append("(").append(t).append(")_");
+                for (Tile t : tiles) {
+                    if (t != null && !t.isTemp) {
+                        s.append(t).append("_");
+                    }
+                }
+            }
+
+            s.deleteCharAt(s.length() - 1);
+            s.append("\nSpikes:");
+            for (Spike[] spikes : level.getSpikes()) {
+                for (Spike spike : spikes) {
+                    if (spike != null && !spike.isTemp) {
+                        s.append(spike).append("_");
+                    }
+                }
+            }
+
+            s.deleteCharAt(s.length() - 1);
+            s.append("\nCheckpoints:");
+            for (Checkpoint checkpoint : level.getCheckpoints()) {
+                if (!checkpoint.isTemp) {
+                    s.append(checkpoint).append("_");
+                }
             }
             s.deleteCharAt(s.length() - 1);
             writer.write(s.toString());
