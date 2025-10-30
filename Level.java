@@ -18,22 +18,20 @@ public class Level {
         clear();
     }
 
-    public void addTile(Tile tile) {
-        blocks[tile.col][tile.row] = tile;
-        numTiles++;
+    public void addObject(Object obj) {
         numObjects++;
-    }
-
-    public void addSpike(Spike spike) {
-        spikes[spike.col][spike.row] = spike;
-        numSpikes++;
-        numObjects++;
-    }
-
-    public void addCheckpoint(Checkpoint checkpoint) {
-        checkpoints.add(checkpoint);
-        numCheckpoints++;
-        numObjects++;
+        if (obj instanceof Tile tile) {
+            blocks[tile.col][tile.row] = tile;
+            numTiles++;
+        } else if (obj instanceof Spike spike) {
+            spikes[spike.col][spike.row] = spike;
+            numSpikes++;
+        } else if (obj instanceof Checkpoint checkpoint) {
+            checkpoints.add(checkpoint);
+            numCheckpoints++;
+        } else {
+            numObjects--;
+        }
     }
 
     public Tile[][] getBlocks() {
