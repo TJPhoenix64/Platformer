@@ -70,6 +70,28 @@ public class Level {
 
     }
 
+    public Thing get(int col, int row) {
+        if (blocks[col][row] != null) {
+            return blocks[col][row];
+        }
+        if (spikes[col][row] != null) {
+            return spikes[col][row];
+        }
+        if (checkpoints.contains(new Checkpoint(col, row, false))) {
+            return new Checkpoint(col, row, false);
+        }
+        if (checkpoints.contains(new Checkpoint(col, row, true))) {
+            return new Checkpoint(col, row, true);
+        }
+        return null;
+    }
+
+    public boolean containsTemp(int col, int row) {
+        Thing thing = get(col, row);
+        // System.out.println("Thing: " + thing);
+        return (thing != null && thing.isTemp);
+    }
+
     public boolean contains(Object obj) {
         if (obj instanceof Tile tile) {
             for (Tile[] tiles : blocks) {
