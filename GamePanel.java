@@ -342,6 +342,24 @@ public final class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * checks if there is an object in that grid location: x, y
+     * 
+     * @param col
+     * @param row
+     * @return
+     */
+    public static boolean isSolidTile(int col, int row) {
+        if (!solidTiles.isEmpty()) {
+            return solidTiles.contains(new Point(col, row));
+        }
+        return false;
+    }
+
+    public boolean containsBlock() {
+        return true;
+    }
+
     public class AL implements KeyListener, MouseListener, MouseMotionListener {
 
         int prevRow;
