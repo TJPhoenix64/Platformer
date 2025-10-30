@@ -94,32 +94,11 @@ public class Level {
 
     public boolean contains(Object obj) {
         if (obj instanceof Tile tile) {
-            for (Tile[] tiles : blocks) {
-                for (Tile t : tiles) {
-                    if (t != null) {
-                        if (t.equals(tile)) {
-                            return true;
-                        }
-                    }
-                }
-            }
+            return (blocks[tile.col][tile.row] == tile);
         } else if (obj instanceof Spike spike) {
-            for (Spike[] points : spikes) {
-                for (Spike s : points) {
-                    if (s != null) {
-                        if (s.equals(spike)) {
-                            return true;
-                        }
-                    }
-                }
-            }
+            return (spikes[spike.col][spike.row] == spike);
         } else if (obj instanceof Checkpoint checkpoint) {
-            for (Checkpoint c : checkpoints) {
-                if (c.equals(checkpoint)) {
-                    return true;
-                }
-            }
-
+            return checkpoints.contains(checkpoint);
         }
         return false;
     }
