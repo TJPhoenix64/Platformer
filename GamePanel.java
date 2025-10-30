@@ -11,6 +11,14 @@ enum GameState {
     MENU, PLAYING, PAUSED, EDITING
 }
 
+enum DrawingType {
+    TILES, SPIKES, CHECKPOINTS;
+
+    public DrawingType next() {
+        return values()[(ordinal() + 1) % values().length];
+    }
+}
+
 public final class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
@@ -39,6 +47,8 @@ public final class GamePanel extends JPanel implements Runnable {
     static boolean playerHurt = false;
 
     private static GameState state = GameState.MENU;
+
+    private static DrawingType type = DrawingType.TILES;
 
     static MusicPlayer bgMusic = new MusicPlayer();
 
