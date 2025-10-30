@@ -56,7 +56,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
     public GamePanel() {
         makePlayer();
-        generateLevel();
+        generateLevels();
         lastTimeEffectStarted = System.currentTimeMillis();
         playMusic = (state == GameState.PLAYING);
         playMusic();
