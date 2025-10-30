@@ -22,6 +22,7 @@ enum DrawingType {
 public final class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
+    LevelGenerator generator = new LevelGenerator();
     static final int PANEL_WIDTH = 1200;
     static final int PANEL_HEIGHT = 800;
     static final Dimension SCREEN_SIZE = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
