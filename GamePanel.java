@@ -441,7 +441,9 @@ public final class GamePanel extends JPanel implements Runnable {
 
             if (key == KeyEvent.VK_SPACE && state != GameState.PLAYING) {
                 state = GameState.PLAYING;
-                playMusic(playMusic);
+                currentLevel = levels.get(currentLevelNum);
+                updateSolidTiles(currentLevel);
+                playMusic();
             }
             if (key == KeyEvent.VK_E) {
                 state = GameState.EDITING;
