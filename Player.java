@@ -208,7 +208,7 @@ public class Player extends Rectangle {
 
         for (int yPos = topTile - 1; yPos <= bottomTile + 1; yPos++) {
             for (int xPos = leftTile - 1; xPos <= rightTile + 1; xPos++) {
-                if (isSolidTile(xPos, yPos)) {
+                if (GamePanel.isSolidTile(xPos, yPos)) {
                     nearbySpikes.clear();
                     nearbyTiles.clear();
                     if (GamePanel.currentLevel.getBlocks()[xPos][yPos] != null) {
@@ -244,13 +244,6 @@ public class Player extends Rectangle {
 
         this.x += dX;
         this.y += dY;
-    }
-
-    public boolean isSolidTile(int col, int row) {
-        if (!GamePanel.solidTiles.isEmpty()) {
-            return GamePanel.solidTiles.contains(new Point(col, row));
-        }
-        return false;
     }
 
     public void draw(Graphics g) {
