@@ -405,7 +405,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
             } else if (state == GameState.EDITING) {
                 if (key == KeyEvent.VK_N) {
-                    System.out.println("numTiles: " + editingLevel.getNumTiles());
+                    System.out.println("numTiles: " + editingLevel.getNumObjects());
                 }
 
                 if (key == KeyEvent.VK_D) {
