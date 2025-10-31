@@ -330,10 +330,12 @@ public final class GamePanel extends JPanel implements Runnable {
             lastTime = now;
             if (delta >= 1) {
                 repaint();
-                tyler.updatePosition();
-                if (playerHurt) {
-                    playerHurt = false;
-                    playerHurt();
+                if (state == GameState.PLAYING) {
+                    tyler.updatePosition();
+                    if (playerHurt) {
+                        playerHurt = false;
+                        playerHurt();
+                    }
                 }
                 delta--;
             }
