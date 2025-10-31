@@ -364,10 +364,6 @@ public final class GamePanel extends JPanel implements Runnable {
         return false;
     }
 
-    public boolean containsBlock() {
-        return true;
-    }
-
     public class AL implements KeyListener, MouseListener, MouseMotionListener {
 
         int prevRow = -1;
