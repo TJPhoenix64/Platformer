@@ -13,20 +13,26 @@ public class Player extends Rectangle {
     boolean isJumping;
     boolean jumpReleased = true;
     Image image;
-    Long startJumpTime;
-    Long endJumpTime;
+    Long startJumpTime = 0L;
+    Long endJumpPressedTime = 0L;
+    Long endAirTime = 0L;
+
+    int totalAirTime;
+
     double gravity = 0.05;
     double initialVeloY;
     boolean moveLeftPressed;
     boolean moveRightPressed;
     boolean moveLeftReleased;
     boolean moveRightReleased;
-    Long endLeftTime;
-    Long endRightTime;
+    Long endLeftTime = 0L;
+    Long endRightTime = 0L;
     int initialVeloX = 10;
     int lastCheckpointX;
     int lastCheckpointY;
     boolean passedCheckpointSinceButtonPress = false;
+    double xVeloAtJump = 0;
+    double currentXVelo = 0;
 
     ArrayList<Tile> nearbyTiles = new ArrayList<>();
     ArrayList<Spike> nearbySpikes = new ArrayList<>();
@@ -107,11 +113,14 @@ public class Player extends Rectangle {
         startJumpTime = startTime;
         isJumping = true;
         jumpReleased = false;
-        endJumpTime = 0L;
+        endJumpPressedTime = 0L;
+        endAirTime = 0L;
+        xVeloAtJump = currentXVelo;
+        totalAirTime = 0;
     }
 
     public void jumpReleased(Long time) {
-        endJumpTime = time;
+        endJumpPressedTime = time;
         jumpReleased = true;
     }
 
@@ -119,7 +128,7 @@ public class Player extends Rectangle {
         double num = 10;
         double diffMilis;
         if (jumpReleased) {
-            diffMilis = getDiffMillis(startJumpTime, endJumpTime);
+            diffMilis = getDiffMillis(startJumpTime, endAirTime);
         } else {
             Long currentTime = System.nanoTime();
             diffMilis = getDiffMillis(startJumpTime, currentTime);
@@ -133,9 +142,14 @@ public class Player extends Rectangle {
     }
 
     public int getDiffMillis(Long startTime, Long endTime) {
-        Long diff = endTime - startTime;
-        int diffMilis = (int) (diff / 1000000);
-        return diffMilis;
+        if (startTime == null || endTime == null)
+            return 0;
+        if (startTime == 0L || endTime == 0L)
+            return 0;
+        long diff = endTime - startTime;
+        if (diff <= 0)
+            return 0;
+        return (int) (diff / 1000000);
     }
 
     public void updatePosition() {
@@ -149,9 +163,20 @@ public class Player extends Rectangle {
             deltaY = (int) (gravity * timeSinceJumpStarted + initialVeloY);
             // System.out.println("dy: " + dy);
             // ensures the block does not go below 500
+            System.out.println(this.y + deltaY);
             if (this.y + deltaY > 500) {
                 deltaY = 500 - this.y;
-                isJumping = false; // mark player as landed
+                if (isJumping) {
+                    isJumping = false;
+                    endAirTime = System.nanoTime();
+                    totalAirTime = getDiffMillis(startJumpTime, endAirTime);
+                }
+            }
+        } else {
+            if (startJumpTime != null) {
+                if (endAirTime == 0L && startJumpTime != 0L) {
+                    endAirTime = System.nanoTime();
+                }
             }
         }
 
@@ -159,38 +184,48 @@ public class Player extends Rectangle {
             deltaX = -initialVeloX;
         } else if (moveRightPressed) {
             deltaX = initialVeloX;
+        } else if (moveLeftReleased || moveRightReleased) {
+            deltaX = handleXVelo(currentTime);
+        }
+
+        changePosition(deltaX, deltaY);
+
+    }
+
+    public int handleXVelo(Long currentTime) {
+
+        if (this.isJumping) {
+            return (int) xVeloAtJump;
         }
 
         if (moveLeftReleased && !passedCheckpointSinceButtonPress) {
             int timeSinceReleased = getDiffMillis(endLeftTime, currentTime);
-            if (timeSinceReleased < 500) {
-                if (this.isJumping) {
-                    deltaX = -initialVeloX;
-                    endLeftTime = System.nanoTime();
-                } else {
-                    deltaX = -(initialVeloX - (timeSinceReleased / 50));
-                }
-            } else {
-                moveLeftReleased = false;
-            }
-        }
 
-        if (moveRightReleased && !passedCheckpointSinceButtonPress) {
-            int timeSinceReleased = getDiffMillis(endRightTime, currentTime);
-            if (timeSinceReleased < 500) {
-                if (this.isJumping) {
-                    deltaX = initialVeloX;
-                    endRightTime = System.nanoTime();
-                } else {
-                    deltaX = (initialVeloX - (timeSinceReleased / 50));
+            if (timeSinceReleased < 500 + totalAirTime) {
+                int effectiveTime = timeSinceReleased - totalAirTime;
+                if (effectiveTime < 0) {
+                    effectiveTime = 0;
                 }
+                return -(initialVeloX - (effectiveTime / 50));
             } else {
                 moveRightReleased = false;
             }
         }
 
-        changePosition(deltaX, deltaY);
+        if (moveRightReleased && !passedCheckpointSinceButtonPress) {
+            int timeSinceReleased = getDiffMillis(endRightTime, currentTime);
 
+            if (timeSinceReleased < 500 + totalAirTime) {
+                int effectiveTime = timeSinceReleased - totalAirTime;
+                if (effectiveTime < 0) {
+                    effectiveTime = 0;
+                }
+                return (initialVeloX - (effectiveTime / 50));
+            } else {
+                moveRightReleased = false;
+            }
+        }
+        return 0;
     }
 
     /**
@@ -241,7 +276,7 @@ public class Player extends Rectangle {
                 GamePanel.playerHurt = true;
             }
         }
-
+        currentXVelo = dX;
         this.x += dX;
         this.y += dY;
     }
