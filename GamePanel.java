@@ -180,9 +180,9 @@ public final class GamePanel extends JPanel implements Runnable {
 
     public void drawHearts(Graphics g) {
         int x = 50;
-        int y = 100;
+        int y = 50;
         for (int i = 0; i < numHearts; i++) {
-            g.drawImage(heart, x + i * 50, y, this);
+            g.drawImage(heart, x + i * 50, y, (int) (heart.getWidth() * 2.5), (int) (heart.getHeight() * 2.5), this);
         }
     }
 
