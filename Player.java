@@ -1,4 +1,3 @@
-
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -6,10 +5,6 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Player extends Rectangle {
-    int width;
-    int height;
-    int x;
-    int y;
     boolean isJumping;
     boolean jumpReleased = true;
     Image image;
