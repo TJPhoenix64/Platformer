@@ -33,10 +33,10 @@ public class Player extends Rectangle {
     ArrayList<Spike> nearbySpikes = new ArrayList<>();
 
     public Player() {
-        this.width = GamePanel.TILE_SIZE;
-        this.height = GamePanel.TILE_SIZE;
-        this.x = 100;
-        this.y = 100;
+        width = GamePanel.TILE_SIZE;
+        height = GamePanel.TILE_SIZE;
+        x = 100;
+        y = 500;
         this.lastCheckpointX = this.x;
         this.lastCheckpointY = this.y;
 
