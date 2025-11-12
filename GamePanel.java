@@ -225,8 +225,6 @@ public final class GamePanel extends JPanel implements Runnable {
             switch (state) {
                 case PLAYING -> {
                     currentLevel.draw(g);
-                    // line
-                    g.drawRect(0, 500 + tyler.height, PANEL_WIDTH, 1);
                     // player
                     tyler.draw(g);
                     drawHearts(g);
