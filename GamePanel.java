@@ -404,6 +404,18 @@ public final class GamePanel extends JPanel implements Runnable {
                     }
                 }
 
+                if (key == KeyEvent.VK_T) {
+                    for (Point point : solidTiles) {
+                        System.out.println("Point: " + point.x + " " + point.y);
+                    }
+                }
+
+                if (key == KeyEvent.VK_G) {
+                    for (Tile t : tyler.nearbyTiles) {
+                        System.out.println(t);
+                    }
+                }
+
             } else if (state == GameState.EDITING) {
                 if (key == KeyEvent.VK_N) {
                     System.out.println("numTiles: " + editingLevel.getNumObjects());
