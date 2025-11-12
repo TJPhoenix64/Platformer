@@ -132,6 +132,7 @@ public final class GamePanel extends JPanel implements Runnable {
      * @param level the level that the hashset is based off of
      */
     public static void updateSolidTiles(Level level) {
+        solidTiles.clear();
         for (Tile[] tiles : level.getBlocks()) {
             for (Tile t : tiles) {
                 if (t != null) {
