@@ -58,6 +58,8 @@ public final class GamePanel extends JPanel implements Runnable {
 
     static MusicPlayer bgMusic = new MusicPlayer();
 
+    File folder = new File("levels");
+
     // final Long startTime;
 
     public GamePanel() {
@@ -113,9 +115,11 @@ public final class GamePanel extends JPanel implements Runnable {
     }
 
     public void generateLevels() {
-        levels.add(generator.getContentsOfFile("LEVEL1.txt"));
-        levels.add(generator.getContentsOfFile("LEVEL2.txt"));
+        File[] files = folder.listFiles();
 
+        for (int i = 1; i < files.length + 1; i++) {
+            levels.add(generator.getContentsOfFile("levels/LEVEL" + i + ".txt"));
+        }
         // next do pattern of levels.add(generator.getContentsOfFile("LEVEL#.txt"));
         // needs to be in order that you want to see them
         currentLevel = levels.get(0);
@@ -422,7 +426,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
             // change this to the filename that you want the program to make
             if (key == KeyEvent.VK_P) {
-                printLevel("LEVEL2");
+                printLevel("levels/LEVEL2");
             }
 
             if (key == KeyEvent.VK_4) {
