@@ -193,6 +193,13 @@ public class Player extends Rectangle {
             teleport(900, 500);
         }
 
+        if (deltaX == 0 && deltaY == 0) {
+            setImage(redImage);
+        } else {
+            setImage(orangeImage);
+        }
+
+        changePosition(deltaX, deltaY);
     }
 
     public int handleXVelo(Long currentTime) {
