@@ -23,6 +23,7 @@ public abstract class Thing {
     public Thing(int col, int row) {
         this.row = row;
         this.col = col;
+        this.isTemp = false;
         x = col * GamePanel.TILE_SIZE;
         y = row * GamePanel.TILE_SIZE;
     }
@@ -56,7 +57,6 @@ public abstract class Thing {
 
     @Override
     public int hashCode() {
-        // It's crucial to override hashCode() whenever equals() is overridden
         return Objects.hash(row, col, isTemp);
     }
 
