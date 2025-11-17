@@ -183,7 +183,15 @@ public class Player extends Rectangle {
             deltaX = handleXVelo(currentTime);
         }
 
-        changePosition(deltaX, deltaY);
+        if (x > GamePanel.PANEL_WIDTH - width) {
+            GamePanel.advanceLevel();
+            teleport(100, 500);
+        }
+
+        if (x < 0) {
+            GamePanel.rewindLevel();
+            teleport(900, 500);
+        }
 
     }
 
