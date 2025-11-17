@@ -195,8 +195,8 @@ public class Level {
             s.deleteCharAt(s.length() - 1);
         }
         s.append("\nSpikes:");
-        for (Spike[] spikes : this.getSpikes()) {
-            for (Spike spike : spikes) {
+        for (Spike[] points : this.getSpikes()) {
+            for (Spike spike : points) {
                 if (spike != null && !spike.isTemp) {
                     s.append(spike).append("_");
                 }
