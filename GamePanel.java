@@ -181,7 +181,19 @@ public final class GamePanel extends JPanel implements Runnable {
     }
 
     public void generatePauseMenu() {
-
+        Image playButton = null;
+        Image settingsButton = null;
+        try {
+            playButton = ImageIO.read(new File("photos/PlayButton.png"));
+            settingsButton = ImageIO.read(new File("photos/orangeBackground.jpg"));
+        } catch (IOException e) {
+        }
+        if (playButton != null) {
+            pauseMenuButtons.add(new ImageRect(playButton, 300, 200, 342, 152));
+        }
+        if (settingsButton != null) {
+            pauseMenuButtons.add(new ImageRect(settingsButton, 300, 400, 342, 152));
+        }
     }
 
     public static void passCheckpoint(Checkpoint c) {
