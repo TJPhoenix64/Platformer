@@ -63,6 +63,23 @@ public class LevelGenerator {
                     }
                 }
             }
+
+            if (sc.hasNextLine()) {
+                String fourthLine = sc.nextLine();
+                // System.out.println("Got checkpoints");
+                if (fourthLine.length() > 5) {
+                    fourthLine = fourthLine.substring(6);
+                    System.out.println(fourthLine);
+                    String[] coins = fourthLine.split("_");
+                    for (String coin : coins) {
+                        String[] items = coin.split(",");
+                        col = Integer.parseInt(items[0]);
+                        row = Integer.parseInt(items[1]);
+                        Coin c = new Coin(col, row);
+                        level.addObject(c);
+                    }
+                }
+            }
         } catch (Exception e) {
             System.out.println("Oh No! something went wrong with the file");
         }

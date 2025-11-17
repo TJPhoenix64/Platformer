@@ -12,7 +12,7 @@ enum GameState {
 }
 
 enum DrawingType {
-    TILES, SPIKES, CHECKPOINTS;
+    TILES, SPIKES, CHECKPOINTS, COINS;
 
     public DrawingType next() {
         return values()[(ordinal() + 1) % values().length];
@@ -154,6 +154,12 @@ public final class GamePanel extends JPanel implements Runnable {
                 if (!solidTiles.contains(new Point(checkpoint.col, checkpoint.row))) {
                     solidTiles.add(new Point(checkpoint.col, checkpoint.row));
                 }
+            }
+        }
+
+        for (Coin coin : level.getCoins()) {
+            if (!solidTiles.contains(new Point(coin.col, coin.row))) {
+                solidTiles.add(new Point(coin.col, coin.row));
             }
         }
     }
@@ -306,6 +312,14 @@ public final class GamePanel extends JPanel implements Runnable {
             for (Checkpoint checkpoint : level.getCheckpoints()) {
                 if (!checkpoint.isTemp) {
                     s.append(checkpoint).append("_");
+                }
+            }
+            s.deleteCharAt(s.length() - 1);
+
+            s.append("\nCoins:");
+            for (Coin coin : level.getCoins()) {
+                if (!coin.isTemp) {
+                    s.append(coin).append("_");
                 }
             }
             s.deleteCharAt(s.length() - 1);
@@ -467,7 +481,6 @@ public final class GamePanel extends JPanel implements Runnable {
             if (key == KeyEvent.VK_ESCAPE) {
                 state = GameState.PAUSED;
                 bgMusic.stopMusic();
-
             }
             if (key == KeyEvent.VK_M) {
                 state = GameState.MENU;
@@ -569,8 +582,11 @@ public final class GamePanel extends JPanel implements Runnable {
                     case CHECKPOINTS:
                         editingLevel.addObject(new Checkpoint(col, row, false));
                         break;
+                    case COINS:
+                        editingLevel.addObject(new Coin(col, row, false));
+                        break;
                     default:
-                        throw new AssertionError();
+                        break;
                 }
             } else {
                 editingLevel.remove(col, row);
@@ -617,6 +633,9 @@ public final class GamePanel extends JPanel implements Runnable {
                         case CHECKPOINTS:
                             editingLevel.addObject(new Checkpoint(col, row, true));
                             break;
+                        case COINS:
+                            editingLevel.addObject(new Coin(col, row, true));
+                            break;
                         default:
                             break;
                     }
@@ -656,6 +675,9 @@ public final class GamePanel extends JPanel implements Runnable {
                             break;
                         case CHECKPOINTS:
                             editingLevel.addObject(new Checkpoint(col, row, false));
+                            break;
+                        case COINS:
+                            editingLevel.addObject(new Coin(col, row, false));
                             break;
                         default:
                             break;
