@@ -8,14 +8,19 @@ public class Player extends Rectangle {
     boolean isJumping;
     boolean jumpReleased = true;
     Image image;
+    Image redImage;
+    Image orangeImage;
     Long startJumpTime = 0L;
     Long endJumpPressedTime = 0L;
     Long endAirTime = 0L;
 
     int totalAirTime;
 
-    double gravity = 0.05;
-    double initialVeloY;
+    double mediumGravity = 0.035;
+    double weakGravity = 0.02;
+    double strongGravity = 0.05;
+    double currentGravity;
+    double initialVeloY = -15;
     boolean moveLeftPressed;
     boolean moveRightPressed;
     boolean moveLeftReleased;
@@ -28,6 +33,9 @@ public class Player extends Rectangle {
     boolean passedCheckpointSinceButtonPress = false;
     double xVeloAtJump = 0;
     double currentXVelo = 0;
+    double currentYVelo = 0;
+
+    int numCoins = 15;
 
     ArrayList<Tile> nearbyTiles = new ArrayList<>();
     ArrayList<Spike> nearbySpikes = new ArrayList<>();
@@ -59,20 +67,16 @@ public class Player extends Rectangle {
         if (GamePanel.currentLevel.getCheckpoints().contains(new Checkpoint(row, col))) {
             GamePanel.passCheckpoint(new Checkpoint(row, col));
         }
-
     }
 
     public Rectangle getPlayerRect() {
         return new Rectangle(this.x, this.y, this.width, this.height);
     }
 
-    /**
-     * this teleports the player, it should only be used for when they take damage
-     * and reset back to the last checkpoint
-     * 
-     * @param x the x-pos
-     * @param y the y-pos
-     */
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
     public void teleport(int x, int y) {
         this.x = x;
         this.y = y;
@@ -96,14 +100,12 @@ public class Player extends Rectangle {
         this.endLeftTime = timeReleased;
         this.moveLeftPressed = false;
         this.moveLeftReleased = true;
-        this.endRightTime = 0L;
     }
 
     public void moveRightReleased(Long timeReleased) {
         this.endRightTime = timeReleased;
         this.moveRightPressed = false;
         this.moveRightReleased = true;
-        this.endLeftTime = 0L;
     }
 
     public void jump(Long startTime) {
@@ -154,29 +156,14 @@ public class Player extends Rectangle {
         int deltaY = 0;
         checkCheckpoints();
         Long currentTime = System.nanoTime();
+
+        // Vertical
         if (isJumping) {
             int timeSinceJumpStarted = getDiffMillis(startJumpTime, currentTime);
-            initialVeloY = getInitialVeloY();
-            deltaY = (int) (gravity * timeSinceJumpStarted + initialVeloY);
-            // System.out.println("dy: " + dy);
-            // ensures the block does not go below 500
-            System.out.println(this.y + deltaY);
-            if (this.y + deltaY > 500) {
-                deltaY = 500 - this.y;
-                if (isJumping) {
-                    isJumping = false;
-                    endAirTime = System.nanoTime();
-                    totalAirTime = getDiffMillis(startJumpTime, endAirTime);
-                }
-            }
-        } else {
-            if (startJumpTime != null) {
-                if (endAirTime == 0L && startJumpTime != 0L) {
-                    endAirTime = System.nanoTime();
-                }
-            }
+            deltaY = (int) (mediumGravity * timeSinceJumpStarted + initialVeloY);
         }
 
+        // Horizontal
         if (moveLeftPressed) {
             deltaX = -initialVeloX;
         } else if (moveRightPressed) {
@@ -205,92 +192,164 @@ public class Player extends Rectangle {
     }
 
     public int handleXVelo(Long currentTime) {
-
-        if (this.isJumping) {
+        // In-air X-velocity remains constant
+        if (isJumping)
             return (int) xVeloAtJump;
-        }
 
+        // Ground deceleration
         if (moveLeftReleased && !passedCheckpointSinceButtonPress) {
-            int timeSinceReleased = getDiffMillis(endLeftTime, currentTime);
-
-            if (timeSinceReleased < 500 + totalAirTime) {
-                int effectiveTime = timeSinceReleased - totalAirTime;
-                if (effectiveTime < 0) {
-                    effectiveTime = 0;
+            if (endLeftTime != 0L) {
+                if (endLeftTime > endAirTime) {
+                    int timeSinceReleased = getDiffMillis(endLeftTime, currentTime);
+                    int num = -(int) (initialVeloX - (timeSinceReleased / 70));
+                    if (num < 0) {
+                        return num;
+                    } else {
+                        moveLeftReleased = false;
+                        endLeftTime = 0L;
+                    }
+                } else {
+                    int timeSinceReleased = getDiffMillis(endAirTime, currentTime);
+                    int num = (int) ((timeSinceReleased / 70) + xVeloAtJump);
+                    if (num < 0) {
+                        return num;
+                    } else {
+                        moveLeftReleased = false;
+                        endAirTime = 0L;
+                    }
                 }
-                return -(initialVeloX - (effectiveTime / 50));
-            } else {
-                moveRightReleased = false;
             }
         }
 
         if (moveRightReleased && !passedCheckpointSinceButtonPress) {
-            int timeSinceReleased = getDiffMillis(endRightTime, currentTime);
-
-            if (timeSinceReleased < 500 + totalAirTime) {
-                int effectiveTime = timeSinceReleased - totalAirTime;
-                if (effectiveTime < 0) {
-                    effectiveTime = 0;
+            if (endRightTime != 0L) {
+                int timeSinceReleased = getDiffMillis(endRightTime, currentTime);
+                if (timeSinceReleased < 500) {
+                    return (initialVeloX - (timeSinceReleased / 50));
+                } else {
+                    moveRightReleased = false;
+                    endRightTime = 0L;
                 }
-                return (initialVeloX - (effectiveTime / 50));
-            } else {
-                moveRightReleased = false;
             }
         }
+
         return 0;
     }
 
-    /**
-     * this handles changing the position, it also handles collisions too
-     * 
-     * @param dX
-     * @param dY
-     */
     public void changePosition(int dX, int dY) {
         int tileSize = GamePanel.TILE_SIZE;
-        int leftTile = this.x / tileSize; // left edge of player
-        int rightTile = (this.x + this.width) / tileSize; // right edge of player
-        int topTile = this.y / tileSize; // top edge of player
-        int bottomTile = (this.y + this.height) / tileSize; // bottom edge of player
+        int leftTile = this.x / tileSize;
+        int rightTile = (this.x + this.width) / tileSize;
+        int topTile = this.y / tileSize;
+        int bottomTile = (this.y + this.height) / tileSize;
 
+        nearbyTiles.clear();
+        nearbySpikes.clear();
         for (int yPos = topTile - 1; yPos <= bottomTile + 1; yPos++) {
             for (int xPos = leftTile - 1; xPos <= rightTile + 1; xPos++) {
                 if (GamePanel.isSolidTile(xPos, yPos)) {
-                    nearbySpikes.clear();
-                    nearbyTiles.clear();
-                    if (GamePanel.currentLevel.getBlocks()[xPos][yPos] != null) {
-                        nearbyTiles.add(new Tile(yPos, xPos, false));
-                    }
-                    if (GamePanel.currentLevel.getSpikes()[xPos][yPos] != null) {
-                        nearbySpikes.add(new Spike(yPos, xPos));
-                    }
+                    if (GamePanel.currentLevel.getBlocks()[xPos][yPos] != null)
+                        nearbyTiles.add(new Tile(xPos, yPos, false));
+                    if (GamePanel.currentLevel.getSpikes()[xPos][yPos] != null)
+                        nearbySpikes.add(new Spike(xPos, yPos));
                 }
             }
         }
 
-        for (Tile tile : nearbyTiles) {
-            Rectangle tileBounds = new Rectangle(tile.col * tileSize,
-                    tile.row * tileSize, tileSize, tileSize);
-            if (getPlayerRect().getBounds().intersects(tileBounds)) {
-                if (dX > 0) {
-
-                }
-            }
-        }
-        /*
-         * if moving right and block is to the right
-         * make sure that it does not move too far
-         */
         for (Spike spike : nearbySpikes) {
-            Rectangle tileBounds = new Rectangle(spike.col * tileSize,
-                    spike.row * tileSize, tileSize, tileSize);
+            Rectangle tileBounds = new Rectangle(spike.col * tileSize, spike.row * tileSize, tileSize, tileSize);
             if (getPlayerRect().getBounds().intersects(tileBounds)) {
                 GamePanel.playerHurt = true;
             }
         }
+
+        for (Tile tile : nearbyTiles) {
+            Rectangle tileBounds = new Rectangle(tile.col * tileSize, tile.row * tileSize, tileSize, tileSize);
+
+            if (dY > 0) {
+                Rectangle playerRect = getPlayerRect();
+                // Predict future horizontal position
+                Rectangle futureRect = new Rectangle(playerRect);
+                futureRect.y += dY;
+                if (futureRect.intersects(tileBounds)) {
+                    int maxDown = tileBounds.y - playerRect.height;
+
+                    // Compute how far we *can* move without intersecting
+                    dY = maxDown - playerRect.y;
+
+                    isJumping = false;
+                    endAirTime = System.nanoTime();
+                    totalAirTime = getDiffMillis(startJumpTime, endAirTime);
+
+                }
+
+                // --- NEW: sync deceleration timers so landing resumes smoothly ---
+                if (moveLeftReleased && endLeftTime < endAirTime) {
+                    endLeftTime = endAirTime; // start ground decel from landing moment
+                }
+                if (moveRightReleased && endRightTime < endAirTime) {
+                    endRightTime = endAirTime;
+                }
+
+            }
+
+            if (dY < 0) {
+                Rectangle playerRect = getPlayerRect();
+                // Predict future horizontal position
+                Rectangle futureRect = new Rectangle(playerRect);
+                futureRect.y += dY;
+                if (futureRect.intersects(tileBounds)) {
+                    int maxUp = tileBounds.y + tileBounds.height;
+
+                    // Compute how far we *can* move without intersecting
+                    dY = maxUp - playerRect.y;
+                }
+            }
+
+            // Only check if moving right
+            if (dX > 0) {
+                Rectangle playerRect = getPlayerRect();
+
+                // Predict future horizontal position
+                Rectangle futureRect = new Rectangle(playerRect);
+                futureRect.x += dX;
+                if (futureRect.intersects(tileBounds)) {
+
+                    int maxRight = tileBounds.x - playerRect.width;
+
+                    dX = maxRight - playerRect.x;
+
+                    // Ensure dX doesn't overshoot (e.g., if already inside tile)
+                    if (dX < 0) {
+                        dX = 0;
+                    }
+                }
+            }
+
+            if (dX < 0) {
+                Rectangle playerRect = getPlayerRect();
+
+                // Predict future horizontal position
+                Rectangle futureRect = new Rectangle(playerRect);
+                futureRect.x += dX;
+                if (futureRect.intersects(tileBounds)) {
+
+                    int maxLeft = tileBounds.x + tileBounds.width;
+
+                    dX = maxLeft - playerRect.x;
+
+                    // Ensure dX doesn't overshoot (e.g., if already inside tile)
+                    if (dX > 0) {
+                        dX = 0;
+                    }
+                }
+            }
+        }
+
         currentXVelo = dX;
         this.x += dX;
         this.y += dY;
+
     }
 
     public void draw(Graphics g) {
