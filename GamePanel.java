@@ -209,6 +209,25 @@ public final class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public static void changeLevel(boolean forward) {
+        if (forward && currentLevelNum != levels.size() - 1) {
+            currentLevelNum++;
+        }
+        if (!forward && currentLevelNum != 0) {
+            currentLevelNum--;
+        }
+        currentLevel = levels.get(currentLevelNum);
+        updateSolidTiles(currentLevel);
+    }
+
+    public static void advanceLevel() {
+        changeLevel(true);
+    }
+
+    public static void rewindLevel() {
+        changeLevel(false);
+    }
+
     /**
      * this should be run whenever the player gets hurt
      */
@@ -423,11 +442,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
 
                 if (key == KeyEvent.VK_A) {
-                    if (currentLevelNum != levels.size() - 1) {
-                        currentLevelNum++;
-                        currentLevel = levels.get(currentLevelNum);
-                        updateSolidTiles(currentLevel);
-                    }
+                    advanceLevel();
                 }
 
                 if (key == KeyEvent.VK_T) {
