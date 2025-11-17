@@ -284,7 +284,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
                 case PAUSED -> {
                     pauseMenuButtons.clear();
-                    generateMainMenu();
+                    generatePauseMenu();
                     for (ImageRect rect : pauseMenuButtons) {
                         rect.draw(g, this);
                     }
