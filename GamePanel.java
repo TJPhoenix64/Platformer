@@ -38,7 +38,7 @@ public final class GamePanel extends JPanel implements Runnable {
     Level editingLevel = new Level();
     ArrayList<ImageRect> mainMenuButtons = new ArrayList<>();
     ArrayList<ImageRect> pauseMenuButtons = new ArrayList<>();
-    ArrayList<Level> levels = new ArrayList<>();
+    static ArrayList<Level> levels = new ArrayList<>();
     static int currentLevelNum = 0;
     static int numHearts = 3;
     boolean playMusic;
