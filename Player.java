@@ -39,6 +39,7 @@ public class Player extends Rectangle {
 
     ArrayList<Tile> nearbyTiles = new ArrayList<>();
     ArrayList<Spike> nearbySpikes = new ArrayList<>();
+    ArrayList<Coin> nearbyCoins = new ArrayList<>();
 
     public Player() {
         width = GamePanel.TILE_SIZE;
@@ -151,6 +152,11 @@ public class Player extends Rectangle {
         return (int) (diff / 1000000);
     }
 
+    public void pickupCoin(Coin coin) {
+        numCoins++;
+        GamePanel.currentLevel.removeCoin(coin);
+    }
+
     public void updatePosition() {
         int deltaX = 0;
         int deltaY = 0;
@@ -245,13 +251,18 @@ public class Player extends Rectangle {
 
         nearbyTiles.clear();
         nearbySpikes.clear();
+        nearbyCoins.clear();
         for (int yPos = topTile - 1; yPos <= bottomTile + 1; yPos++) {
             for (int xPos = leftTile - 1; xPos <= rightTile + 1; xPos++) {
                 if (GamePanel.isSolidTile(xPos, yPos)) {
-                    if (GamePanel.currentLevel.getBlocks()[xPos][yPos] != null)
+                    if (GamePanel.currentLevel.getBlocks()[xPos][yPos] != null) {
                         nearbyTiles.add(new Tile(xPos, yPos, false));
-                    if (GamePanel.currentLevel.getSpikes()[xPos][yPos] != null)
+                    } else if (GamePanel.currentLevel.getSpikes()[xPos][yPos] != null) {
                         nearbySpikes.add(new Spike(xPos, yPos));
+                    } else if (GamePanel.currentLevel.getCoins().contains(new Coin(xPos, yPos))) {
+                        System.out.println("numCoins: " + GamePanel.currentLevel.getCoins().size());
+                        nearbyCoins.add(new Coin(xPos, yPos));
+                    }
                 }
             }
         }
@@ -260,6 +271,13 @@ public class Player extends Rectangle {
             Rectangle tileBounds = new Rectangle(spike.col * tileSize, spike.row * tileSize, tileSize, tileSize);
             if (getPlayerRect().getBounds().intersects(tileBounds)) {
                 GamePanel.playerHurt = true;
+            }
+        }
+
+        for (Coin coin : nearbyCoins) {
+            Rectangle tileBounds = new Rectangle(coin.col * tileSize, coin.row * tileSize, tileSize, tileSize);
+            if (getPlayerRect().getBounds().intersects(tileBounds)) {
+                pickupCoin(coin);
             }
         }
 
