@@ -95,18 +95,19 @@ public class Level {
         if (spikes[col][row] != null) {
             return spikes[col][row];
         }
-        if (checkpoints.contains(new Checkpoint(col, row, false))) {
-            return new Checkpoint(col, row, false);
+
+        for (Checkpoint cp : checkpoints) {
+            if (cp.col == col && cp.row == row) {
+                return cp;
+            }
         }
-        if (checkpoints.contains(new Checkpoint(col, row, true))) {
-            return new Checkpoint(col, row, true);
+
+        for (Coin coin : coins) {
+            if (coin.col == col && coin.row == row) {
+                return coin;
+            }
         }
-        if (coins.contains(new Coin(col, row, false))) {
-            return new Coin(col, row, false);
-        }
-        if (coins.contains(new Coin(col, row, true))) {
-            return new Coin(col, row, true);
-        }
+
         return null;
     }
 
