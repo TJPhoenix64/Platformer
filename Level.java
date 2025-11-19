@@ -75,8 +75,13 @@ public class Level {
         return numCoins;
     }
 
-    public final void clear() {
+    public void removeCoin(Coin coin) {
+        if (coins.contains(coin)) {
+            coins.remove(coin);
+        }
+    }
 
+    public final void clear() {
         blocks = new Tile[cols][rows];
         spikes = new Spike[cols][rows];
         checkpoints = new ArrayList<>();
