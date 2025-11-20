@@ -659,7 +659,19 @@ public final class GamePanel extends JPanel implements Runnable {
                             editingLevel.addObject(new Tile(col, row, true));
                             break;
                         case SPIKES:
-                            editingLevel.addObject(new Spike(col, row, tempSpikeRotation, true));
+                            if (editingLevel.contains(col - 1, row) && editingLevel.contains(col + 1, row)) {
+                                editingLevel.addObject(new Spike(col, row, 0, true));
+                            } else if (editingLevel.contains(col - 1, row)) {
+                                editingLevel.addObject(new Spike(col, row, 90, true));
+                            } else if (editingLevel.contains(col + 1, row)) {
+                                editingLevel.addObject(new Spike(col, row, 270, true));
+                            } else if (editingLevel.contains(col, row + 1)) {
+                                editingLevel.addObject(new Spike(col, row, 0, true));
+                            } else if (editingLevel.contains(col, row - 1)) {
+                                editingLevel.addObject(new Spike(col, row, 180, true));
+                            } else {
+                                editingLevel.addObject(new Spike(col, row, tempSpikeRotation, true));
+                            }
                             break;
                         case CHECKPOINTS:
                             editingLevel.addObject(new Checkpoint(col, row, true));
@@ -702,7 +714,19 @@ public final class GamePanel extends JPanel implements Runnable {
                             editingLevel.addObject(new Tile(col, row, false));
                             break;
                         case SPIKES:
-                            editingLevel.addObject(new Spike(col, row, tempSpikeRotation, false));
+                            if (solidTiles.contains(new Point(col - 1, row)) && solidTiles.contains(new Point(col + 1, row))) {
+                                editingLevel.addObject(new Spike(col, row, 0, false));
+                            } else if (solidTiles.contains(new Point(col - 1, row))) {
+                                editingLevel.addObject(new Spike(col, row, 90, false));
+                            } else if (solidTiles.contains(new Point(col + 1, row))) {
+                                editingLevel.addObject(new Spike(col, row, 270, false));
+                            } else if (solidTiles.contains(new Point(col, row + 1))) {
+                                editingLevel.addObject(new Spike(col, row, 0, false));
+                            } else if (solidTiles.contains(new Point(col, row - 1))) {
+                                editingLevel.addObject(new Spike(col, row, 180, false));
+                            } else {
+                                editingLevel.addObject(new Spike(col, row, tempSpikeRotation, false));
+                            }
                             break;
                         case CHECKPOINTS:
                             editingLevel.addObject(new Checkpoint(col, row, false));
