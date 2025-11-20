@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -61,7 +62,6 @@ public final class GamePanel extends JPanel implements Runnable {
     File folder = new File("levels");
 
     // final Long startTime;
-
     public GamePanel() {
         makePlayer();
         generateLevels();
@@ -128,7 +128,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
     /**
      * updates the Hashset of solid tiles so that the isSolidTile method works
-     * 
+     *
      * @param level the level that the hashset is based off of
      */
     public static void updateSolidTiles(Level level) {
@@ -267,7 +267,7 @@ public final class GamePanel extends JPanel implements Runnable {
             g.drawImage(pausedBackground, 0, 0, getWidth(), getHeight(), null);
         }
 
-        if (null != state)
+        if (null != state) {
             switch (state) {
                 case PLAYING -> {
                     currentLevel.draw(g);
@@ -297,6 +297,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 default -> {
                 }
             }
+        }
 
     }
 
@@ -406,7 +407,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
     /**
      * checks if there is an object in that grid location: x, y
-     * 
+     *
      * @param col
      * @param row
      * @return

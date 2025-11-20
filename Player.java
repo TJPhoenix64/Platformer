@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -5,6 +6,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Player extends Rectangle {
+
     boolean isJumping;
     boolean jumpReleased = true;
     Image image;
@@ -142,13 +144,16 @@ public class Player extends Rectangle {
     }
 
     public int getDiffMillis(Long startTime, Long endTime) {
-        if (startTime == null || endTime == null)
+        if (startTime == null || endTime == null) {
             return 0;
-        if (startTime == 0L || endTime == 0L)
+        }
+        if (startTime == 0L || endTime == 0L) {
             return 0;
+        }
         long diff = endTime - startTime;
-        if (diff <= 0)
+        if (diff <= 0) {
             return 0;
+        }
         return (int) (diff / 1000000);
     }
 
@@ -199,8 +204,9 @@ public class Player extends Rectangle {
 
     public int handleXVelo(Long currentTime) {
         // In-air X-velocity remains constant
-        if (isJumping)
+        if (isJumping) {
             return (int) xVeloAtJump;
+        }
 
         // Ground deceleration
         if (moveLeftReleased && !passedCheckpointSinceButtonPress) {
