@@ -249,7 +249,7 @@ public final class GamePanel extends JPanel implements Runnable {
             numHearts--;
             tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
             tyler.passedCheckpointSinceButtonPress = true;
-            System.out.println(tyler.getPlayerRect());
+            System.out.println(Player.playerRect);
         }
     }
 
@@ -466,6 +466,10 @@ public final class GamePanel extends JPanel implements Runnable {
 
                 if (key == KeyEvent.VK_C) {
                     System.out.println("coins: " + tyler.numCoins);
+                }
+
+                if (key == KeyEvent.VK_N) {
+                    System.out.println("numTiles: " + currentLevel.getNumObjects());
                 }
 
             } else if (state == GameState.EDITING) {

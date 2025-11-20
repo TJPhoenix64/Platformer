@@ -43,6 +43,8 @@ public class Player extends Rectangle {
     ArrayList<Spike> nearbySpikes = new ArrayList<>();
     ArrayList<Coin> nearbyCoins = new ArrayList<>();
 
+    public static Rectangle playerRect = null;
+
     public Player() {
         width = GamePanel.TILE_SIZE;
         height = GamePanel.TILE_SIZE;
@@ -50,6 +52,7 @@ public class Player extends Rectangle {
         y = 500;
         this.lastCheckpointX = this.x;
         this.lastCheckpointY = this.y;
+        playerRect = new Rectangle(x, y, width, height);
 
         try {
             orangeImage = ImageIO.read(new File("photos/orangeBackground.jpg"));
@@ -70,10 +73,6 @@ public class Player extends Rectangle {
         if (GamePanel.currentLevel.getCheckpoints().contains(new Checkpoint(row, col))) {
             GamePanel.passCheckpoint(new Checkpoint(row, col));
         }
-    }
-
-    public Rectangle getPlayerRect() {
-        return new Rectangle(this.x, this.y, this.width, this.height);
     }
 
     public void setImage(Image image) {
@@ -274,14 +273,14 @@ public class Player extends Rectangle {
 
         for (Spike spike : nearbySpikes) {
             Rectangle tileBounds = new Rectangle(spike.col * tileSize, spike.row * tileSize, tileSize, tileSize);
-            if (getPlayerRect().getBounds().intersects(tileBounds)) {
+            if (playerRect.getBounds().intersects(tileBounds)) {
                 GamePanel.playerHurt = true;
             }
         }
 
         for (Coin coin : nearbyCoins) {
             Rectangle tileBounds = new Rectangle(coin.col * tileSize, coin.row * tileSize, tileSize, tileSize);
-            if (getPlayerRect().getBounds().intersects(tileBounds)) {
+            if (playerRect.getBounds().intersects(tileBounds)) {
                 pickupCoin(coin);
             }
         }
@@ -290,7 +289,6 @@ public class Player extends Rectangle {
             Rectangle tileBounds = new Rectangle(tile.col * tileSize, tile.row * tileSize, tileSize, tileSize);
 
             if (dY > 0) {
-                Rectangle playerRect = getPlayerRect();
                 // Predict future horizontal position
                 Rectangle futureRect = new Rectangle(playerRect);
                 futureRect.y += dY;
@@ -317,7 +315,6 @@ public class Player extends Rectangle {
             }
 
             if (dY < 0) {
-                Rectangle playerRect = getPlayerRect();
                 // Predict future horizontal position
                 Rectangle futureRect = new Rectangle(playerRect);
                 futureRect.y += dY;
@@ -331,7 +328,6 @@ public class Player extends Rectangle {
 
             // Only check if moving right
             if (dX > 0) {
-                Rectangle playerRect = getPlayerRect();
 
                 // Predict future horizontal position
                 Rectangle futureRect = new Rectangle(playerRect);
@@ -350,7 +346,6 @@ public class Player extends Rectangle {
             }
 
             if (dX < 0) {
-                Rectangle playerRect = getPlayerRect();
 
                 // Predict future horizontal position
                 Rectangle futureRect = new Rectangle(playerRect);
@@ -372,7 +367,8 @@ public class Player extends Rectangle {
         currentXVelo = dX;
         this.x += dX;
         this.y += dY;
-
+        playerRect.x = this.x;
+        playerRect.y = this.y;
     }
 
     public void draw(Graphics g) {
