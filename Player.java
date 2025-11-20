@@ -256,12 +256,11 @@ public class Player extends Rectangle {
             for (int xPos = leftTile - 1; xPos <= rightTile + 1; xPos++) {
                 if (GamePanel.isSolidTile(xPos, yPos)) {
                     if (GamePanel.currentLevel.getBlocks()[xPos][yPos] != null) {
-                        nearbyTiles.add(new Tile(xPos, yPos, false));
+                        nearbyTiles.add(GamePanel.currentLevel.getBlocks()[xPos][yPos]);
                     } else if (GamePanel.currentLevel.getSpikes()[xPos][yPos] != null) {
-                        nearbySpikes.add(new Spike(xPos, yPos));
-                    } else if (GamePanel.currentLevel.getCoins().contains(new Coin(xPos, yPos))) {
-                        System.out.println("numCoins: " + GamePanel.currentLevel.getCoins().size());
-                        nearbyCoins.add(new Coin(xPos, yPos));
+                        nearbySpikes.add(GamePanel.currentLevel.getSpikes()[xPos][yPos]);
+                    } else if (GamePanel.currentLevel.getCoins()[xPos][yPos] != null) {
+                        nearbyCoins.add(GamePanel.currentLevel.getCoins()[xPos][yPos]);
                     }
                 }
             }

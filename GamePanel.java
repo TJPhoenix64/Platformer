@@ -157,9 +157,13 @@ public final class GamePanel extends JPanel implements Runnable {
             }
         }
 
-        for (Coin coin : level.getCoins()) {
-            if (!solidTiles.contains(new Point(coin.col, coin.row))) {
-                solidTiles.add(new Point(coin.col, coin.row));
+        for (Coin[] cs : level.getCoins()) {
+            for (Coin coin : cs) {
+                if (coin != null) {
+                    if (!solidTiles.contains(new Point(coin.col, coin.row))) {
+                        solidTiles.add(new Point(coin.col, coin.row));
+                    }
+                }
             }
         }
     }
@@ -348,9 +352,11 @@ public final class GamePanel extends JPanel implements Runnable {
             s.deleteCharAt(s.length() - 1);
 
             s.append("\nCoins:");
-            for (Coin coin : level.getCoins()) {
-                if (!coin.isTemp) {
-                    s.append(coin).append("_");
+            for (Coin[] cs : level.getCoins()) {
+                for (Coin c : cs) {
+                    if (c != null && !c.isTemp) {
+                        s.append(c).append("_");
+                    }
                 }
             }
             s.deleteCharAt(s.length() - 1);

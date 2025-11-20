@@ -1,11 +1,13 @@
+
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Level {
+
     private Tile[][] blocks;
     private Spike[][] spikes;
     private ArrayList<Checkpoint> checkpoints;
-    private ArrayList<Coin> coins;
+    private Coin[][] coins;
 
     private int numTiles = 0;
     private int numCheckpoints = 0;
@@ -32,7 +34,7 @@ public class Level {
             checkpoints.add(checkpoint);
             numCheckpoints++;
         } else if (obj instanceof Coin coin) {
-            coins.add(coin);
+            coins[coin.col][coin.row] = coin;
             numCoins++;
         } else {
             numObjects--;
@@ -51,7 +53,7 @@ public class Level {
         return checkpoints;
     }
 
-    public ArrayList<Coin> getCoins() {
+    public Coin[][] getCoins() {
         return coins;
     }
 
@@ -76,8 +78,8 @@ public class Level {
     }
 
     public void removeCoin(Coin coin) {
-        if (coins.contains(coin)) {
-            coins.remove(coin);
+        if (coins[coin.col][coin.row] != null) {
+            coins[coin.col][coin.row] = null;
         }
     }
 
@@ -85,7 +87,7 @@ public class Level {
         blocks = new Tile[cols][rows];
         spikes = new Spike[cols][rows];
         checkpoints = new ArrayList<>();
-        coins = new ArrayList<>();
+        coins = new Coin[cols][rows];
     }
 
     public Thing get(int col, int row) {
@@ -101,11 +103,8 @@ public class Level {
                 return cp;
             }
         }
-
-        for (Coin coin : coins) {
-            if (coin.col == col && coin.row == row) {
-                return coin;
-            }
+        if (coins[col][row] != null) {
+            return coins[col][row];
         }
 
         return null;
@@ -125,12 +124,15 @@ public class Level {
         } else if (obj instanceof Checkpoint checkpoint) {
             return checkpoints.contains(checkpoint);
         } else if (obj instanceof Coin coin) {
-            return coins.contains(coin);
+            return coins[coin.col][coin.row] == coin;
         }
         return false;
     }
 
     public boolean contains(int col, int row) {
+        if (col < 0 || col > blocks.length || row < 0 || row > blocks[0].length) {
+            return false;
+        }
         if (blocks[col][row] != null) {
             return true;
         }
@@ -138,7 +140,7 @@ public class Level {
             return true;
         }
 
-        if (coins.contains(new Coin(col, row, true)) || coins.contains(new Coin(col, row, false))) {
+        if (coins[col][row] != null) {
             return true;
         }
         return checkpoints.contains(new Checkpoint(col, row, false))
@@ -147,7 +149,7 @@ public class Level {
 
     /**
      * removes any objects in that grid tile
-     * 
+     *
      * @param col
      * @param row
      */
@@ -156,8 +158,8 @@ public class Level {
         spikes[col][row] = null;
         checkpoints.remove(new Checkpoint(col, row, false));
         checkpoints.remove(new Checkpoint(col, row, true));
-        coins.remove(new Coin(col, row, false));
-        coins.remove(new Coin(col, row, true));
+        coins[col][row] = null;
+
     }
 
     // Additional logic for your level
@@ -181,8 +183,12 @@ public class Level {
             c.draw(g);
         }
 
-        for (Coin c : coins) {
-            c.draw(g);
+        for (Coin[] cs : coins) {
+            for (Coin c : cs) {
+                if (c != null) {
+                    c.draw(g2d);
+                }
+            }
         }
     }
 
@@ -222,9 +228,11 @@ public class Level {
         }
 
         s.append("\nCoins:");
-        for (Coin coin : this.getCoins()) {
-            if (!coin.isTemp) {
-                s.append(coin).append("_");
+        for (Coin[] cs : this.getCoins()) {
+            for (Coin c : cs) {
+                if (c != null && !c.isTemp) {
+                    s.append(c).append("_");
+                }
             }
         }
         if (s.toString().charAt(s.length() - 1) != ':') {
