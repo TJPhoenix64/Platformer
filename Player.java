@@ -46,6 +46,7 @@ public class Player extends Rectangle {
     ArrayList<Tile> nearbyTiles = new ArrayList<>();
     ArrayList<Spike> nearbySpikes = new ArrayList<>();
     ArrayList<Coin> nearbyCoins = new ArrayList<>();
+    Rectangle tileBounds = new Rectangle(0, 0, GamePanel.TILE_SIZE, GamePanel.TILE_SIZE);
 
     public static Rectangle playerRect = null;
 
@@ -287,21 +288,26 @@ public class Player extends Rectangle {
         }
 
         for (Spike spike : nearbySpikes) {
-            Rectangle tileBounds = new Rectangle(spike.col * tileSize, spike.row * tileSize, tileSize, tileSize);
+            tileBounds.x = spike.col * tileSize;
+            tileBounds.y = spike.row * tileSize;
+
             if (playerRect.getBounds().intersects(tileBounds)) {
                 GamePanel.playerHurt = true;
             }
         }
 
         for (Coin coin : nearbyCoins) {
-            Rectangle tileBounds = new Rectangle(coin.col * tileSize, coin.row * tileSize, tileSize, tileSize);
+            tileBounds.x = coin.col * tileSize;
+            tileBounds.y = coin.row * tileSize;
+
             if (playerRect.getBounds().intersects(tileBounds)) {
                 pickupCoin(coin);
             }
         }
 
         for (Tile tile : nearbyTiles) {
-            Rectangle tileBounds = new Rectangle(tile.col * tileSize, tile.row * tileSize, tileSize, tileSize);
+            tileBounds.x = tile.col * tileSize;
+            tileBounds.y = tile.row * tileSize;
 
             if (dY > 0) {
                 // Predict future horizontal position
