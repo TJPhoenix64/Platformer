@@ -249,7 +249,7 @@ public final class GamePanel extends JPanel implements Runnable {
             numHearts--;
             tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
             tyler.passedCheckpointSinceButtonPress = true;
-            System.out.println(Player.playerRect);
+            //System.out.println(Player.playerRect);
         }
     }
 
@@ -611,7 +611,7 @@ public final class GamePanel extends JPanel implements Runnable {
             if (state != GameState.EDITING) {
                 return;
             }
-            System.out.println("MousePressed");
+            //System.out.println("MousePressed");
             int x = e.getPoint().x;
             int y = e.getPoint().y;
             int row = y / TILE_SIZE;
@@ -723,19 +723,18 @@ public final class GamePanel extends JPanel implements Runnable {
             if (state != GameState.EDITING) {
                 return;
             }
-            System.out.println("Dragged");
+            //System.out.println("Dragged");
             int x = e.getPoint().x;
             int y = e.getPoint().y;
             int row = y / TILE_SIZE;
             int col = x / TILE_SIZE;
 
             // System.out.println("col: " + col + " row: " + row);
-            System.out.println("Obj: " + editingLevel.get(col, row));
+            //System.out.println("Obj: " + editingLevel.get(col, row));
             if (editingLevel.containsTemp(col, row)) {
                 editingLevel.remove(col, row);
             }
             if (!editingLevel.contains(col, row)) {
-                System.out.println("new grid");
                 if (null != type) {
                     switch (type) {
                         case TILES:
