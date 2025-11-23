@@ -8,6 +8,7 @@ public class Level {
     private Spike[][] spikes;
     private ArrayList<Checkpoint> checkpoints;
     private Coin[][] coins;
+    private StartTile startTile = null;
 
     private int numTiles = 0;
     private int numCheckpoints = 0;
@@ -17,6 +18,11 @@ public class Level {
 
     private final int cols = GamePanel.PANEL_WIDTH / GamePanel.TILE_SIZE;
     private final int rows = GamePanel.PANEL_HEIGHT / GamePanel.TILE_SIZE;
+
+    private int startCol;
+    private int startRow;
+
+    boolean hasStart = false;
 
     public Level() {
         clear();
@@ -39,6 +45,14 @@ public class Level {
         } else {
             numObjects--;
         }
+    }
+
+    public void addStartTile(StartTile tile) {
+        startTile = tile;
+    }
+
+    public StartTile getStartTile() {
+        return startTile;
     }
 
     public Tile[][] getBlocks() {
@@ -88,6 +102,7 @@ public class Level {
         spikes = new Spike[cols][rows];
         checkpoints = new ArrayList<>();
         coins = new Coin[cols][rows];
+        startTile = null;
     }
 
     public Thing get(int col, int row) {
@@ -107,6 +122,12 @@ public class Level {
             return coins[col][row];
         }
 
+        if (this.startTile != null) {
+            if (col == startTile.col && row == startTile.row) {
+                return startTile;
+            }
+        }
+
         return null;
     }
 
@@ -117,7 +138,9 @@ public class Level {
     }
 
     public boolean contains(Object obj) {
-        if (obj instanceof Tile tile) {
+        if (obj instanceof StartTile tile) {
+            return tile == startTile;
+        } else if (obj instanceof Tile tile) {
             return (blocks[tile.col][tile.row] == tile);
         } else if (obj instanceof Spike spike) {
             return (spikes[spike.col][spike.row] == spike);
@@ -143,6 +166,11 @@ public class Level {
         if (coins[col][row] != null) {
             return true;
         }
+        if (this.startTile != null) {
+            if (col == startTile.col && row == startTile.row) {
+                return true;
+            }
+        }
         return checkpoints.contains(new Checkpoint(col, row, false))
                 || checkpoints.contains(new Checkpoint(col, row, true));
     }
@@ -159,6 +187,11 @@ public class Level {
         checkpoints.remove(new Checkpoint(col, row, false));
         checkpoints.remove(new Checkpoint(col, row, true));
         coins[col][row] = null;
+        if (startTile != null) {
+            if (startTile.col == col && startTile.row == row) {
+                startTile = null;
+            }
+        }
 
     }
 
@@ -189,6 +222,10 @@ public class Level {
                     c.draw(g2d);
                 }
             }
+        }
+
+        if (startTile != null) {
+            startTile.draw(g);
         }
     }
 

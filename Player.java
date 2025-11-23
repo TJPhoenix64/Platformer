@@ -37,6 +37,10 @@ public class Player extends Rectangle {
     double currentXVelo = 0;
     double currentYVelo = 0;
 
+    int defaultForwardX = 100;
+    int defaultBackwardX = 500;
+    int defaultY = 300;
+
     int numCoins = 15;
 
     ArrayList<Tile> nearbyTiles = new ArrayList<>();
@@ -181,15 +185,26 @@ public class Player extends Rectangle {
         } else if (moveLeftReleased || moveRightReleased) {
             deltaX = handleXVelo(currentTime);
         }
-
+        int startX;
+        int startY;
+        if (GamePanel.currentLevel.getStartTile() != null) {
+            startX = GamePanel.currentLevel.getStartTile().x;
+            startY = GamePanel.currentLevel.getStartTile().x;
+        } else {
+            startY = defaultY;
+            startX = defaultForwardX;
+        }
         if (x > GamePanel.PANEL_WIDTH - width) {
             GamePanel.advanceLevel();
-            teleport(100, 500);
+            teleport(startX, startY);
         }
 
         if (x < 0) {
             GamePanel.rewindLevel();
-            teleport(900, 500);
+            if (startX == defaultForwardX) {
+                startX = defaultBackwardX;
+            }
+            teleport(startX, startY);
         }
 
         if (deltaX == 0 && deltaY == 0) {

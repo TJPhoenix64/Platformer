@@ -13,7 +13,7 @@ enum GameState {
 }
 
 enum DrawingType {
-    TILES, SPIKES, CHECKPOINTS, COINS;
+    TILES, SPIKES, CHECKPOINTS, COINS, STARTTILE;
 
     public DrawingType next() {
         return values()[(ordinal() + 1) % values().length];
@@ -361,6 +361,12 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
             }
             s.deleteCharAt(s.length() - 1);
+
+            s.append("\nstartPos:");
+            s.append(level.getStartTile().col);
+            s.append(",");
+            s.append(level.getStartTile().row);
+
             writer.write(s.toString());
             writer.close();
         } catch (IOException e) {
@@ -627,6 +633,12 @@ public final class GamePanel extends JPanel implements Runnable {
                     case COINS:
                         editingLevel.addObject(new Coin(col, row, false));
                         break;
+                    case STARTTILE:
+                        if (!editingLevel.hasStart) {
+                            editingLevel.addStartTile(new StartTile(col, row, false));
+                            editingLevel.hasStart = true;
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -690,6 +702,11 @@ public final class GamePanel extends JPanel implements Runnable {
                         case COINS:
                             editingLevel.addObject(new Coin(col, row, true));
                             break;
+                        case STARTTILE:
+                            if (!editingLevel.hasStart) {
+                                editingLevel.addStartTile(new StartTile(col, row, true));
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -744,6 +761,12 @@ public final class GamePanel extends JPanel implements Runnable {
                             break;
                         case COINS:
                             editingLevel.addObject(new Coin(col, row, false));
+                            break;
+                        case STARTTILE:
+                            if (!editingLevel.hasStart) {
+                                editingLevel.addStartTile(new StartTile(col, row, false));
+                                editingLevel.hasStart = true;
+                            }
                             break;
                         default:
                             break;
