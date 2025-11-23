@@ -1,4 +1,7 @@
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LevelGenerator {
@@ -9,81 +12,76 @@ public class LevelGenerator {
         Scanner sc;
         try {
             sc = new Scanner(new File(fileName));
-            int row;
-            int col;
-            int rotation;
-            if (sc.hasNextLine()) {
-                String firstLine = sc.nextLine();
-                // System.out.println("got tiles");
-                if (firstLine.length() > 7) {
-                    firstLine = firstLine.substring(6);
-                    // System.out.println(firstLine);
-                    String[] tiles = firstLine.split("_");
-                    for (String tile : tiles) {
-                        String[] items = tile.split(",");
-                        col = Integer.parseInt(items[0]);
-                        row = Integer.parseInt(items[1]);
-                        Tile t = new Tile(col, row, false);
+
+            while (sc.hasNextLine()) {
+                String OGLine = sc.nextLine();
+                String line = OGLine;
+                String[] cords;
+                String[] items;
+                ArrayList<Integer> cols = new ArrayList<>();
+                ArrayList<Integer> rows = new ArrayList<>();
+                ArrayList<Integer> rotations = new ArrayList<>();
+                while (line.length() > 0 && !Character.isDigit(line.charAt(0))) {
+                    line = line.substring(1);
+                }
+                //System.out.println(line);
+                cords = line.split("_");
+
+                for (String cord : cords) {
+                    if (cord.isEmpty()) {
+                        continue; // skip bad
+                    }
+                    items = cord.split(",");
+                    if (items.length < 2) {
+                        continue; // skip malformed
+                    }
+                    try {
+                        cols.add(Integer.valueOf(items[0]));
+                        rows.add(Integer.valueOf(items[1]));
+
+                        if (items.length > 2) {
+                            rotations.add(Integer.valueOf(items[2]));
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Skipping bad cord: " + cord);
+                    }
+                }
+                if (cords[0].isEmpty()) {
+                    continue;
+                }
+                if (OGLine.startsWith("Tiles")) {
+                    for (int k = 0; k < cords.length; k++) {
+                        Tile t = new Tile(cols.get(k), rows.get(k), false);
                         level.addObject(t);
                     }
-                }
-            }
-
-            if (sc.hasNextLine()) {
-                String secondLine = sc.nextLine();
-                // System.out.println("got spikes");
-                if (secondLine.length() > 8) {
-                    secondLine = secondLine.substring(7);
-                    // System.out.println(secondLine);
-                    String[] spikes = secondLine.split("_");
-
-                    for (String spike : spikes) {
-                        String[] items = spike.split(",");
-                        col = Integer.parseInt(items[0]);
-                        row = Integer.parseInt(items[1]);
-                        rotation = Integer.parseInt(items[2]);
-                        Spike s = new Spike(col, row, rotation);
+                } else if (OGLine.startsWith("Spike")) {
+                    for (int k = 0; k < cords.length; k++) {
+                        Spike s = new Spike(cols.get(k),
+                                rows.get(k),
+                                rotations.get(k));
                         level.addObject(s);
                     }
-                }
-            }
-            if (sc.hasNextLine()) {
-                String thirdLine = sc.nextLine();
-                // System.out.println("Got checkpoints");
-                if (thirdLine.length() > 13) {
-                    thirdLine = thirdLine.substring(12);
-                    // System.out.println(thirdLine);
-                    String[] checkpoints = thirdLine.split("_");
-                    for (String checkpoint : checkpoints) {
-                        String[] items = checkpoint.split(",");
-                        col = Integer.parseInt(items[0]);
-                        row = Integer.parseInt(items[1]);
-                        Checkpoint c = new Checkpoint(col, row);
+                } else if (OGLine.startsWith("Check")) {
+                    for (int k = 0; k < cords.length; k++) {
+                        Checkpoint c = new Checkpoint(cols.get(k), rows.get(k));
                         level.addObject(c);
                     }
+                } else if (OGLine.startsWith("Coins")) {
+                    for (int k = 0; k < cords.length; k++) {
+                        Coin c = new Coin(cols.get(k), rows.get(k));
+                        level.addObject(c);
+                    }
+                } else if (OGLine.startsWith("start")) {
+                    StartTile t = new StartTile(cols.get(0), rows.get(0), false);
+                    level.addObject(t);
                 }
-            }
 
-            if (sc.hasNextLine()) {
-                String fourthLine = sc.nextLine();
-                // System.out.println("Got checkpoints");
-                if (fourthLine.length() > 5) {
-                    fourthLine = fourthLine.substring(6);
-                    System.out.println(fourthLine);
-                    String[] coins = fourthLine.split("_");
-                    for (String coin : coins) {
-                        String[] items = coin.split(",");
-                        col = Integer.parseInt(items[0]);
-                        row = Integer.parseInt(items[1]);
-                        Coin c = new Coin(col, row);
-                        level.addObject(c);
-                    }
-                }
             }
-        } catch (Exception e) {
-            System.out.println("Oh No! something went wrong with the file");
+        } catch (FileNotFoundException | NumberFormatException e) {
+            System.out.println(e);
         }
         // System.out.println("This is being run");
+
         return level;
     }
 
