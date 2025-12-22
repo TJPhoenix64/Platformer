@@ -363,9 +363,11 @@ public final class GamePanel extends JPanel implements Runnable {
             s.deleteCharAt(s.length() - 1);
 
             s.append("\nstartPos:");
-            s.append(level.getStartTile().col);
-            s.append(",");
-            s.append(level.getStartTile().row);
+            if (level.getStartTile() != null) {
+                s.append(level.getStartTile().col);
+                s.append(",");
+                s.append(level.getStartTile().row);
+            }
 
             writer.write(s.toString());
             writer.close();
@@ -501,7 +503,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
             // change this to the filename that you want the program to make
             if (key == KeyEvent.VK_P) {
-                printLevel("levels/LEVEL2");
+                printLevel("levels/LEVEL1");
             }
 
             if (key == KeyEvent.VK_4) {
