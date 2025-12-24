@@ -480,6 +480,10 @@ public final class GamePanel extends JPanel implements Runnable {
                     System.out.println("numTiles: " + currentLevel.getNumObjects());
                 }
 
+                if (key == KeyEvent.VK_SHIFT) {
+                    System.out.println("StartTile: " + currentLevel.getStartTile());
+                }
+
             } else if (state == GameState.EDITING) {
                 if (key == KeyEvent.VK_N) {
                     System.out.println("numTiles: " + editingLevel.getNumObjects());
@@ -503,7 +507,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
             // change this to the filename that you want the program to make
             if (key == KeyEvent.VK_P) {
-                printLevel("levels/LEVEL1");
+                printLevel("levels/LEVEL2");
             }
 
             if (key == KeyEvent.VK_4) {
