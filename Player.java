@@ -56,7 +56,7 @@ public class Player extends Rectangle {
         width = GamePanel.TILE_SIZE;
         height = GamePanel.TILE_SIZE;
         x = 100;
-        y = 500;
+        y = 100;
         this.lastCheckpointX = this.x;
         this.lastCheckpointY = this.y;
         playerRect = new Rectangle(x, y, width, height);
@@ -188,26 +188,38 @@ public class Player extends Rectangle {
         } else if (moveLeftReleased || moveRightReleased) {
             deltaX = handleXVelo(currentTime);
         }
-        int startX;
-        int startY;
-        if (GamePanel.currentLevel.getStartTile() != null) {
-            startX = GamePanel.currentLevel.getStartTile().x;
-            startY = GamePanel.currentLevel.getStartTile().x;
-        } else {
-            startY = defaultY;
-            startX = defaultForwardX;
-        }
-        if (x > GamePanel.PANEL_WIDTH - width) {
-            GamePanel.advanceLevel();
-            teleport(startX, startY);
-        }
 
-        if (x < 0) {
-            GamePanel.rewindLevel();
-            if (startX == defaultForwardX) {
-                startX = defaultBackwardX;
+        if (x > GamePanel.PANEL_WIDTH - width || x < 0) {
+
+            if (x > GamePanel.PANEL_WIDTH - width) {
+                GamePanel.advanceLevel();
+                int startX;
+                int startY;
+                if (GamePanel.currentLevel.getStartTile() != null) {
+                    startX = GamePanel.currentLevel.getStartTile().x;
+                    startY = GamePanel.currentLevel.getStartTile().y;
+                } else {
+                    startY = defaultY;
+                    startX = defaultForwardX;
+                }
+                System.out.println("advance startX: " + startX + " startY: " + startY);
+                teleport(startX, startY);
             }
-            teleport(startX, startY);
+
+            if (x < 0) {
+                GamePanel.rewindLevel();
+                int startX;
+                int startY;
+                if (GamePanel.currentLevel.getStartTile() != null) {
+                    startX = GamePanel.currentLevel.getStartTile().x;
+                    startY = GamePanel.currentLevel.getStartTile().y;
+                } else {
+                    startY = defaultY;
+                    startX = defaultBackwardX;
+                }
+                System.out.println("rewind startX: " + startX + " startY: " + startY);
+                teleport(startX, startY);
+            }
         }
 
         if (deltaX == 0 && deltaY == 0) {
