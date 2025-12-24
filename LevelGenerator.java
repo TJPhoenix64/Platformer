@@ -72,8 +72,10 @@ public class LevelGenerator {
                         level.addObject(c);
                     }
                 } else if (OGLine.startsWith("start")) {
+
                     StartTile t = new StartTile(cols.get(0), rows.get(0), false);
-                    level.addObject(t);
+                    level.addStartTile(t);
+                    System.out.println("Adding S-Tile: " + t);
                 }
 
             }
