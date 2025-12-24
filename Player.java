@@ -37,6 +37,8 @@ public class Player extends Rectangle {
     double currentXVelo = 0;
     double currentYVelo = 0;
 
+    int groundFriction = 30;
+
     int defaultForwardX = 100;
     int defaultBackwardX = 500;
     int defaultY = 300;
@@ -228,7 +230,7 @@ public class Player extends Rectangle {
             if (endLeftTime != 0L) {
                 if (endLeftTime > endAirTime) {
                     int timeSinceReleased = getDiffMillis(endLeftTime, currentTime);
-                    int num = -(int) (initialVeloX - (timeSinceReleased / 70));
+                    int num = -(int) (initialVeloX - (timeSinceReleased / groundFriction));
                     if (num < 0) {
                         return num;
                     } else {
@@ -237,7 +239,7 @@ public class Player extends Rectangle {
                     }
                 } else {
                     int timeSinceReleased = getDiffMillis(endAirTime, currentTime);
-                    int num = (int) ((timeSinceReleased / 70) + xVeloAtJump);
+                    int num = (int) ((timeSinceReleased / groundFriction) + xVeloAtJump);
                     if (num < 0) {
                         return num;
                     } else {
@@ -250,12 +252,24 @@ public class Player extends Rectangle {
 
         if (moveRightReleased && !passedCheckpointSinceButtonPress) {
             if (endRightTime != 0L) {
-                int timeSinceReleased = getDiffMillis(endRightTime, currentTime);
-                if (timeSinceReleased < 500) {
-                    return (initialVeloX - (timeSinceReleased / 50));
+                if (endRightTime > endAirTime) {
+                    int timeSinceReleased = getDiffMillis(endRightTime, currentTime);
+                    int num = (int) (initialVeloX - (timeSinceReleased / groundFriction));
+                    if (num > 0) {
+                        return num;
+                    } else {
+                        moveRightReleased = false;
+                        endRightTime = 0L;
+                    }
                 } else {
-                    moveRightReleased = false;
-                    endRightTime = 0L;
+                    int timeSinceReleased = getDiffMillis(endAirTime, currentTime);
+                    int num = (int) (xVeloAtJump - (timeSinceReleased / 30));
+                    if (num > 0) {
+                        return num;
+                    } else {
+                        moveRightReleased = false;
+                        endAirTime = 0L;
+                    }
                 }
             }
         }
