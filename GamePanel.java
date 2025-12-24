@@ -254,7 +254,7 @@ public final class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void draw(Graphics g) {
+    public void drawBackground(Graphics g) {
         if (plainBackground != null && state == GameState.MENU) {
             g.drawImage(plainBackground, 0, 0, getWidth(), getHeight(), null);
         }
@@ -267,6 +267,10 @@ public final class GamePanel extends JPanel implements Runnable {
         if (pausedBackground != null && state == GameState.PAUSED) {
             g.drawImage(pausedBackground, 0, 0, getWidth(), getHeight(), null);
         }
+    }
+
+    public void draw(Graphics g) {
+        drawBackground(g);
 
         if (null != state) {
             switch (state) {
@@ -278,6 +282,9 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
                 case EDITING -> {
                     editingLevel.draw(g);
+                    if (editingLevel.getStartTile() != null) {
+                        editingLevel.drawStartTile(g);
+                    }
                     drawGrid(PANEL_WIDTH, PANEL_HEIGHT, g);
                 }
                 case MENU -> {
