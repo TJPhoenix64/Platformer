@@ -65,6 +65,7 @@ public final class GamePanel extends JPanel implements Runnable {
     public GamePanel() {
         makePlayer();
         generateLevels();
+        tyler.teleport(currentLevel.getStartTile().x, currentLevel.getStartTile().y);
         lastTimeEffectStarted = System.currentTimeMillis();
         playMusic = (state == GameState.PLAYING);
         playMusic();
