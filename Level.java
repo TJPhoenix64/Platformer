@@ -224,9 +224,10 @@ public class Level {
             }
         }
 
-        if (startTile != null) {
-            startTile.draw(g);
-        }
+    }
+
+    public void drawStartTile(Graphics g) {
+        startTile.draw(g);
     }
 
     public String toString() {
