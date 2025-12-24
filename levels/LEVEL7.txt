@@ -2,4 +2,4 @@ Tiles:0,15_1,15_2,15_3,15_4,15_5,15_6,15_7,15_8,15_9,15_10,15_11,15_12,15_13,15_
 Spikes
 Checkpoints
 Coins
-startPos:15,14
+startPos:6,8
