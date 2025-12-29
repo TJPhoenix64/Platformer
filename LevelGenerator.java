@@ -75,7 +75,7 @@ public class LevelGenerator {
 
                     StartTile t = new StartTile(cols.get(0), rows.get(0), false);
                     level.addStartTile(t);
-                    System.out.println("Adding S-Tile: " + t);
+                    //System.out.println("Adding S-Tile: " + t);
                 }
 
             }
