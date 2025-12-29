@@ -7,13 +7,14 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Spike extends Thing {
+
     private Polygon spike;
     private String defaultImagePath = "photos/dirt.png";
     int rotation;
 
     /**
      * goes counter clockwise starting from bottom left corner
-     * 
+     *
      * @param x1
      * @param y1
      * @param x2
@@ -46,9 +47,9 @@ public class Spike extends Thing {
     }
 
     /**
-     * simplest constructor, assumes it is 1 tile wide and tall, uses default image
-     * path, also asumes is upright
-     * 
+     * simplest constructor, assumes it is 1 tile wide and tall, uses default
+     * image path, also asumes is upright
+     *
      * @param col
      * @param row
      */
@@ -78,7 +79,7 @@ public class Spike extends Thing {
 
     /**
      * location of top right corner
-     * 
+     *
      * @param col
      * @param row
      * @param numTileWidth how many tiles it has in length and width
@@ -120,7 +121,7 @@ public class Spike extends Thing {
 
     /**
      * position, rotation, and if its temporary
-     * 
+     *
      * @param col
      * @param row
      * @param rotation
@@ -162,7 +163,7 @@ public class Spike extends Thing {
 
     /**
      * location of top right corner
-     * 
+     *
      * @param col
      * @param row
      * @param numTileWidth how many tiles it has in length and width
@@ -234,9 +235,9 @@ public class Spike extends Thing {
 
     @Override
     public String toString() {
-        return col +
-                "," + row +
-                "," + rotation;
+        return col
+                + "," + row
+                + "," + rotation;
     }
 
 }
