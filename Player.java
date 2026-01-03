@@ -176,27 +176,7 @@ public class Player extends Rectangle {
         GamePanel.currentLevel.removeCoin(coin);
     }
 
-    public void updatePosition() {
-        int deltaX = 0;
-        int deltaY = 0;
-        checkCheckpoints();
-        Long currentTime = System.nanoTime();
-
-        // Vertical
-        if (isJumping) {
-            int timeSinceJumpStarted = getDiffMillis(startJumpTime, currentTime);
-            deltaY = (int) (mediumGravity * timeSinceJumpStarted + initialVeloY);
-        }
-
-        // Horizontal
-        if (moveLeftPressed) {
-            deltaX = -initialVeloX;
-        } else if (moveRightPressed) {
-            deltaX = initialVeloX;
-        } else if (moveLeftReleased || moveRightReleased) {
-            deltaX = handleXVelo(currentTime);
-        }
-
+    public void handleOffScreenMovement() {
         if (x > GamePanel.PANEL_WIDTH - width || x < 0) {
 
             if (x > GamePanel.PANEL_WIDTH - width) {
@@ -227,6 +207,29 @@ public class Player extends Rectangle {
                 teleport(startX, startY);
             }
         }
+    }
+
+    public void updatePosition() {
+        double deltaX = 0;
+        double deltaY;
+        long currentTime = System.nanoTime();
+
+        checkCheckpoints(currentTime);
+
+        // Vertical
+        currentYVelo += mediumGravity;
+        deltaY = currentYVelo;
+
+        // Horizontal
+        if (moveLeftPressed) {
+            deltaX = -initialVeloX;
+        } else if (moveRightPressed) {
+            deltaX = initialVeloX;
+        } else if (moveLeftReleased || moveRightReleased) {
+            deltaX = handleXVelo(currentTime);
+        }
+
+        handleOffScreenMovement();
 
         if (deltaX == 0 && deltaY == 0) {
             setImage(redImage);
