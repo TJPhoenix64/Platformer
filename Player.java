@@ -32,6 +32,7 @@ public class Player extends Rectangle {
     int initialVeloX = 10;
     int lastCheckpointX;
     int lastCheckpointY;
+    int lastCheckpointLevel;
     boolean passedCheckpointSinceButtonPress = false;
     double xVeloAtJump = 0;
     double currentXVelo = 0;
@@ -59,6 +60,7 @@ public class Player extends Rectangle {
         y = 100;
         this.lastCheckpointX = this.x;
         this.lastCheckpointY = this.y;
+        this.lastCheckpointLevel = GamePanel.currentLevelNum;
         playerRect = new Rectangle(x, y, width, height);
 
         try {
@@ -74,11 +76,26 @@ public class Player extends Rectangle {
         this.lastCheckpointY = y;
     }
 
-    public void checkCheckpoints() {
+    public void checkCheckpoints(long currentTime) {
         int col = x / GamePanel.TILE_SIZE;
         int row = y / GamePanel.TILE_SIZE;
-        if (GamePanel.currentLevel.getCheckpoints().contains(new Checkpoint(row, col))) {
-            GamePanel.passCheckpoint(new Checkpoint(row, col));
+
+        if (!GamePanel.currentLevel.contains(col, row)) {
+            return;
+        }
+
+        Thing thing = GamePanel.currentLevel.get(col, row);
+        if (thing instanceof Checkpoint checkpoint) {
+            long diffMs = getDiffMillis(GamePanel.lastCheckpointTime, currentTime);
+
+            if (diffMs > 200) {
+                if (!(checkpoint.x == GamePanel.tyler.lastCheckpointX && checkpoint.y == GamePanel.tyler.lastCheckpointY && GamePanel.currentLevelNum == GamePanel.tyler.lastCheckpointLevel)) {
+                    GamePanel.passCheckpoint(checkpoint);
+                    GamePanel.lastCheckpointTime = currentTime;
+                }
+
+            }
+
         }
     }
 

@@ -48,6 +48,7 @@ public final class GamePanel extends JPanel implements Runnable {
     static float tempTransparency = 0.4f;
     long lastTimeEffectStarted;
     double invincibilitySeconds = 1.5;
+    static long lastCheckpointTime = 0L;
 
     static int tempSpikeRotation = 0;
 
@@ -63,6 +64,7 @@ public final class GamePanel extends JPanel implements Runnable {
     File folder = new File("levels");
 
     final long startTime;
+    static long timeRunning = 0L;
     double timeRunningSeconds = 0;
 
     public GamePanel() {
@@ -86,7 +88,8 @@ public final class GamePanel extends JPanel implements Runnable {
         this.setPreferredSize(SCREEN_SIZE);
         gameThread = new Thread(this);
         gameThread.start();
-        // startTime = System.nanoTime();
+
+        startTime = System.nanoTime();
 
         try {
             platformerBackground = ImageIO.read(new File("photos/platformerBackground.jpg"));
@@ -253,7 +256,10 @@ public final class GamePanel extends JPanel implements Runnable {
     }
 
     public static void passCheckpoint(Checkpoint c) {
+        //System.out.println("checkpoint: " + c);
         tyler.updateCheckpointPos(c.x, c.y);
+        tyler.lastCheckpointLevel = GamePanel.currentLevelNum;
+        GamePanel.lastCheckpointTime = System.nanoTime();
         MusicPlayer.playSound("music/ding.wav");
     }
 
@@ -300,6 +306,9 @@ public final class GamePanel extends JPanel implements Runnable {
             }
             numHearts--;
             tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
+            currentLevelNum = tyler.lastCheckpointLevel;
+            currentLevel = levels.get(currentLevelNum);
+
             tyler.passedCheckpointSinceButtonPress = true;
             //System.out.println(Player.playerRect);
         }
