@@ -145,6 +145,11 @@ public class Player extends Rectangle {
         jumpReleased = true;
     }
 
+    /**
+     * attempt at making variable jump heights, not being used right now
+     *
+     * @return
+     */
     public double getInitialVeloY() {
         double num = 10;
         double diffMilis;
