@@ -209,7 +209,6 @@ public class Player extends Rectangle {
                     startY = defaultY;
                     startX = defaultForwardX;
                 }
-                System.out.println("advance startX: " + startX + " startY: " + startY);
                 teleport(startX, startY);
             }
 
@@ -224,7 +223,6 @@ public class Player extends Rectangle {
                     startY = defaultY;
                     startX = defaultBackwardX;
                 }
-                System.out.println("rewind startX: " + startX + " startY: " + startY);
                 teleport(startX, startY);
             }
         }
