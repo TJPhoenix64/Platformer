@@ -211,6 +211,10 @@ public final class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public int centerX(int width) {
+        return (PANEL_WIDTH - width) / 2;
+    }
+
     public void generateMainMenu() {
         Image playButton = null;
         Image settingsButton = null;
@@ -222,7 +226,7 @@ public final class GamePanel extends JPanel implements Runnable {
         } catch (IOException e) {
         }
         if (playButton != null) {
-            mainMenuButtons.add(new ImageRect(playButton, 300, 200, 342, 152));
+            mainMenuButtons.add(new ImageRect(playButton, centerX(342), 200, 342, 152));
         }
         if (settingsButton != null) {
             mainMenuButtons.add(new ImageRect(settingsButton, centerX(342), 400, 342, 152));
