@@ -1,3 +1,4 @@
+
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -5,6 +6,7 @@ import java.awt.Image;
 import java.util.Objects;
 
 public abstract class Thing {
+
     int row;
     int col;
     int x;
@@ -35,7 +37,7 @@ public abstract class Thing {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, GamePanel.tempTransparency));
         }
         if (image != null) {
-            g2d.drawImage(image, this.x, this.y, GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
+            g2d.drawImage(image, this.x - GamePanel.cameraX, this.y, GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
 
         }
         g2d.dispose();

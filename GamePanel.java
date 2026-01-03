@@ -24,6 +24,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
     LevelGenerator generator = new LevelGenerator();
+    static int cameraX = 0;
     static final int PANEL_WIDTH = 1200;
     static final int PANEL_HEIGHT = 800;
     static final Dimension SCREEN_SIZE = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
@@ -160,6 +161,12 @@ public final class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    // way that scrolling works, 
+    // things have an x position on the screen,
+    // then there is a camera x 
+    // just do thingX - camX and it will scroll when you change the camera x
+    // make some global cam x variable then make the arrow keys change the value
+    // only scroll in the x axis
     public void generateLevels() {
         File[] files = folder.listFiles();
 
@@ -512,8 +519,16 @@ public final class GamePanel extends JPanel implements Runnable {
                     playerHurt = true;
                 }
 
-                if (key == KeyEvent.VK_A) {
+                if (key == KeyEvent.VK_Q) {
                     advanceLevel();
+                }
+
+                if (key == KeyEvent.VK_A) {
+                    cameraX += 10;
+                }
+
+                if (key == KeyEvent.VK_D) {
+                    cameraX -= 10;
                 }
 
                 if (key == KeyEvent.VK_T) {

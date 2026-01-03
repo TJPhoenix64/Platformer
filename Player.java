@@ -41,6 +41,8 @@ public class Player extends Rectangle {
     int defaultBackwardX = 500;
     int defaultY = 300;
 
+    int displayX;
+
     int numCoins = 15;
 
     ArrayList<Tile> nearbyTiles = new ArrayList<>();
@@ -54,6 +56,7 @@ public class Player extends Rectangle {
         width = GamePanel.TILE_SIZE;
         height = GamePanel.TILE_SIZE;
         x = 100;
+        displayX = x;
         y = 100;
         this.lastCheckpointX = this.x;
         this.lastCheckpointY = this.y;
@@ -323,7 +326,7 @@ public class Player extends Rectangle {
         }
 
         for (Spike spike : nearbySpikes) {
-            tileBounds.x = spike.col * tileSize;
+            tileBounds.x = spike.col * tileSize - GamePanel.cameraX;
             tileBounds.y = spike.row * tileSize;
 
             if (playerRect.getBounds().intersects(tileBounds)) {
@@ -332,7 +335,7 @@ public class Player extends Rectangle {
         }
 
         for (Coin coin : nearbyCoins) {
-            tileBounds.x = coin.col * tileSize;
+            tileBounds.x = coin.col * tileSize - GamePanel.cameraX;
             tileBounds.y = coin.row * tileSize;
 
             if (playerRect.getBounds().intersects(tileBounds)) {
@@ -341,7 +344,7 @@ public class Player extends Rectangle {
         }
 
         for (Tile tile : nearbyTiles) {
-            tileBounds.x = tile.col * tileSize;
+            tileBounds.x = tile.col * tileSize - GamePanel.cameraX;
             tileBounds.y = tile.row * tileSize;
 
             if (dY > 0) {
