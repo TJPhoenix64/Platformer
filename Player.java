@@ -290,7 +290,7 @@ public class Player extends Rectangle {
         return 0;
     }
 
-    public void changePosition(int dX, int dY) {
+    public void changePosition(double dX, double dY) {
         int tileSize = GamePanel.TILE_SIZE;
         int leftTile = this.x / tileSize;
         int rightTile = (this.x + this.width) / tileSize;
@@ -417,8 +417,8 @@ public class Player extends Rectangle {
         currentXVelo = dX;
         this.x += dX;
         this.y += dY;
-        playerRect.x = this.x;
-        playerRect.y = this.y;
+        playerRect.x = (int) x;
+        playerRect.y = (int) y;
     }
 
     public void draw(Graphics g) {
