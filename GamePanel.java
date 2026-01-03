@@ -98,6 +98,39 @@ public final class GamePanel extends JPanel implements Runnable {
 
     }
 
+    @Override
+    public void run() {
+        long lastTime = System.nanoTime();
+        double amountOfTicks = 60.0;
+        double ns = 1000000000 / amountOfTicks;
+        double delta = 0.0;
+        tyler.startJumpTime = lastTime;
+
+        while (true) {
+            long now = System.nanoTime();
+            timeRunning = now - startTime;
+            timeRunningSeconds = timeRunning / 1_000_000_000.0;
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            if (delta >= 1) {
+                repaint();
+                if (state == GameState.PLAYING) {
+                    tyler.updatePosition();
+                    if (playerHurt) {
+                        playerHurt = false;
+                        playerHurt();
+                    }
+                }
+                delta--;
+            }
+            try {
+                Thread.sleep(1); // sleep 1ms to prevent 100% CPU usage
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void makePlayer() {
         tyler = new Player();
     }
@@ -393,30 +426,6 @@ public final class GamePanel extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
-    }
-
-    @Override
-    public void run() {
-        long lastTime = System.nanoTime();
-        double amountOfTicks = 60.0;
-        double ns = 1000000000 / amountOfTicks;
-        double delta = 0.0;
-        while (true) {
-            long now = System.nanoTime();
-            delta += (now - lastTime) / ns;
-            lastTime = now;
-            if (delta >= 1) {
-                repaint();
-                if (state == GameState.PLAYING) {
-                    tyler.updatePosition();
-                    if (playerHurt) {
-                        playerHurt = false;
-                        playerHurt();
-                    }
-                }
-                delta--;
-            }
-        }
     }
 
     public static void playMusic() {
