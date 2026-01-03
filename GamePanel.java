@@ -373,6 +373,10 @@ public final class GamePanel extends JPanel implements Runnable {
                     rect.draw(g, this);
                 }
             }
+
+            default -> {
+                System.out.println("State is: " + state.toString());
+            }
         }
 
     }
