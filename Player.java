@@ -18,11 +18,8 @@ public class Player extends Rectangle {
 
     int totalAirTime;
 
-    double mediumGravity = 0.035;
-    double weakGravity = 0.02;
-    double strongGravity = 0.05;
-    double currentGravity;
-    double initialVeloY = -15;
+    double mediumGravity = 0.4;
+    double initialVeloY = -12;
     boolean moveLeftPressed;
     boolean moveRightPressed;
     boolean moveLeftReleased;
@@ -134,14 +131,13 @@ public class Player extends Rectangle {
         this.moveRightReleased = true;
     }
 
-    public void jump(Long startTime) {
-        startJumpTime = startTime;
-        isJumping = true;
-        jumpReleased = false;
-        endJumpPressedTime = 0L;
-        endAirTime = 0L;
-        xVeloAtJump = currentXVelo;
-        totalAirTime = 0;
+    public void jump(long startTime) {
+        if (!isJumping) {
+            isJumping = true;
+            currentYVelo = initialVeloY; // negative
+            startJumpTime = startTime;
+
+        }
     }
 
     public void jumpReleased(long time) {
@@ -351,6 +347,8 @@ public class Player extends Rectangle {
                     dY = maxDown - playerRect.y;
 
                     isJumping = false;
+                    currentYVelo = 0;
+
                     endAirTime = System.nanoTime();
                     totalAirTime = getDiffMillis(startJumpTime, endAirTime);
 
