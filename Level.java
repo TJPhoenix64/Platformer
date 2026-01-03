@@ -153,7 +153,7 @@ public class Level {
     }
 
     public boolean contains(int col, int row) {
-        if (col < 0 || col > blocks.length || row < 0 || row > blocks[0].length) {
+        if (col < 0 || col >= blocks.length || row < 0 || row >= blocks[0].length) {
             return false;
         }
         if (blocks[col][row] != null) {
