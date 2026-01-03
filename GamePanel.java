@@ -58,6 +58,7 @@ public final class GamePanel extends JPanel implements Runnable {
     private static DrawingType type = DrawingType.TILES;
 
     static MusicPlayer bgMusic = new MusicPlayer();
+    FancyText title;
 
     File folder = new File("levels");
 
@@ -213,16 +214,21 @@ public final class GamePanel extends JPanel implements Runnable {
     public void generateMainMenu() {
         Image playButton = null;
         Image settingsButton = null;
+        Image titleImage = null;
         try {
             playButton = ImageIO.read(new File("photos/PlayButton.png"));
             settingsButton = ImageIO.read(new File("photos/redImage.jpg"));
+            titleImage = ImageIO.read(new File("photos/Title.png"));
         } catch (IOException e) {
         }
         if (playButton != null) {
             mainMenuButtons.add(new ImageRect(playButton, 300, 200, 342, 152));
         }
         if (settingsButton != null) {
-            mainMenuButtons.add(new ImageRect(settingsButton, 300, 400, 342, 152));
+            mainMenuButtons.add(new ImageRect(settingsButton, centerX(342), 400, 342, 152));
+        }
+        if (titleImage != null) {
+            title = new FancyText(centerX(342), 20, 342, 152, 1.5, 20, -20, titleImage, false);
         }
     }
 
