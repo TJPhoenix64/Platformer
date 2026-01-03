@@ -332,20 +332,20 @@ public final class GamePanel extends JPanel implements Runnable {
     public void draw(Graphics g) {
         drawBackground(g);
 
-        if (null != state) {
-            switch (state) {
-                case PLAYING -> {
-                    currentLevel.draw(g);
-                    // player
-                    tyler.draw(g);
-                    drawHearts(g);
-                }
-                case EDITING -> {
-                    editingLevel.draw(g);
-                    if (editingLevel.getStartTile() != null) {
-                        editingLevel.drawStartTile(g);
-                    }
-                    drawGrid(PANEL_WIDTH, PANEL_HEIGHT, g);
+        if (state == null) {
+            return;
+        }
+        switch (state) {
+            case PLAYING -> {
+                currentLevel.draw(g);
+                // player
+                tyler.draw(g);
+                drawHearts(g);
+            }
+            case EDITING -> {
+                editingLevel.draw(g);
+                if (editingLevel.getStartTile() != null) {
+                    editingLevel.drawStartTile(g);
                 }
                 drawGrid(PANEL_WIDTH, PANEL_HEIGHT, g);
             }
