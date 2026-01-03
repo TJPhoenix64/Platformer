@@ -166,18 +166,8 @@ public class Player extends Rectangle {
         return -num;
     }
 
-    public int getDiffMillis(Long startTime, Long endTime) {
-        if (startTime == null || endTime == null) {
-            return 0;
-        }
-        if (startTime == 0L || endTime == 0L) {
-            return 0;
-        }
-        long diff = endTime - startTime;
-        if (diff <= 0) {
-            return 0;
-        }
-        return (int) (diff / 1000000);
+    public static int getDiffMillis(long startNs, long endNs) {
+        return (int) Math.max(0, (endNs - startNs) / 1_000_000);
     }
 
     public void pickupCoin(Coin coin) {
