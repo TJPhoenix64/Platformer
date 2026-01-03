@@ -305,12 +305,22 @@ public final class GamePanel extends JPanel implements Runnable {
                 SayExample.sayPhrase("wow, you make this game look really hard");
             }
             numHearts--;
+            handlePotentialLoss();
             tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
             currentLevelNum = tyler.lastCheckpointLevel;
             currentLevel = levels.get(currentLevelNum);
 
             tyler.passedCheckpointSinceButtonPress = true;
             //System.out.println(Player.playerRect);
+
+        }
+    }
+
+    public void handlePotentialLoss() {
+        if (numHearts < 1) {
+            state = GameState.MENU;
+            currentLevelNum = 0;
+            numHearts = 3;
         }
     }
 
