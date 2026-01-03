@@ -46,7 +46,7 @@ public final class GamePanel extends JPanel implements Runnable {
     static float musicVolume = 0.8f;
     static float tempMusicVolume = 0.8f;
     static float tempTransparency = 0.4f;
-    Long lastTimeEffectStarted;
+    long lastTimeEffectStarted;
     double invincibilitySeconds = 1.5;
 
     static int tempSpikeRotation = 0;
@@ -61,7 +61,9 @@ public final class GamePanel extends JPanel implements Runnable {
 
     File folder = new File("levels");
 
-    // final Long startTime;
+    final long startTime;
+    double timeRunningSeconds = 0;
+
     public GamePanel() {
         makePlayer();
         generateLevels();
@@ -244,7 +246,7 @@ public final class GamePanel extends JPanel implements Runnable {
      */
     public void playerHurt() {
         double num = Math.random();
-        Long currentTime = System.currentTimeMillis();
+        long currentTime = System.currentTimeMillis();
 
         if (currentTime - lastTimeEffectStarted > invincibilitySeconds * 1000) {
             lastTimeEffectStarted = currentTime;

@@ -12,9 +12,9 @@ public class Player extends Rectangle {
     Image image;
     Image redImage;
     Image orangeImage;
-    Long startJumpTime = 0L;
-    Long endJumpPressedTime = 0L;
-    Long endAirTime = 0L;
+    long startJumpTime = 0L;
+    long endJumpPressedTime = 0L;
+    long endAirTime = 0L;
 
     int totalAirTime;
 
@@ -27,8 +27,8 @@ public class Player extends Rectangle {
     boolean moveRightPressed;
     boolean moveLeftReleased;
     boolean moveRightReleased;
-    Long endLeftTime = 0L;
-    Long endRightTime = 0L;
+    long endLeftTime = 0L;
+    long endRightTime = 0L;
     int initialVeloX = 10;
     int lastCheckpointX;
     int lastCheckpointY;
@@ -105,13 +105,13 @@ public class Player extends Rectangle {
         this.moveLeftPressed = false;
     }
 
-    public void moveLeftReleased(Long timeReleased) {
+    public void moveLeftReleased(long timeReleased) {
         this.endLeftTime = timeReleased;
         this.moveLeftPressed = false;
         this.moveLeftReleased = true;
     }
 
-    public void moveRightReleased(Long timeReleased) {
+    public void moveRightReleased(long timeReleased) {
         this.endRightTime = timeReleased;
         this.moveRightPressed = false;
         this.moveRightReleased = true;
@@ -127,7 +127,7 @@ public class Player extends Rectangle {
         totalAirTime = 0;
     }
 
-    public void jumpReleased(Long time) {
+    public void jumpReleased(long time) {
         endJumpPressedTime = time;
         jumpReleased = true;
     }
@@ -138,7 +138,7 @@ public class Player extends Rectangle {
         if (jumpReleased) {
             diffMilis = getDiffMillis(startJumpTime, endAirTime);
         } else {
-            Long currentTime = System.nanoTime();
+            long currentTime = System.nanoTime();
             diffMilis = getDiffMillis(startJumpTime, currentTime);
         }
         num += diffMilis / 10.0;
@@ -231,7 +231,7 @@ public class Player extends Rectangle {
         changePosition(deltaX, deltaY);
     }
 
-    public int handleXVelo(Long currentTime) {
+    public int handleXVelo(long currentTime) {
         // In-air X-velocity remains constant
         if (isJumping) {
             return (int) xVeloAtJump;
