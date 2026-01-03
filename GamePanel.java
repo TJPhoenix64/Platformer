@@ -69,6 +69,12 @@ public final class GamePanel extends JPanel implements Runnable {
         lastTimeEffectStarted = System.currentTimeMillis();
         playMusic = (state == GameState.PLAYING);
         playMusic();
+
+        mainMenuButtons.clear();
+        generateMainMenu();
+        pauseMenuButtons.clear();
+        generatePauseMenu();
+
         this.setFocusable(true);
         AL listener = new AL();
         this.addKeyListener(listener);
@@ -287,22 +293,20 @@ public final class GamePanel extends JPanel implements Runnable {
                     }
                     drawGrid(PANEL_WIDTH, PANEL_HEIGHT, g);
                 }
-                case MENU -> {
-                    mainMenuButtons.clear();
-                    generateMainMenu();
-                    for (ImageRect rect : mainMenuButtons) {
-                        rect.draw(g, this);
-                    }
+                drawGrid(PANEL_WIDTH, PANEL_HEIGHT, g);
+            }
+            case MENU -> {
+                for (ImageRect rect : mainMenuButtons) {
+                    rect.draw(g, this);
                 }
-                case PAUSED -> {
-                    pauseMenuButtons.clear();
-                    generatePauseMenu();
-                    for (ImageRect rect : pauseMenuButtons) {
-                        rect.draw(g, this);
-                    }
+                if (title != null) {
+                    title.draw((Graphics2D) g, timeRunningSeconds);
                 }
-
-                default -> {
+                //g.drawLine(PANEL_WIDTH / 2, 0, PANEL_WIDTH / 2, PANEL_HEIGHT);
+            }
+            case PAUSED -> {
+                for (ImageRect rect : pauseMenuButtons) {
+                    rect.draw(g, this);
                 }
             }
         }
