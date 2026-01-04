@@ -1,24 +1,27 @@
+
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
 
 public class MusicPlayer {
+
     private Clip clip;
 
     public void playMusic(String filePath, boolean loop, float volume) {
-        try {
-            File file = new File(filePath);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+        close(); // close previous clip if any
+
+        try (AudioInputStream audioStream
+                = AudioSystem.getAudioInputStream(new File(filePath))) {
 
             clip = AudioSystem.getClip();
             clip.open(audioStream);
 
             setVolume(volume);
 
-            clip.start();
-
             if (loop) {
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
+            } else {
+                clip.start();
             }
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
@@ -48,12 +51,20 @@ public class MusicPlayer {
     }
 
     public static void playSound(String filePath) {
-        try {
-            File file = new File(filePath);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+        try (AudioInputStream audioStream
+                = AudioSystem.getAudioInputStream(new File(filePath))) {
+
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
+
+            clip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP) {
+                    clip.close();
+                }
+            });
+
             clip.start();
+
         } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
             e.printStackTrace();
         }

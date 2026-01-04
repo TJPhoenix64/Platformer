@@ -306,13 +306,17 @@ public final class GamePanel extends JPanel implements Runnable {
 
         if (currentTime - lastTimeEffectStarted > invincibilitySeconds * 1000) {
             lastTimeEffectStarted = currentTime;
-            if (num > 0.5) {
-                MusicPlayer.playSound("music/hurt.wav");
-            } else {
-                SayExample.sayPhrase("wow, you make this game look really hard");
-            }
+
             numHearts--;
-            handlePotentialLoss();
+            if (!handlePotentialLoss()) {
+                if (num > 0.5) {
+                    MusicPlayer.playSound("music/hurt.wav");
+                } else {
+                    SayExample.sayPhrase("wow, you make this game look really hard");
+                }
+            } else {
+                MusicPlayer.playSound("music/fail.wav");
+            }
             tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
             currentLevelNum = tyler.lastCheckpointLevel;
             currentLevel = levels.get(currentLevelNum);
@@ -323,12 +327,20 @@ public final class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void handlePotentialLoss() {
+    /**
+     * handles loss logic and game resetting
+     *
+     * @return returns if you lost or not(is called whenever hurt)
+     */
+    public boolean handlePotentialLoss() {
         if (numHearts < 1) {
             state = GameState.MENU;
             currentLevelNum = 0;
             numHearts = 3;
+            bgMusic.stopMusic();
+            return true;
         }
+        return false;
     }
 
     public void drawBackground(Graphics g) {
@@ -358,6 +370,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 // player
                 tyler.draw(g);
                 drawHearts(g);
+
             }
             case EDITING -> {
                 editingLevel.draw(g);
