@@ -46,7 +46,6 @@ public final class GamePanel extends JPanel implements Runnable {
     static int numHearts = 3;
     boolean playMusic;
     static float musicVolume = 0.8f;
-    static float tempMusicVolume = 0.8f;
     static float tempTransparency = 0.4f;
     long lastTimeEffectStarted;
     double invincibilitySeconds = 1.5;
