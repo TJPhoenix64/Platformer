@@ -51,6 +51,8 @@ public final class GamePanel extends JPanel implements Runnable {
     double invincibilitySeconds = 1.5;
     static long lastCheckpointTime = 0L;
 
+    static VolumeSlider volumeSlider;
+
     static int tempSpikeRotation = 0;
 
     static boolean playerHurt = false;
@@ -61,6 +63,11 @@ public final class GamePanel extends JPanel implements Runnable {
 
     static MusicPlayer bgMusic = new MusicPlayer();
     FancyText title;
+
+    Color ovalColor = new Color(108, 111, 117);
+    Color circleColor = new Color(44, 74, 138);
+    Color rectColor = new Color(49, 51, 56);
+    Rectangle sliderRect = new Rectangle(900, 100, 75, 200);
 
     File folder = new File("levels");
 
@@ -75,6 +82,7 @@ public final class GamePanel extends JPanel implements Runnable {
         lastTimeEffectStarted = System.currentTimeMillis();
         playMusic = (state == GameState.PLAYING);
         playMusic();
+        volumeSlider = new VolumeSlider(50, sliderRect, rectColor, 20, circleColor, 10, 150, ovalColor);
 
         mainMenuButtons.clear();
         generateMainMenu();
@@ -255,10 +263,10 @@ public final class GamePanel extends JPanel implements Runnable {
         } catch (IOException e) {
         }
         if (playButton != null) {
-            pauseMenuButtons.add(new ImageRect(playButton, 300, 200, 342, 152));
+            pauseMenuButtons.add(new ImageRect(playButton, centerX(342), 200, 342, 152));
         }
         if (settingsButton != null) {
-            pauseMenuButtons.add(new ImageRect(settingsButton, 300, 400, 342, 152));
+            pauseMenuButtons.add(new ImageRect(settingsButton, centerX(342), 400, 342, 152));
         }
     }
 
@@ -298,7 +306,7 @@ public final class GamePanel extends JPanel implements Runnable {
     }
 
     /**
-     * this should be run whenever the player gets hurt
+     * this handles logic for whenever the player is hurt
      */
     public void playerHurt() {
         double num = Math.random();
@@ -392,6 +400,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 for (ImageRect rect : pauseMenuButtons) {
                     rect.draw(g, this);
                 }
+                volumeSlider.draw(g);
             }
 
             default -> {
@@ -484,6 +493,8 @@ public final class GamePanel extends JPanel implements Runnable {
     public static void playMusic() {
         if (state == GameState.PLAYING) {
             bgMusic.playMusic("music/background.wav", true, musicVolume);
+        } else if (state == GameState.PAUSED) {
+            bgMusic.playMusic("music/pauseMenuBackground.wav", true, musicVolume);
         } else {
             bgMusic.stopMusic();
         }
@@ -619,6 +630,7 @@ public final class GamePanel extends JPanel implements Runnable {
             if (key == KeyEvent.VK_ESCAPE) {
                 state = GameState.PAUSED;
                 bgMusic.stopMusic();
+                playMusic();
             }
             if (key == KeyEvent.VK_M) {
                 state = GameState.MENU;
@@ -765,41 +777,39 @@ public final class GamePanel extends JPanel implements Runnable {
                     editingLevel.remove(prevCol, prevRow);
                 }
             }
-            if (!editingLevel.contains(col, row)) {
-                if (null != type) {
-                    switch (type) {
-                        case TILES:
-                            editingLevel.addObject(new Tile(col, row, true));
-                            break;
-                        case SPIKES:
-                            if (editingLevel.contains(col - 1, row) && editingLevel.contains(col + 1, row)) {
-                                editingLevel.addObject(new Spike(col, row, 0, true));
-                            } else if (editingLevel.contains(col - 1, row)) {
-                                editingLevel.addObject(new Spike(col, row, 90, true));
-                            } else if (editingLevel.contains(col + 1, row)) {
-                                editingLevel.addObject(new Spike(col, row, 270, true));
-                            } else if (editingLevel.contains(col, row + 1)) {
-                                editingLevel.addObject(new Spike(col, row, 0, true));
-                            } else if (editingLevel.contains(col, row - 1)) {
-                                editingLevel.addObject(new Spike(col, row, 180, true));
-                            } else {
-                                editingLevel.addObject(new Spike(col, row, tempSpikeRotation, true));
-                            }
-                            break;
-                        case CHECKPOINTS:
-                            editingLevel.addObject(new Checkpoint(col, row, true));
-                            break;
-                        case COINS:
-                            editingLevel.addObject(new Coin(col, row, true));
-                            break;
-                        case STARTTILE:
-                            if (!editingLevel.hasStart) {
-                                editingLevel.addStartTile(new StartTile(col, row, true));
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+            if (!editingLevel.contains(col, row) && type != null) {
+                switch (type) {
+                    case TILES:
+                        editingLevel.addObject(new Tile(col, row, true));
+                        break;
+                    case SPIKES:
+                        if (editingLevel.contains(col - 1, row) && editingLevel.contains(col + 1, row)) {
+                            editingLevel.addObject(new Spike(col, row, 0, true));
+                        } else if (editingLevel.contains(col - 1, row)) {
+                            editingLevel.addObject(new Spike(col, row, 90, true));
+                        } else if (editingLevel.contains(col + 1, row)) {
+                            editingLevel.addObject(new Spike(col, row, 270, true));
+                        } else if (editingLevel.contains(col, row + 1)) {
+                            editingLevel.addObject(new Spike(col, row, 0, true));
+                        } else if (editingLevel.contains(col, row - 1)) {
+                            editingLevel.addObject(new Spike(col, row, 180, true));
+                        } else {
+                            editingLevel.addObject(new Spike(col, row, tempSpikeRotation, true));
+                        }
+                        break;
+                    case CHECKPOINTS:
+                        editingLevel.addObject(new Checkpoint(col, row, true));
+                        break;
+                    case COINS:
+                        editingLevel.addObject(new Coin(col, row, true));
+                        break;
+                    case STARTTILE:
+                        if (!editingLevel.hasStart) {
+                            editingLevel.addStartTile(new StartTile(col, row, true));
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -810,14 +820,22 @@ public final class GamePanel extends JPanel implements Runnable {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            if (state != GameState.EDITING) {
-                return;
-            }
-            //System.out.println("Dragged");
             int x = e.getPoint().x;
             int y = e.getPoint().y;
             int row = y / TILE_SIZE;
             int col = x / TILE_SIZE;
+            if (state == GameState.PAUSED) {
+                if (volumeSlider.circleClicked(x, y)) {
+                    //System.out.println("Circle clicked");
+                    volumeSlider.moveCircle(y);
+                    musicVolume = (volumeSlider.getVolume());
+                    bgMusic.setVolume(musicVolume);
+                }
+            }
+            if (state != GameState.EDITING) {
+                return;
+            }
+            //System.out.println("Dragged");
 
             // System.out.println("col: " + col + " row: " + row);
             //System.out.println("Obj: " + editingLevel.get(col, row));
