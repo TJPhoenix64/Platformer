@@ -363,10 +363,9 @@ public final class GamePanel extends JPanel implements Runnable {
      */
     public boolean handlePotentialLoss() {
         if (numHearts < 1) {
-            state = GameState.MENU;
+            switchState(GameState.MENU);
             currentLevelNum = 0;
             numHearts = 3;
-            bgMusic.stopMusic();
             return true;
         }
         return false;
@@ -536,6 +535,12 @@ public final class GamePanel extends JPanel implements Runnable {
         return false;
     }
 
+    private void switchState(GameState newState) {
+        state = newState;
+        bgMusic.stopMusic();
+        playMusic();
+    }
+
     public class AL implements KeyListener, MouseListener, MouseMotionListener {
 
         int prevRow = -1;
@@ -638,26 +643,22 @@ public final class GamePanel extends JPanel implements Runnable {
             }
 
             if (key == KeyEvent.VK_SPACE && state != GameState.PLAYING) {
-                state = GameState.PLAYING;
+                switchState(GameState.PLAYING);
                 currentLevel = levels.get(currentLevelNum);
                 updateSolidTiles(currentLevel);
-                playMusic();
+
             }
             if (key == KeyEvent.VK_E) {
-                state = GameState.EDITING;
+                switchState(GameState.EDITING);
                 currentLevel = editingLevel;
                 updateSolidTiles(currentLevel);
-                bgMusic.stopMusic();
+
             }
             if (key == KeyEvent.VK_ESCAPE) {
-                state = GameState.PAUSED;
-                bgMusic.stopMusic();
-                playMusic();
+                switchState(GameState.PAUSED);
             }
             if (key == KeyEvent.VK_M) {
-                state = GameState.MENU;
-                bgMusic.stopMusic();
-
+                switchState(GameState.MENU);
             }
 
             if (key == KeyEvent.VK_X) {
@@ -710,11 +711,10 @@ public final class GamePanel extends JPanel implements Runnable {
                         }
                         if (playButton != null) {
                             if (rect.getBounds().equals(mainMenuButtons.get(0).getBounds())) {
-                                state = GameState.PLAYING;
-                                playMusic();
+                                switchState(GameState.PLAYING);
                             }
                             if (rect.getBounds().equals(mainMenuButtons.get(1).getBounds())) {
-                                state = GameState.PAUSED;
+                                switchState(GameState.PAUSED);
                             }
                         }
                     }
@@ -724,16 +724,14 @@ public final class GamePanel extends JPanel implements Runnable {
             if (state == GameState.PAUSED) {
                 for (ImageRect rect : pauseMenuButtons) {
                     if (rect.contains(x, y)) {
-                        state = GameState.PLAYING;
+                        switchState(GameState.PLAYING);
                     }
                 }
             }
 
             if (state == GameState.PLAYING) {
                 if (pauseButton.contains(x, y)) {
-                    state = GameState.PAUSED;
-                    bgMusic.stopMusic();
-                    playMusic();
+                    switchState(GameState.PAUSED);
                 }
             }
         }
