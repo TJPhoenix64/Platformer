@@ -268,7 +268,7 @@ public final class GamePanel extends JPanel implements Runnable {
         } catch (IOException e) {
         }
         if (image != null) {
-            pauseButton = new ImageRect(image, 200, 200, 50, 50);
+            pauseButton = new ImageRect(image, 1100, 50, 50, 50);
         }
 
     }
