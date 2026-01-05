@@ -40,6 +40,7 @@ public final class GamePanel extends JPanel implements Runnable {
     Level editingLevel = new Level();
     ArrayList<ImageRect> mainMenuButtons = new ArrayList<>();
     ArrayList<ImageRect> pauseMenuButtons = new ArrayList<>();
+    ImageRect pauseButton;
     static ArrayList<Level> levels = new ArrayList<>();
     static int currentLevelNum = 0;
     static int numHearts = 3;
@@ -88,6 +89,7 @@ public final class GamePanel extends JPanel implements Runnable {
         generateMainMenu();
         pauseMenuButtons.clear();
         generatePauseMenu();
+        generatePauseButton();
 
         this.setFocusable(true);
         AL listener = new AL();
@@ -233,6 +235,9 @@ public final class GamePanel extends JPanel implements Runnable {
         return (PANEL_WIDTH - width) / 2;
     }
 
+    /**
+     * generates the images for the main menu
+     */
     public void generateMainMenu() {
         Image playButton = null;
         Image settingsButton = null;
@@ -254,6 +259,24 @@ public final class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * generates the images for the pause button on the playin screen
+     */
+    public void generatePauseButton() {
+        Image image = null;
+        try {
+            image = ImageIO.read(new File("photos/pauseButton.png"));
+        } catch (IOException e) {
+        }
+        if (image != null) {
+            pauseButton = new ImageRect(image, 200, 200, 50, 50);
+        }
+
+    }
+
+    /**
+     * generates the images for the pause menu
+     */
     public void generatePauseMenu() {
         Image playButton = null;
         Image settingsButton = null;
@@ -330,7 +353,6 @@ public final class GamePanel extends JPanel implements Runnable {
             currentLevel = levels.get(currentLevelNum);
 
             tyler.passedCheckpointSinceButtonPress = true;
-            //System.out.println(Player.playerRect);
 
         }
     }
@@ -378,6 +400,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 // player
                 tyler.draw(g);
                 drawHearts(g);
+                pauseButton.draw(g, this);
 
             }
             case EDITING -> {
@@ -704,6 +727,14 @@ public final class GamePanel extends JPanel implements Runnable {
                     if (rect.contains(x, y)) {
                         state = GameState.PLAYING;
                     }
+                }
+            }
+
+            if (state == GameState.PLAYING) {
+                if (pauseButton.contains(x, y)) {
+                    state = GameState.PAUSED;
+                    bgMusic.stopMusic();
+                    playMusic();
                 }
             }
         }
