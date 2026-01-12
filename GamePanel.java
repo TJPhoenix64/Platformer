@@ -13,7 +13,7 @@ enum GameState {
 }
 
 enum DrawingType {
-    TILES, SPIKES, CHECKPOINTS, COINS, STARTTILE;
+    TILES, SPIKES, CHECKPOINTS, COINS, STARTTILE, ENEMY;
 
     public DrawingType next() {
         return values()[(ordinal() + 1) % values().length];
@@ -25,10 +25,6 @@ public final class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     LevelGenerator generator = new LevelGenerator();
     static int cameraX = 0;
-    static final int PANEL_WIDTH = 1200;
-    static final int PANEL_HEIGHT = 800;
-    static final Dimension SCREEN_SIZE = new Dimension(PANEL_WIDTH, PANEL_HEIGHT);
-    static final int TILE_SIZE = 50;
     BufferedImage platformerBackground;
     BufferedImage plainBackground;
     BufferedImage greyBackground;
@@ -95,7 +91,7 @@ public final class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(listener);
         addMouseListener(listener);
         addMouseMotionListener(listener);
-        this.setPreferredSize(SCREEN_SIZE);
+        this.setPreferredSize(GameConstants.SCREEN_SIZE);
         gameThread = new Thread(this);
         gameThread.start();
 
@@ -231,7 +227,7 @@ public final class GamePanel extends JPanel implements Runnable {
     }
 
     public int centerX(int width) {
-        return (PANEL_WIDTH - width) / 2;
+        return (GameConstants.PANEL_WIDTH - width) / 2;
     }
 
     /**
@@ -406,7 +402,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 if (editingLevel.getStartTile() != null) {
                     editingLevel.drawStartTile(g);
                 }
-                drawGrid(PANEL_WIDTH, PANEL_HEIGHT, g);
+                drawGrid(GameConstants.PANEL_WIDTH, GameConstants.PANEL_HEIGHT, g);
             }
             case MENU -> {
                 for (ImageRect rect : mainMenuButtons) {
@@ -432,11 +428,11 @@ public final class GamePanel extends JPanel implements Runnable {
     }
 
     public void drawGrid(int width, int height, Graphics g) {
-        for (int i = 0; i < PANEL_WIDTH; i += TILE_SIZE) {
+        for (int i = 0; i < GameConstants.PANEL_WIDTH; i += GameConstants.TILE_SIZE) {
             g.drawLine(i, 0, i, height);
         }
 
-        for (int i = 0; i < height; i += TILE_SIZE) {
+        for (int i = 0; i < height; i += GameConstants.TILE_SIZE) {
             g.drawLine(0, i, width, i);
         }
     }
@@ -724,7 +720,12 @@ public final class GamePanel extends JPanel implements Runnable {
             if (state == GameState.PAUSED) {
                 for (ImageRect rect : pauseMenuButtons) {
                     if (rect.contains(x, y)) {
-                        switchState(GameState.PLAYING);
+                        if (rect.getBounds().equals(pauseMenuButtons.get(0).getBounds())) {
+                            switchState(GameState.PLAYING);
+                        }
+                        if (rect.getBounds().equals(pauseMenuButtons.get(1).getBounds())) {
+                            switchState(GameState.MENU);
+                        }
                     }
                 }
             }
@@ -744,8 +745,8 @@ public final class GamePanel extends JPanel implements Runnable {
             //System.out.println("MousePressed");
             int x = e.getPoint().x;
             int y = e.getPoint().y;
-            int row = y / TILE_SIZE;
-            int col = x / TILE_SIZE;
+            int row = y / GameConstants.TILE_SIZE;
+            int col = x / GameConstants.TILE_SIZE;
             if (editingLevel.containsTemp(col, row)) {
                 editingLevel.remove(col, row);
             }
@@ -769,6 +770,8 @@ public final class GamePanel extends JPanel implements Runnable {
                             editingLevel.hasStart = true;
                         }
                         break;
+                    case ENEMY:
+                        editingLevel.addObject(new Enemy(row, col, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE));
                     default:
                         break;
                 }
@@ -798,8 +801,8 @@ public final class GamePanel extends JPanel implements Runnable {
 
             int x = e.getPoint().x;
             int y = e.getPoint().y;
-            int row = y / TILE_SIZE;
-            int col = x / TILE_SIZE;
+            int row = y / GameConstants.TILE_SIZE;
+            int col = x / GameConstants.TILE_SIZE;
             if (prevRow != -1 && prevCol != -1) {
                 if (editingLevel.containsTemp(prevCol, prevRow)) {
                     editingLevel.remove(prevCol, prevRow);
@@ -850,8 +853,8 @@ public final class GamePanel extends JPanel implements Runnable {
         public void mouseDragged(MouseEvent e) {
             int x = e.getPoint().x;
             int y = e.getPoint().y;
-            int row = y / TILE_SIZE;
-            int col = x / TILE_SIZE;
+            int row = y / GameConstants.TILE_SIZE;
+            int col = x / GameConstants.TILE_SIZE;
             if (state == GameState.PAUSED) {
                 if (volumeSlider.circleClicked(x, y)) {
                     //System.out.println("Circle clicked");
