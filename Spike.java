@@ -25,7 +25,7 @@ public class Spike extends Thing {
      */
     public Spike(int x1, int y1, int x2, int y2, int x3, int y3, String imagePath) {
         // row, col
-        super(x1 / GamePanel.TILE_SIZE, y3 / GamePanel.TILE_SIZE);
+        super(x1 / GameConstants.TILE_SIZE, y3 / GameConstants.TILE_SIZE);
         int[] xArr = new int[3];
         xArr[0] = x1;
         xArr[1] = x2;
@@ -58,14 +58,14 @@ public class Spike extends Thing {
         this.rotation = 0;
 
         int[] xArr = new int[3];
-        xArr[0] = col * GamePanel.TILE_SIZE;
-        xArr[1] = (col + 1) * GamePanel.TILE_SIZE;
+        xArr[0] = col * GameConstants.TILE_SIZE;
+        xArr[1] = (col + 1) * GameConstants.TILE_SIZE;
         xArr[2] = (xArr[0] + xArr[1]) / 2;
 
         int[] yArr = new int[3];
-        yArr[0] = (row + 1) * GamePanel.TILE_SIZE;
-        yArr[1] = (row + 1) * GamePanel.TILE_SIZE;
-        yArr[2] = row * GamePanel.TILE_SIZE;
+        yArr[0] = (row + 1) * GameConstants.TILE_SIZE;
+        yArr[1] = (row + 1) * GameConstants.TILE_SIZE;
+        yArr[2] = row * GameConstants.TILE_SIZE;
 
         this.spike = new Polygon(xArr, yArr, 3);
 
@@ -89,14 +89,14 @@ public class Spike extends Thing {
         super(col, row, false);
         this.rotation = rotation;
         int[] xArr = new int[3];
-        xArr[0] = col * GamePanel.TILE_SIZE;
-        xArr[1] = (col + 1) * GamePanel.TILE_SIZE;
+        xArr[0] = col * GameConstants.TILE_SIZE;
+        xArr[1] = (col + 1) * GameConstants.TILE_SIZE;
         xArr[2] = (xArr[0] + xArr[1]) / 2;
 
         int[] yArr = new int[3];
-        yArr[0] = (row + 1) * GamePanel.TILE_SIZE;
-        yArr[1] = (row + 1) * GamePanel.TILE_SIZE;
-        yArr[2] = row * GamePanel.TILE_SIZE;
+        yArr[0] = (row + 1) * GameConstants.TILE_SIZE;
+        yArr[1] = (row + 1) * GameConstants.TILE_SIZE;
+        yArr[2] = row * GameConstants.TILE_SIZE;
 
         this.spike = new Polygon(xArr, yArr, 3);
         if (rotation != 0) {
@@ -131,14 +131,14 @@ public class Spike extends Thing {
         super(col, row, isTemp);
         this.rotation = rotation;
         int[] xArr = new int[3];
-        xArr[0] = col * GamePanel.TILE_SIZE;
-        xArr[1] = (col + 1) * GamePanel.TILE_SIZE;
+        xArr[0] = col * GameConstants.TILE_SIZE;
+        xArr[1] = (col + 1) * GameConstants.TILE_SIZE;
         xArr[2] = (xArr[0] + xArr[1]) / 2;
 
         int[] yArr = new int[3];
-        yArr[0] = (row + 1) * GamePanel.TILE_SIZE;
-        yArr[1] = (row + 1) * GamePanel.TILE_SIZE;
-        yArr[2] = row * GamePanel.TILE_SIZE;
+        yArr[0] = (row + 1) * GameConstants.TILE_SIZE;
+        yArr[1] = (row + 1) * GameConstants.TILE_SIZE;
+        yArr[2] = row * GameConstants.TILE_SIZE;
 
         this.spike = new Polygon(xArr, yArr, 3);
         if (rotation != 0) {
@@ -173,14 +173,14 @@ public class Spike extends Thing {
         super(col, row, false);
         this.rotation = rotation;
         int[] xArr = new int[3];
-        xArr[0] = col * GamePanel.TILE_SIZE;
-        xArr[1] = (col + numTileWidth) * GamePanel.TILE_SIZE;
+        xArr[0] = col * GameConstants.TILE_SIZE;
+        xArr[1] = (col + numTileWidth) * GameConstants.TILE_SIZE;
         xArr[2] = (xArr[0] + xArr[1]) / 2;
 
         int[] yArr = new int[3];
-        yArr[0] = (row + numTileWidth) * GamePanel.TILE_SIZE;
-        yArr[1] = (row + numTileWidth) * GamePanel.TILE_SIZE;
-        yArr[2] = row * GamePanel.TILE_SIZE;
+        yArr[0] = (row + numTileWidth) * GameConstants.TILE_SIZE;
+        yArr[1] = (row + numTileWidth) * GameConstants.TILE_SIZE;
+        yArr[2] = row * GameConstants.TILE_SIZE;
 
         this.spike = new Polygon(xArr, yArr, 3);
         if (rotation != 0) {

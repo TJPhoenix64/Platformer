@@ -48,13 +48,13 @@ public class Player extends Rectangle {
     ArrayList<Tile> nearbyTiles = new ArrayList<>();
     ArrayList<Spike> nearbySpikes = new ArrayList<>();
     ArrayList<Coin> nearbyCoins = new ArrayList<>();
-    Rectangle tileBounds = new Rectangle(0, 0, GamePanel.TILE_SIZE, GamePanel.TILE_SIZE);
+    Rectangle tileBounds = new Rectangle(0, 0, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE);
 
     public static Rectangle playerRect = null;
 
     public Player() {
-        width = GamePanel.TILE_SIZE;
-        height = GamePanel.TILE_SIZE;
+        width = GameConstants.TILE_SIZE;
+        height = GameConstants.TILE_SIZE;
         x = 100;
         displayX = x;
         y = 100;
@@ -77,8 +77,8 @@ public class Player extends Rectangle {
     }
 
     public void checkCheckpoints(long currentTime) {
-        int col = x / GamePanel.TILE_SIZE;
-        int row = y / GamePanel.TILE_SIZE;
+        int col = x / GameConstants.TILE_SIZE;
+        int row = y / GameConstants.TILE_SIZE;
 
         if (!GamePanel.currentLevel.contains(col, row)) {
             return;
@@ -180,9 +180,9 @@ public class Player extends Rectangle {
     }
 
     public void handleOffScreenMovement() {
-        if (x > GamePanel.PANEL_WIDTH - width || x < 0) {
+        if (x > GameConstants.PANEL_WIDTH - width || x < 0) {
 
-            if (x > GamePanel.PANEL_WIDTH - width) {
+            if (x > GameConstants.PANEL_WIDTH - width) {
                 GamePanel.advanceLevel();
                 int startX;
                 int startY;
@@ -302,7 +302,7 @@ public class Player extends Rectangle {
     }
 
     public void changePosition(double dX, double dY) {
-        int tileSize = GamePanel.TILE_SIZE;
+        int tileSize = GameConstants.TILE_SIZE;
         int leftTile = this.x / tileSize;
         int rightTile = (this.x + this.width) / tileSize;
         int topTile = this.y / tileSize;

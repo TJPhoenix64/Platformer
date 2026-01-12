@@ -18,16 +18,16 @@ public abstract class Thing {
         this.row = row;
         this.col = col;
         this.isTemp = isTemp;
-        x = col * GamePanel.TILE_SIZE;
-        y = row * GamePanel.TILE_SIZE;
+        x = col * GameConstants.TILE_SIZE;
+        y = row * GameConstants.TILE_SIZE;
     }
 
     public Thing(int col, int row) {
         this.row = row;
         this.col = col;
         this.isTemp = false;
-        x = col * GamePanel.TILE_SIZE;
-        y = row * GamePanel.TILE_SIZE;
+        x = col * GameConstants.TILE_SIZE;
+        y = row * GameConstants.TILE_SIZE;
     }
 
     public void draw(Graphics g) {
@@ -37,7 +37,7 @@ public abstract class Thing {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, GamePanel.tempTransparency));
         }
         if (image != null) {
-            g2d.drawImage(image, this.x - GamePanel.cameraX, this.y, GamePanel.TILE_SIZE, GamePanel.TILE_SIZE, null);
+            g2d.drawImage(image, this.x - GamePanel.cameraX, this.y, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, null);
 
         }
         g2d.dispose();

@@ -6,8 +6,8 @@ public class Checkpoint extends Thing {
 
     public Checkpoint(int col, int row) {
         super(col, row, false);
-        x = col * GamePanel.TILE_SIZE;
-        y = row * GamePanel.TILE_SIZE;
+        x = col * GameConstants.TILE_SIZE;
+        y = row * GameConstants.TILE_SIZE;
         try {
             image = ImageIO.read(new File("photos/flag.png"));
         } catch (IOException e) {
@@ -17,8 +17,8 @@ public class Checkpoint extends Thing {
 
     public Checkpoint(int col, int row, boolean isTemp) {
         super(col, row, isTemp);
-        x = col * GamePanel.TILE_SIZE;
-        y = row * GamePanel.TILE_SIZE;
+        x = col * GameConstants.TILE_SIZE;
+        y = row * GameConstants.TILE_SIZE;
         try {
             image = ImageIO.read(new File("photos/flag.png"));
         } catch (IOException e) {
