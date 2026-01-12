@@ -8,19 +8,19 @@ public class Level {
     private Spike[][] spikes;
     private ArrayList<Checkpoint> checkpoints;
     private Coin[][] coins;
+    private Enemy[][] enemies;
     private StartTile startTile = null;
 
     private int numTiles = 0;
     private int numCheckpoints = 0;
     private int numSpikes = 0;
-    private int numObjects = 0;
     private int numCoins = 0;
+    private int numEnemies = 0;
 
-    private final int cols = GamePanel.PANEL_WIDTH / GamePanel.TILE_SIZE;
-    private final int rows = GamePanel.PANEL_HEIGHT / GamePanel.TILE_SIZE;
+    private int numObjects = 0;
 
-    private int startCol;
-    private int startRow;
+    private final int cols = GameConstants.PANEL_WIDTH / GameConstants.TILE_SIZE;
+    private final int rows = GameConstants.PANEL_HEIGHT / GameConstants.TILE_SIZE;
 
     boolean hasStart = false;
 
@@ -42,6 +42,9 @@ public class Level {
         } else if (obj instanceof Coin coin) {
             coins[coin.col][coin.row] = coin;
             numCoins++;
+        } else if (obj instanceof Enemy enemy) {
+            enemies[enemy.col][enemy.row] = enemy;
+            numEnemies++;
         } else {
             numObjects--;
         }
@@ -53,6 +56,10 @@ public class Level {
 
     public StartTile getStartTile() {
         return startTile;
+    }
+
+    public Enemy[][] getEnemies() {
+        return enemies;
     }
 
     public Tile[][] getBlocks() {
@@ -73,6 +80,10 @@ public class Level {
 
     public int getNumObjects() {
         return numObjects;
+    }
+
+    public int getNumEnemies() {
+        return numEnemies;
     }
 
     public int getNumTiles() {
@@ -102,6 +113,7 @@ public class Level {
         spikes = new Spike[cols][rows];
         checkpoints = new ArrayList<>();
         coins = new Coin[cols][rows];
+        enemies = new Enemy[cols][rows];
         startTile = null;
     }
 
@@ -148,6 +160,8 @@ public class Level {
             return checkpoints.contains(checkpoint);
         } else if (obj instanceof Coin coin) {
             return coins[coin.col][coin.row] == coin;
+        } else if (obj instanceof Enemy enemy) {
+            return enemies[enemy.col][enemy.row] == enemy;
         }
         return false;
     }
@@ -166,6 +180,11 @@ public class Level {
         if (coins[col][row] != null) {
             return true;
         }
+
+        if (enemies[col][row] != null) {
+            return true;
+        }
+
         if (this.startTile != null) {
             if (col == startTile.col && row == startTile.row) {
                 return true;
@@ -187,6 +206,7 @@ public class Level {
         checkpoints.remove(new Checkpoint(col, row, false));
         checkpoints.remove(new Checkpoint(col, row, true));
         coins[col][row] = null;
+        enemies[col][row] = null;
         if (startTile != null) {
             if (startTile.col == col && startTile.row == row) {
                 startTile = null;
@@ -219,6 +239,14 @@ public class Level {
             for (Coin c : cs) {
                 if (c != null) {
                     c.draw(g2d);
+                }
+            }
+        }
+
+        for (Enemy[] es : enemies) {
+            for (Enemy e : es) {
+                if (e != null) {
+                    e.draw(g);
                 }
             }
         }
