@@ -6,27 +6,25 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Enemy {
+
     BufferedImage image;
     int row;
     int col;
-    int width;
-    int height;
+    Rectangle rect;
 
     public Enemy(int row, int col, int width, int height) {
         this.row = row;
         this.col = col;
-        this.width = width;
-        this.height = height;
+        this.rect = new Rectangle(col * GameConstants.TILE_SIZE, row * GameConstants.TILE_SIZE, width, height);
         try {
-            image = ImageIO.read(new File("photos/redImage.jpg"));
-
+            image = ImageIO.read(new File("photos/enemyImage.png"));
         } catch (IOException e) {
         }
     }
 
     public void draw(Graphics g) {
         if (image != null) {
-            g.drawImage(image, this.col * GamePanel.TILE_SIZE, this.row * GamePanel.TILE_SIZE, this.width, this.height,
+            g.drawImage(image, rect.x, rect.y, rect.width, rect.height,
                     null);
         }
     }
