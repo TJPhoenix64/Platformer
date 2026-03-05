@@ -10,8 +10,14 @@ public class Player extends Rectangle {
     boolean isJumping;
     boolean jumpReleased = true;
     Image image;
+
+    Image playerImageRight;
+    Image playerImageLeft;
     Image redImage;
     Image orangeImage;
+    Image swordImageLeft;
+    Image swordImageRight;
+    Image swordImage;
     long startJumpTime = 0L;
     long endJumpPressedTime = 0L;
     long endAirTime = 0L;
@@ -50,11 +56,17 @@ public class Player extends Rectangle {
     ArrayList<Coin> nearbyCoins = new ArrayList<>();
     Rectangle tileBounds = new Rectangle(0, 0, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE);
 
+    boolean isAttacking = false;
+    long attackStartTime = 0l;
+    long expectedAttackEndTime = 0l;
+
+    boolean facingRight = true;
+
     public static Rectangle playerRect = null;
 
     public Player() {
         width = GameConstants.TILE_SIZE;
-        height = GameConstants.TILE_SIZE;
+        height = GameConstants.TILE_SIZE * 2;
         x = 100;
         displayX = x;
         y = 100;
@@ -66,7 +78,14 @@ public class Player extends Rectangle {
         try {
             orangeImage = ImageIO.read(new File("photos/orangeBackground.jpg"));
             redImage = ImageIO.read(new File("photos/redImage.jpg"));
-            image = orangeImage;
+            swordImageRight = ImageIO.read(new File("photos/pixelSwordRight.png"));
+            swordImageLeft = ImageIO.read(new File("photos/pixelSwordLeft.png"));
+            playerImageRight = ImageIO.read(new File("photos/playerImageRight.png"));
+            playerImageLeft = ImageIO.read(new File("photos/playerImageLeft.png"));
+
+            image = playerImageRight;
+            swordImage = swordImageRight;
+
         } catch (IOException e) {
         }
     }
@@ -179,6 +198,20 @@ public class Player extends Rectangle {
         GamePanel.currentLevel.removeCoin(coin);
     }
 
+    public void attack() {
+        if (!isAttacking) {
+            isAttacking = true;
+            attackStartTime = System.currentTimeMillis();
+            expectedAttackEndTime = attackStartTime + 500;
+        }
+    }
+
+    public void updateAttack() {
+        if (System.currentTimeMillis() > expectedAttackEndTime) {
+            isAttacking = false;
+        }
+    }
+
     public void handleOffScreenMovement() {
         if (x > GameConstants.PANEL_WIDTH - width || x < 0) {
 
@@ -233,11 +266,10 @@ public class Player extends Rectangle {
         }
 
         handleOffScreenMovement();
-
-        if (deltaX == 0 && deltaY == 0) {
-            setImage(redImage);
-        } else {
-            setImage(orangeImage);
+        if (deltaX > 1) {
+            facingRight = true;
+        } else if (deltaX < -1) {
+            facingRight = false;
         }
 
         changePosition(deltaX, deltaY);
@@ -433,8 +465,21 @@ public class Player extends Rectangle {
     }
 
     public void draw(Graphics g) {
+        int xPos;
+        if (facingRight) {
+            image = playerImageRight;
+            xPos = x + width;
+            swordImage = swordImageRight;
+        } else {
+            image = playerImageLeft;
+            swordImage = swordImageLeft;
+            xPos = x - swordImage.getWidth(null);
+        }
         if (image != null) {
             g.drawImage(image, this.x, this.y, width, height, null);
+        }
+        if (isAttacking) {
+            g.drawImage(swordImage, xPos, y + height / 2 - swordImage.getHeight(null) / 2, null);
         }
     }
 }

@@ -41,7 +41,7 @@ public final class GamePanel extends JPanel implements Runnable {
     static int currentLevelNum = 0;
     static int numHearts = 3;
     boolean playMusic;
-    static float musicVolume = 0.8f;
+    static float musicVolume = 0.5f;
     static float tempTransparency = 0.4f;
     long lastTimeEffectStarted;
     double invincibilitySeconds = 1.5;
@@ -126,6 +126,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 repaint();
                 if (state == GameState.PLAYING) {
                     tyler.updatePosition();
+                    tyler.updateAttack();
                     if (playerHurt) {
                         playerHurt = false;
                         playerHurt();
@@ -576,6 +577,10 @@ public final class GamePanel extends JPanel implements Runnable {
 
                 if (key == KeyEvent.VK_D) {
                     cameraX -= 10;
+                }
+
+                if (key == KeyEvent.VK_Z) {
+                    tyler.attack();
                 }
 
                 if (key == KeyEvent.VK_T) {
