@@ -98,12 +98,17 @@ public class Player extends Rectangle {
     public void checkCheckpoints(long currentTime) {
         int col = x / GameConstants.TILE_SIZE;
         int row = y / GameConstants.TILE_SIZE;
+        int row2 = (y / GameConstants.TILE_SIZE) + 1;
 
-        if (!GamePanel.currentLevel.contains(col, row)) {
+        Thing thing;
+        if (GamePanel.currentLevel.contains(col, row)) {
+            thing = GamePanel.currentLevel.get(col, row);
+        } else if (GamePanel.currentLevel.contains(col, row2)) {
+            thing = GamePanel.currentLevel.get(col, row2);
+        } else {
             return;
         }
 
-        Thing thing = GamePanel.currentLevel.get(col, row);
         if (thing instanceof Checkpoint checkpoint) {
             long diffMs = getDiffMillis(GamePanel.lastCheckpointTime, currentTime);
 
