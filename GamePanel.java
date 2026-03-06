@@ -425,6 +425,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 System.out.println("State is: " + state.toString());
             }
         }
+        g.drawString("Counter: " + tyler.numCoins, 50, 50);
 
     }
 
