@@ -485,7 +485,9 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
             }
 
-            s.deleteCharAt(s.length() - 1);
+            if (s.charAt(s.length() - 1) == '_') {
+                s.deleteCharAt(s.length() - 1);
+            }
             s.append("\nSpikes:");
             for (Spike[] spikes : level.getSpikes()) {
                 for (Spike spike : spikes) {
@@ -495,15 +497,19 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
             }
 
-            s.deleteCharAt(s.length() - 1);
+            if (s.charAt(s.length() - 1) == '_') {
+                s.deleteCharAt(s.length() - 1);
+            }
             s.append("\nCheckpoints:");
             for (Checkpoint checkpoint : level.getCheckpoints()) {
                 if (!checkpoint.isTemp) {
                     s.append(checkpoint).append("_");
                 }
             }
-            s.deleteCharAt(s.length() - 1);
 
+            if (s.charAt(s.length() - 1) == '_') {
+                s.deleteCharAt(s.length() - 1);
+            }
             s.append("\nCoins:");
             for (Coin[] cs : level.getCoins()) {
                 for (Coin c : cs) {
@@ -512,8 +518,10 @@ public final class GamePanel extends JPanel implements Runnable {
                     }
                 }
             }
-            s.deleteCharAt(s.length() - 1);
 
+            if (s.charAt(s.length() - 1) == '_') {
+                s.deleteCharAt(s.length() - 1);
+            }
             s.append("\nstartPos:");
             if (level.getStartTile() != null) {
                 s.append(level.getStartTile().col);
