@@ -10,15 +10,18 @@ public class GameFrame extends JFrame {
     public GameFrame() {
         isLoading = true;
 
-        // new Thread(() -> {
-        //     try {
-        //         while (true) {
-        //             System.out.println("is Loading:" + isLoading);
-        //             Thread.sleep(500);
-        //         }
-        //     } catch (Exception e) {
-        //     }
-        // }).start();
+        new Thread(() -> {
+            try {
+                while (true) {
+                    System.out.println("is Loading:" + isLoading);
+                    if (!isLoading) {
+                        break;
+                    }
+                    Thread.sleep(500);
+                }
+            } catch (InterruptedException e) {
+            }
+        }).start();
         panel = new GamePanel();
         this.add(panel);
         this.setTitle("Platformer");
