@@ -74,6 +74,8 @@ public final class GamePanel extends JPanel implements Runnable {
     static long timeRunning = 0L;
     double timeRunningSeconds = 0;
 
+    int enemyId = 0;
+
     public GamePanel() {
 
         playMusic = (state == GameState.PLAYING);
@@ -249,6 +251,16 @@ public final class GamePanel extends JPanel implements Runnable {
                 if (coin != null) {
                     if (!solidTiles.contains(new Point(coin.col, coin.row))) {
                         solidTiles.add(new Point(coin.col, coin.row));
+                    }
+                }
+            }
+        }
+
+        for (Enemy[] enemies : level.getEnemies()) {
+            for (Enemy enemy : enemies) {
+                if (enemy != null) {
+                    if (!solidTiles.contains(new Point(enemy.col, enemy.row))) {
+                        solidTiles.add(new Point(enemy.col, enemy.row));
                     }
                 }
             }
@@ -530,6 +542,21 @@ public final class GamePanel extends JPanel implements Runnable {
                 s.append(level.getStartTile().row);
             }
 
+            if (s.charAt(s.length() - 1) == '_') {
+                s.deleteCharAt(s.length() - 1);
+            }
+            s.append("\nSmallEnemies:");
+            for (Enemy[] enemies : level.getEnemies()) {
+                for (Enemy enemy : enemies) {
+                    if (enemy != null && !enemy.isTemp) {
+                        s.append(enemy).append("_");
+                    }
+                }
+            }
+            if (s.charAt(s.length() - 1) == '_') {
+                s.deleteCharAt(s.length() - 1);
+            }
+
             writer.write(s.toString());
             writer.close();
         } catch (IOException e) {
@@ -648,6 +675,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
                 if (key == KeyEvent.VK_D) {
                     editingLevel.clear();
+                    enemyId = 0;
                 }
 
                 if (key == KeyEvent.VK_2) {
@@ -810,7 +838,7 @@ public final class GamePanel extends JPanel implements Runnable {
                         }
                         break;
                     case ENEMY:
-                        editingLevel.addObject(new Enemy(row, col, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE));
+                        editingLevel.addObject(new SmallEnemy(col, row, false, enemyId));
                     default:
                         break;
                 }
@@ -878,6 +906,10 @@ public final class GamePanel extends JPanel implements Runnable {
                             editingLevel.addStartTile(new StartTile(col, row, true));
                         }
                         break;
+                    case ENEMY:
+                        editingLevel.addObject(new SmallEnemy(col, row, true, enemyId));
+                        enemyId++;
+                        break;
                     default:
                         break;
                 }
@@ -944,6 +976,10 @@ public final class GamePanel extends JPanel implements Runnable {
                                 editingLevel.addStartTile(new StartTile(col, row, false));
                                 editingLevel.hasStart = true;
                             }
+                            break;
+                        case ENEMY:
+                            editingLevel.addObject(new SmallEnemy(col, row, true, enemyId));
+                            enemyId++;
                             break;
                         default:
                             break;

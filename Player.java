@@ -54,6 +54,7 @@ public class Player extends Rectangle {
     ArrayList<Tile> nearbyTiles = new ArrayList<>();
     ArrayList<Spike> nearbySpikes = new ArrayList<>();
     ArrayList<Coin> nearbyCoins = new ArrayList<>();
+    ArrayList<Enemy> nearbyEnemies = new ArrayList<>();
     Rectangle tileBounds = new Rectangle(0, 0, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE);
 
     boolean isAttacking = false;
@@ -102,9 +103,9 @@ public class Player extends Rectangle {
 
         Thing thing;
         if (GamePanel.currentLevel.contains(col, row)) {
-            thing = GamePanel.currentLevel.get(col, row);
+            thing = GamePanel.currentLevel.getThing(col, row);
         } else if (GamePanel.currentLevel.contains(col, row2)) {
-            thing = GamePanel.currentLevel.get(col, row2);
+            thing = GamePanel.currentLevel.getThing(col, row2);
         } else {
             return;
         }

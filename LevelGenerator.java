@@ -72,10 +72,14 @@ public class LevelGenerator {
                         level.addObject(c);
                     }
                 } else if (OGLine.startsWith("start")) {
-
                     StartTile t = new StartTile(cols.get(0), rows.get(0), false);
                     level.addStartTile(t);
                     //System.out.println("Adding S-Tile: " + t);
+                } else if (OGLine.startsWith("SmallEnemies")) {
+                    for (int k = 0; k < cords.length; k++) {
+                        SmallEnemy enemy = new SmallEnemy(cols.get(k), rows.get(k), false, k);
+                        level.addObject(enemy);
+                    }
                 }
 
             }

@@ -117,7 +117,7 @@ public class Level {
         startTile = null;
     }
 
-    public Thing get(int col, int row) {
+    public Thing getThing(int col, int row) {
         if (blocks[col][row] != null) {
             return blocks[col][row];
         }
@@ -143,10 +143,14 @@ public class Level {
         return null;
     }
 
+    public Enemy getEnemy(int col, int row) {
+        return enemies[col][row];
+    }
+
     public boolean containsTemp(int col, int row) {
-        Thing thing = get(col, row);
-        // System.out.println("Thing: " + thing);
-        return (thing != null && thing.isTemp);
+        Thing thing = getThing(col, row);
+        Enemy enemy = getEnemy(col, row);
+        return ((thing != null && thing.isTemp) || (enemy != null && enemy.isTemp));
     }
 
     public boolean contains(Object obj) {
