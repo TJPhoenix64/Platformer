@@ -338,6 +338,36 @@ public class Player extends Rectangle {
         return 0;
     }
 
+    /**
+     * clears the nearby arrays of tiles, spikes, coins, and enemies
+     */
+    public void clearNearbyStuff() {
+        nearbyTiles.clear();
+        nearbySpikes.clear();
+        nearbyCoins.clear();
+        nearbyEnemies.clear();
+    }
+
+    /**
+     * checks the location and adds the thing there to its nearby array
+     *
+     * @param xPos column that is checked
+     * @param yPos row that is checked
+     */
+    public void addNearbyThing(int xPos, int yPos) {
+        if (GamePanel.isSolidTile(xPos, yPos)) {
+            if (GamePanel.currentLevel.getBlocks()[xPos][yPos] != null) {
+                nearbyTiles.add(GamePanel.currentLevel.getBlocks()[xPos][yPos]);
+            } else if (GamePanel.currentLevel.getSpikes()[xPos][yPos] != null) {
+                nearbySpikes.add(GamePanel.currentLevel.getSpikes()[xPos][yPos]);
+            } else if (GamePanel.currentLevel.getCoins()[xPos][yPos] != null) {
+                nearbyCoins.add(GamePanel.currentLevel.getCoins()[xPos][yPos]);
+            } else if (GamePanel.currentLevel.getEnemies()[xPos][yPos] != null) {
+                nearbyEnemies.add(GamePanel.currentLevel.getEnemies()[xPos][yPos]);
+            }
+        }
+    }
+
     public void changePosition(double dX, double dY) {
         int tileSize = GameConstants.TILE_SIZE;
         int leftTile = this.x / tileSize;
@@ -345,20 +375,21 @@ public class Player extends Rectangle {
         int topTile = this.y / tileSize;
         int bottomTile = (this.y + this.height) / tileSize;
 
-        nearbyTiles.clear();
-        nearbySpikes.clear();
-        nearbyCoins.clear();
+        clearNearbyStuff();
+
         for (int yPos = topTile - 1; yPos <= bottomTile + 1; yPos++) {
             for (int xPos = leftTile - 1; xPos <= rightTile + 1; xPos++) {
-                if (GamePanel.isSolidTile(xPos, yPos)) {
-                    if (GamePanel.currentLevel.getBlocks()[xPos][yPos] != null) {
-                        nearbyTiles.add(GamePanel.currentLevel.getBlocks()[xPos][yPos]);
-                    } else if (GamePanel.currentLevel.getSpikes()[xPos][yPos] != null) {
-                        nearbySpikes.add(GamePanel.currentLevel.getSpikes()[xPos][yPos]);
-                    } else if (GamePanel.currentLevel.getCoins()[xPos][yPos] != null) {
-                        nearbyCoins.add(GamePanel.currentLevel.getCoins()[xPos][yPos]);
-                    }
-                }
+                addNearbyThing(xPos, yPos);
+            }
+        }
+
+        // should change this in the future to just do it for basic enemies(only contact damage) 
+        // and have something sepsarate fro ones with projectiles or bosses
+        for (Enemy enemy : nearbyEnemies) {
+            tileBounds.x = enemy.col * tileSize - GamePanel.cameraX;
+            tileBounds.y = enemy.row * tileSize;
+            if (playerRect.getBounds().intersects(tileBounds)) {
+                GamePanel.playerHurt = true;
             }
         }
 
@@ -384,10 +415,12 @@ public class Player extends Rectangle {
             tileBounds.x = tile.col * tileSize - GamePanel.cameraX;
             tileBounds.y = tile.row * tileSize;
 
+            //going down
             if (dY > 0) {
-                // Predict future horizontal position
+                // Predict future vertical position
                 Rectangle futureRect = new Rectangle(playerRect);
                 futureRect.y += dY;
+                //TODO: fix the code in this if statement
                 if (futureRect.intersects(tileBounds)) {
                     int maxDown = tileBounds.y - playerRect.height;
 
@@ -412,6 +445,7 @@ public class Player extends Rectangle {
 
             }
 
+            // going up
             if (dY < 0) {
                 // Predict future horizontal position
                 Rectangle futureRect = new Rectangle(playerRect);
