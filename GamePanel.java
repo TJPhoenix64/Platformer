@@ -192,6 +192,7 @@ public final class GamePanel extends JPanel implements Runnable {
         // needs to be in order that you want to see them
         currentLevel = levels.get(0);
         updateSolidTiles(currentLevel);
+        tyler.updateCheckpointPos(currentLevel.getStartTile().x, currentLevel.getStartTile().y - 200);
     }
 
     /**
