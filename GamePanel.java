@@ -67,24 +67,19 @@ public final class GamePanel extends JPanel implements Runnable {
 
     File folder = new File("levels");
 
+    Font font = new Font("Arial", Font.BOLD, 30);
+
     final long startTime;
     static long timeRunning = 0L;
     double timeRunningSeconds = 0;
 
     public GamePanel() {
-        makePlayer();
-        generateLevels();
-        tyler.teleport(currentLevel.getStartTile().x, currentLevel.getStartTile().y);
-        lastTimeEffectStarted = System.currentTimeMillis();
+
         playMusic = (state == GameState.PLAYING);
         playMusic();
-        volumeSlider = new VolumeSlider(50, sliderRect, rectColor, 20, circleColor, 10, 150, ovalColor);
 
         mainMenuButtons.clear();
         generateMainMenu();
-        pauseMenuButtons.clear();
-        generatePauseMenu();
-        generatePauseButton();
 
         this.setFocusable(true);
         AL listener = new AL();
@@ -98,14 +93,29 @@ public final class GamePanel extends JPanel implements Runnable {
         startTime = System.nanoTime();
 
         try {
-            platformerBackground = ImageIO.read(new File("photos/platformerBackground.jpg"));
             plainBackground = ImageIO.read(new File("photos/blueBackground.png"));
+        } catch (IOException e) {
+        }
+
+    }
+
+    public void secondaryInitialization() {
+        makePlayer();
+        generateLevels();
+        tyler.teleport(currentLevel.getStartTile().x, currentLevel.getStartTile().y);
+        lastTimeEffectStarted = System.currentTimeMillis();
+        volumeSlider = new VolumeSlider(50, sliderRect, rectColor, 20, circleColor, 10, 150, ovalColor);
+        pauseMenuButtons.clear();
+        generatePauseMenu();
+        generatePauseButton();
+
+        try {
+            platformerBackground = ImageIO.read(new File("photos/platformerBackground.jpg"));
             greyBackground = ImageIO.read(new File("photos/greyBackground.jpg"));
             heart = ImageIO.read(new File("photos/heart.png"));
             pausedBackground = ImageIO.read(new File("photos/redImage.jpg"));
         } catch (IOException e) {
         }
-
     }
 
     @Override
@@ -114,16 +124,25 @@ public final class GamePanel extends JPanel implements Runnable {
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
         double delta = 0.0;
-        tyler.startJumpTime = lastTime;
+
+        long timer = System.currentTimeMillis();
+        int frames = 0;
+        if (tyler != null) {
+            tyler.startJumpTime = lastTime;
+        }
 
         while (true) {
             long now = System.nanoTime();
             timeRunning = now - startTime;
             timeRunningSeconds = timeRunning / 1_000_000_000.0;
+
             delta += (now - lastTime) / ns;
             lastTime = now;
+
             if (delta >= 1) {
-                repaint();
+                repaint(); // this counts as a frame
+                frames++;
+
                 if (state == GameState.PLAYING) {
                     tyler.updatePosition();
                     tyler.updateAttack();
@@ -134,8 +153,16 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
                 delta--;
             }
+
+            // print FPS every second
+            if (System.currentTimeMillis() - timer >= 1000) {
+                System.out.println("FPS: " + frames);
+                frames = 0;
+                timer += 1000;
+            }
+
             try {
-                Thread.sleep(1); // sleep 1ms to prevent 100% CPU usage
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -384,6 +411,10 @@ public final class GamePanel extends JPanel implements Runnable {
     }
 
     public void draw(Graphics g) {
+        g.setFont(font);
+// if (GameFrame.isLoading) {
+        //g.drawString("Loading...", 100, 100);
+//}
         drawBackground(g);
 
         if (state == null) {
@@ -396,6 +427,8 @@ public final class GamePanel extends JPanel implements Runnable {
                 tyler.draw(g);
                 drawHearts(g);
                 pauseButton.draw(g, this);
+
+                g.drawString("Coins: " + tyler.numCoins, 50, 50);
 
             }
             case EDITING -> {
@@ -419,14 +452,13 @@ public final class GamePanel extends JPanel implements Runnable {
                     rect.draw(g, this);
                 }
                 volumeSlider.draw(g);
+                g.drawString("Coins: " + tyler.numCoins, 50, 50);
             }
 
             default -> {
                 System.out.println("State is: " + state.toString());
             }
         }
-        g.drawString("Counter: " + tyler.numCoins, 50, 50);
-
     }
 
     public void drawGrid(int width, int height, Graphics g) {
@@ -644,19 +676,19 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
             }
 
-            if (key == KeyEvent.VK_SPACE && state != GameState.PLAYING) {
+            if (key == KeyEvent.VK_SPACE && state != GameState.PLAYING && !GameFrame.isLoading) {
                 switchState(GameState.PLAYING);
                 currentLevel = levels.get(currentLevelNum);
                 updateSolidTiles(currentLevel);
 
             }
-            if (key == KeyEvent.VK_E) {
+            if (key == KeyEvent.VK_E && !GameFrame.isLoading) {
                 switchState(GameState.EDITING);
                 currentLevel = editingLevel;
                 updateSolidTiles(currentLevel);
 
             }
-            if (key == KeyEvent.VK_ESCAPE) {
+            if (key == KeyEvent.VK_ESCAPE && !GameFrame.isLoading) {
                 switchState(GameState.PAUSED);
             }
             if (key == KeyEvent.VK_M) {
@@ -703,7 +735,7 @@ public final class GamePanel extends JPanel implements Runnable {
             int x = e.getPoint().x;
             int y = e.getPoint().y;
 
-            if (state == GameState.MENU) {
+            if (state == GameState.MENU && !GameFrame.isLoading) {
                 for (ImageRect rect : mainMenuButtons) {
                     if (rect.contains(x, y)) {
                         Image playButton = null;
