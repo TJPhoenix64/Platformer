@@ -1,6 +1,9 @@
+package menuclasses;
+
 import java.awt.*;
 
-class ImageRect {
+public class ImageRect {
+
     Rectangle bounds;
     Image image;
 
