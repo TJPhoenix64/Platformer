@@ -176,27 +176,6 @@ public final class GamePanel extends JPanel implements Runnable {
         tyler = new Player();
     }
 
-    public void generateLevel(String fileName) {
-        currentLevel = generator.getContentsOfFile(fileName);
-        for (Tile[] tiles : currentLevel.getBlocks()) {
-            for (Tile t : tiles) {
-                if (t != null) {
-                    solidTiles.add(new Point(t.col, t.row));
-                }
-            }
-        }
-        for (Spike[] spikes : currentLevel.getSpikes()) {
-            for (Spike s : spikes) {
-                if (s != null) {
-                    if (!solidTiles.contains(new Point(s.col, s.row))) {
-                        solidTiles.add(new Point(s.col, s.row));
-                    }
-                }
-            }
-
-        }
-    }
-
     // way that scrolling works, 
     // things have an x position on the screen,
     // then there is a camera x 
