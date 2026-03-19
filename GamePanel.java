@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import javax.imageio.*;
 import javax.swing.*;
+import menuclasses.*;
 
 enum GameState {
     MENU, PLAYING, PAUSED, EDITING
