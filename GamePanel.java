@@ -366,6 +366,7 @@ public final class GamePanel extends JPanel implements Runnable {
             tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
             currentLevelNum = tyler.lastCheckpointLevel;
             currentLevel = levels.get(currentLevelNum);
+            updateSolidTiles(currentLevel);
 
             tyler.passedCheckpointSinceButtonPress = true;
 
