@@ -63,6 +63,8 @@ public class Player extends Rectangle {
 
     boolean facingRight = true;
 
+    long startHeadHitTime = 0l;
+
     public static Rectangle playerRect = null;
 
     public Player() {
@@ -432,6 +434,7 @@ public class Player extends Rectangle {
                     currentYVelo = 0;
 
                     endAirTime = System.nanoTime();
+                    startHeadHitTime = endAirTime;
                     totalAirTime = getDiffMillis(startJumpTime, endAirTime);
 
                 }
@@ -456,6 +459,9 @@ public class Player extends Rectangle {
 
                     // Compute how far we *can* move without intersecting
                     dY = maxUp - playerRect.y;
+                    if (Math.abs(dY) < 0.01) {
+                        isJumping = false;
+                    }
                 }
             }
 
