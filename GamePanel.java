@@ -406,9 +406,6 @@ public final class GamePanel extends JPanel implements Runnable {
 
     public void draw(Graphics g) {
         g.setFont(font);
-// if (GameFrame.isLoading) {
-        //g.drawString("Loading...", 100, 100);
-//}
         drawBackground(g);
 
         if (state == null) {
