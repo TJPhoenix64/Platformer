@@ -67,7 +67,7 @@ public class VolumeSlider {
     }
 
     public float getVolume() {
-        return (float) (volume / 100.0);
+        return 0.5f + (volume / 100.0f) * 0.5f;  // 0→0.5, 50→0.75, 100→1.0
     }
 
     public void setVolume(int volume) {
@@ -96,6 +96,7 @@ public class VolumeSlider {
         } else {
             this.yCir = y;
         }
+        // sets the volume range between 50 and 100
         this.volume = percentage;
         this.upperYCircle = yCir - (radius / 2);
     }

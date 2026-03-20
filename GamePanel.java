@@ -107,7 +107,7 @@ public final class GamePanel extends JPanel implements Runnable {
         generateLevels();
         tyler.teleport(currentLevel.getStartTile().x, currentLevel.getStartTile().y);
         lastTimeEffectStarted = System.currentTimeMillis();
-        volumeSlider = new VolumeSlider(50, sliderRect, rectColor, 20, circleColor, 10, 150, ovalColor);
+        volumeSlider = new VolumeSlider(75, sliderRect, rectColor, 20, circleColor, 10, 150, ovalColor);
         pauseMenuButtons.clear();
         generatePauseMenu();
         generatePauseButton();
@@ -160,6 +160,9 @@ public final class GamePanel extends JPanel implements Runnable {
             // print FPS every second
             if (System.currentTimeMillis() - timer >= 1000) {
                 System.out.println("FPS: " + frames);
+                if (volumeSlider != null) {
+                    System.out.println("volume" + volumeSlider.getVolume());
+                }
                 frames = 0;
                 timer += 1000;
             }
