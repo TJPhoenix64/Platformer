@@ -211,7 +211,7 @@ public class Spike extends Thing {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, GamePanel.tempTransparency));
         }
         Rectangle bounds = spike.getBounds();
-        g2d.drawImage(image, bounds.x, bounds.y, bounds.width, bounds.height, null);
+        g2d.drawImage(image, bounds.x - GamePanel.cameraX, bounds.y, bounds.width, bounds.height, null);
         g2d.setClip(oldClip);
         g2d.setComposite(oldComposite);
     }

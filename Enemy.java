@@ -35,7 +35,7 @@ public class Enemy {
 
     public void draw(Graphics g) {
         if (image != null) {
-            g.drawImage(image, rect.x, rect.y, rect.width, rect.height,
+            g.drawImage(image, rect.x - GamePanel.cameraX, rect.y, rect.width, rect.height,
                     null);
         }
     }

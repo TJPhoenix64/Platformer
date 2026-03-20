@@ -389,7 +389,7 @@ public class Player extends Rectangle {
         // should change this in the future to just do it for basic enemies(only contact damage) 
         // and have something sepsarate fro ones with projectiles or bosses
         for (Enemy enemy : nearbyEnemies) {
-            tileBounds.x = enemy.col * tileSize - GamePanel.cameraX;
+            tileBounds.x = enemy.col * tileSize;
             tileBounds.y = enemy.row * tileSize;
             if (playerRect.getBounds().intersects(tileBounds)) {
                 GamePanel.playerHurt = true;
@@ -397,7 +397,7 @@ public class Player extends Rectangle {
         }
 
         for (Spike spike : nearbySpikes) {
-            tileBounds.x = spike.col * tileSize - GamePanel.cameraX;
+            tileBounds.x = spike.col * tileSize;
             tileBounds.y = spike.row * tileSize;
 
             if (playerRect.getBounds().intersects(tileBounds)) {
@@ -406,7 +406,7 @@ public class Player extends Rectangle {
         }
 
         for (Coin coin : nearbyCoins) {
-            tileBounds.x = coin.col * tileSize - GamePanel.cameraX;
+            tileBounds.x = coin.col * tileSize;
             tileBounds.y = coin.row * tileSize;
 
             if (playerRect.getBounds().intersects(tileBounds)) {
@@ -415,7 +415,7 @@ public class Player extends Rectangle {
         }
 
         for (Tile tile : nearbyTiles) {
-            tileBounds.x = tile.col * tileSize - GamePanel.cameraX;
+            tileBounds.x = tile.col * tileSize;
             tileBounds.y = tile.row * tileSize;
 
             //going down
@@ -522,10 +522,10 @@ public class Player extends Rectangle {
             xPos = x - swordImage.getWidth(null);
         }
         if (image != null) {
-            g.drawImage(image, this.x, this.y, width, height, null);
+            g.drawImage(image, this.x - GamePanel.cameraX, this.y, width, height, null);
         }
         if (isAttacking) {
-            g.drawImage(swordImage, xPos, y + height / 2 - swordImage.getHeight(null) / 2, null);
+            g.drawImage(swordImage, xPos - GamePanel.cameraX, y + height / 2 - swordImage.getHeight(null) / 2, null);
         }
     }
 }
