@@ -48,22 +48,7 @@ public class VolumeSlider {
     }
 
     public VolumeSlider(int volume, int xRect, int yRect, int widthRect, int heightRect, Color rectColor, int radius, Color circleColor, int widthOval, int heightOval, Color ovalColor) {
-        this.volume = volume;
-        this.rect = new Rectangle(xRect, yRect, widthRect, heightRect);
-        this.radius = radius;
-        this.rectColor = rectColor;
-        this.circleColor = circleColor;
-        this.widthOval = widthOval;
-        this.heightOval = heightOval;
-        this.ovalColor = ovalColor;
-        this.centerX = rect.x + (rect.width / 2);
-        this.centerY = rect.y + (rect.height / 2);
-        this.leftXCircle = centerX - (radius / 2);
-        this.upperYCircle = centerY - (radius / 2);
-        this.leftXOval = centerX - (widthOval / 2);
-        this.upperYOval = centerY - (heightOval / 2);
-        this.lowerYOval = centerY + (heightOval / 2);
-
+        this(volume, new Rectangle(xRect, yRect, widthRect, heightRect), rectColor, radius, circleColor, widthOval, heightOval, ovalColor);
     }
 
     public float getVolume() {

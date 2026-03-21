@@ -47,79 +47,6 @@ public class Spike extends Thing {
     }
 
     /**
-     * simplest constructor, assumes it is 1 tile wide and tall, uses default
-     * image path, also asumes is upright
-     *
-     * @param col
-     * @param row
-     */
-    public Spike(int col, int row) {
-        super(col, row, false);
-        this.rotation = 0;
-
-        int[] xArr = new int[3];
-        xArr[0] = col * GameConstants.TILE_SIZE;
-        xArr[1] = (col + 1) * GameConstants.TILE_SIZE;
-        xArr[2] = (xArr[0] + xArr[1]) / 2;
-
-        int[] yArr = new int[3];
-        yArr[0] = (row + 1) * GameConstants.TILE_SIZE;
-        yArr[1] = (row + 1) * GameConstants.TILE_SIZE;
-        yArr[2] = row * GameConstants.TILE_SIZE;
-
-        this.spike = new Polygon(xArr, yArr, 3);
-
-        try {
-            image = ImageIO.read(new File(defaultImagePath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * location of top right corner
-     *
-     * @param col
-     * @param row
-     * @param numTileWidth how many tiles it has in length and width
-     * @param imagePath
-     */
-    public Spike(int col, int row, int rotation) {
-        super(col, row, false);
-        this.rotation = rotation;
-        int[] xArr = new int[3];
-        xArr[0] = col * GameConstants.TILE_SIZE;
-        xArr[1] = (col + 1) * GameConstants.TILE_SIZE;
-        xArr[2] = (xArr[0] + xArr[1]) / 2;
-
-        int[] yArr = new int[3];
-        yArr[0] = (row + 1) * GameConstants.TILE_SIZE;
-        yArr[1] = (row + 1) * GameConstants.TILE_SIZE;
-        yArr[2] = row * GameConstants.TILE_SIZE;
-
-        this.spike = new Polygon(xArr, yArr, 3);
-        if (rotation != 0) {
-
-            double angleRadians = Math.toRadians(rotation);
-            Rectangle bounds = this.spike.getBounds();
-            double centerX = bounds.getCenterX();
-            double centerY = bounds.getCenterY();
-
-            AffineTransform transform = new AffineTransform();
-            transform.rotate(angleRadians, centerX, centerY);
-
-            Shape rotated = transform.createTransformedShape(this.spike);
-            this.spike = toPolygon(rotated);
-        }
-        try {
-            image = ImageIO.read(new File(defaultImagePath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * position, rotation, and if its temporary
      *
      * @param col
@@ -141,24 +68,27 @@ public class Spike extends Thing {
         yArr[2] = row * GameConstants.TILE_SIZE;
 
         this.spike = new Polygon(xArr, yArr, 3);
-        if (rotation != 0) {
-
-            double angleRadians = Math.toRadians(rotation);
-            Rectangle bounds = this.spike.getBounds();
-            double centerX = bounds.getCenterX();
-            double centerY = bounds.getCenterY();
-
-            AffineTransform transform = new AffineTransform();
-            transform.rotate(angleRadians, centerX, centerY);
-
-            Shape rotated = transform.createTransformedShape(this.spike);
-            this.spike = toPolygon(rotated);
-        }
+        applyRotation();
         try {
-            image = ImageIO.read(new File(defaultImagePath));
+            image = ImageIO.read(new File(DEFAULT_IMAGE_PATH));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * simplest constructor, assumes it is 1 tile wide and tall, uses default
+     * image path, also asumes is upright
+     *
+     * @param col
+     * @param row
+     */
+    public Spike(int col, int row, int rotation) {
+        this(col, row, rotation, false);
+    }
+
+    public Spike(int col, int row) {
+        this(col, row, 0, false);
     }
 
     /**

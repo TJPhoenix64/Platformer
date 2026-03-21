@@ -23,11 +23,7 @@ public abstract class Thing {
     }
 
     public Thing(int col, int row) {
-        this.row = row;
-        this.col = col;
-        this.isTemp = false;
-        x = col * GameConstants.TILE_SIZE;
-        y = row * GameConstants.TILE_SIZE;
+        this(col, row, false);
     }
 
     public void draw(Graphics g) {

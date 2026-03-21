@@ -15,15 +15,6 @@ public class Enemy {
     int id;
     boolean isTemp;
 
-    public Enemy(int col, int row, int width, int height, boolean isTemp, int id) {
-        this.row = row;
-        this.col = col;
-        this.id = id;
-        this.isTemp = isTemp;
-        this.rect = new Rectangle(col * GameConstants.TILE_SIZE, row * GameConstants.TILE_SIZE, width, height);
-        this.image = defaultImage;
-    }
-
     public Enemy(int col, int row, int width, int height, boolean isTemp, int id, BufferedImage image) {
         this.row = row;
         this.col = col;
@@ -31,6 +22,10 @@ public class Enemy {
         this.isTemp = isTemp;
         this.rect = new Rectangle(col * GameConstants.TILE_SIZE, row * GameConstants.TILE_SIZE, width, height);
         this.image = image;
+    }
+
+    public Enemy(int col, int row, int width, int height, boolean isTemp, int id) {
+        this(col, row, width, height, isTemp, id, defaultImage);
     }
 
     public void draw(Graphics g) {
