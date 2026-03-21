@@ -112,8 +112,16 @@ public class Spike extends Thing {
         yArr[2] = row * GameConstants.TILE_SIZE;
 
         this.spike = new Polygon(xArr, yArr, 3);
-        if (rotation != 0) {
+        applyRotation();
+        try {
+            image = ImageIO.read(new File(imagePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private void applyRotation() {
+        if (rotation != 0) {
             double angleRadians = Math.toRadians(rotation);
             Rectangle bounds = this.spike.getBounds();
             double centerX = bounds.getCenterX();
@@ -124,11 +132,6 @@ public class Spike extends Thing {
 
             Shape rotated = transform.createTransformedShape(this.spike);
             this.spike = toPolygon(rotated);
-        }
-        try {
-            image = ImageIO.read(new File(imagePath));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
