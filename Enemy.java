@@ -37,7 +37,7 @@ public class Enemy {
 
     private static BufferedImage loadDefaultImage() {
         try {
-            return ImageIO.read(new File("photos/platformerBackground.jpg"));
+            return ImageIO.read(new File(GameConstants.Images.PLATFORMER_BACKGROUND));
         } catch (IOException e) {
             e.printStackTrace();
             return null;

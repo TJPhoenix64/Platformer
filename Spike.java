@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 public class Spike extends Thing {
 
     private Polygon spike;
-    private String defaultImagePath = "photos/dirt.png";
     int rotation;
 
     /**
@@ -70,7 +69,7 @@ public class Spike extends Thing {
         this.spike = new Polygon(xArr, yArr, 3);
         applyRotation();
         try {
-            image = ImageIO.read(new File(DEFAULT_IMAGE_PATH));
+            image = ImageIO.read(new File(GameConstants.Images.DEFAULT_SPIKE_IMAGE));
         } catch (IOException e) {
             e.printStackTrace();
         }

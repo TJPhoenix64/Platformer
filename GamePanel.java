@@ -96,7 +96,7 @@ public final class GamePanel extends JPanel implements Runnable {
         startTime = System.nanoTime();
 
         try {
-            plainBackground = ImageIO.read(new File("photos/blueBackground.png"));
+            plainBackground = ImageIO.read(new File(GameConstants.Images.BLUE_BACKGROUND));
         } catch (IOException e) {
         }
 
@@ -113,10 +113,10 @@ public final class GamePanel extends JPanel implements Runnable {
         generatePauseButton();
 
         try {
-            platformerBackground = ImageIO.read(new File("photos/platformerBackground.jpg"));
-            greyBackground = ImageIO.read(new File("photos/greyBackground.jpg"));
-            heart = ImageIO.read(new File("photos/heart.png"));
-            pausedBackground = ImageIO.read(new File("photos/redImage.jpg"));
+            platformerBackground = ImageIO.read(new File(GameConstants.Images.PLATFORMER_BACKGROUND));
+            greyBackground = ImageIO.read(new File(GameConstants.Images.GREY_BACKGROUND));
+            heart = ImageIO.read(new File(GameConstants.Images.HEART));
+            pausedBackground = ImageIO.read(new File(GameConstants.Images.PAUSED_BACKGROUND));
         } catch (IOException e) {
         }
     }
@@ -262,9 +262,9 @@ public final class GamePanel extends JPanel implements Runnable {
         Image settingsButton = null;
         Image titleImage = null;
         try {
-            playButton = ImageIO.read(new File("photos/PlayButton.png"));
-            settingsButton = ImageIO.read(new File("photos/redImage.jpg"));
-            titleImage = ImageIO.read(new File("photos/Title.png"));
+            playButton = ImageIO.read(new File(GameConstants.Images.PLAY_BUTTON));
+            settingsButton = ImageIO.read(new File(GameConstants.Images.SETTINGS_BUTTON));
+            titleImage = ImageIO.read(new File(GameConstants.Images.TITLE_IMAGE));
         } catch (IOException e) {
         }
         if (playButton != null) {
@@ -284,7 +284,7 @@ public final class GamePanel extends JPanel implements Runnable {
     public void generatePauseButton() {
         Image image = null;
         try {
-            image = ImageIO.read(new File("photos/pauseButton.png"));
+            image = ImageIO.read(new File(GameConstants.Images.PAUSE_BUTTON));
         } catch (IOException e) {
         }
         if (image != null) {
@@ -300,8 +300,8 @@ public final class GamePanel extends JPanel implements Runnable {
         Image playButton = null;
         Image settingsButton = null;
         try {
-            playButton = ImageIO.read(new File("photos/PlayButton.png"));
-            settingsButton = ImageIO.read(new File("photos/orangeBackground.jpg"));
+            playButton = ImageIO.read(new File(GameConstants.Images.PLAY_BUTTON));
+            settingsButton = ImageIO.read(new File(GameConstants.Images.ORANGE_IMAGE));
         } catch (IOException e) {
         }
         if (playButton != null) {
@@ -317,7 +317,7 @@ public final class GamePanel extends JPanel implements Runnable {
         tyler.updateCheckpointPos(c.x, c.y);
         tyler.lastCheckpointLevel = GamePanel.currentLevelNum;
         GamePanel.lastCheckpointTime = System.nanoTime();
-        MusicPlayer.playSound("music/ding.wav");
+        MusicPlayer.playSound(GameConstants.Music.DING);
     }
 
     public void drawHearts(Graphics g) {
@@ -360,12 +360,12 @@ public final class GamePanel extends JPanel implements Runnable {
             numHearts--;
             if (!handlePotentialLoss()) {
                 if (num > 0.5) {
-                    MusicPlayer.playSound("music/hurt.wav");
+                    MusicPlayer.playSound(GameConstants.Music.HURT);
                 } else {
                     SayExample.sayPhrase("wow, you make this game look really hard");
                 }
             } else {
-                MusicPlayer.playSound("music/fail.wav");
+                MusicPlayer.playSound(GameConstants.Music.FAIL);
             }
             tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
             currentLevelNum = tyler.lastCheckpointLevel;
@@ -560,9 +560,9 @@ public final class GamePanel extends JPanel implements Runnable {
 
     public static void playMusic() {
         if (state == GameState.PLAYING) {
-            bgMusic.playMusic("music/background.wav", true, musicVolume);
+            bgMusic.playMusic(GameConstants.Music.BACKGROUND, true, musicVolume);
         } else if (state == GameState.PAUSED) {
-            bgMusic.playMusic("music/pauseMenuBackground.wav", true, musicVolume);
+            bgMusic.playMusic(GameConstants.Music.PAUSE_BACKGROUND, true, musicVolume);
         } else {
             bgMusic.stopMusic();
         }
@@ -758,7 +758,7 @@ public final class GamePanel extends JPanel implements Runnable {
                     if (rect.contains(x, y)) {
                         Image playButton = null;
                         try {
-                            playButton = ImageIO.read(new File("photos/PlayButton.png"));
+                            playButton = ImageIO.read(new File(GameConstants.Images.PLAY_BUTTON));
                         } catch (IOException a) {
                         }
                         if (playButton != null) {

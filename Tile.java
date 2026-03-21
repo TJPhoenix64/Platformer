@@ -8,7 +8,7 @@ public class Tile extends Thing {
     public Tile(int col, int row, boolean isTemp) {
         super(col, row, isTemp);
         try {
-            image = ImageIO.read(new File("photos/dirt.png"));
+            image = ImageIO.read(new File(GameConstants.Images.DIRT));
         } catch (IOException e) {
         }
     }

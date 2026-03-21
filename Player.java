@@ -79,12 +79,12 @@ public class Player extends Rectangle {
         playerRect = new Rectangle(x, y, width, height);
 
         try {
-            orangeImage = ImageIO.read(new File("photos/orangeBackground.jpg"));
-            redImage = ImageIO.read(new File("photos/redImage.jpg"));
-            swordImageRight = ImageIO.read(new File("photos/pixelSwordRight.png"));
-            swordImageLeft = ImageIO.read(new File("photos/pixelSwordLeft.png"));
-            playerImageRight = ImageIO.read(new File("photos/playerImageRight.png"));
-            playerImageLeft = ImageIO.read(new File("photos/playerImageLeft.png"));
+            orangeImage = ImageIO.read(new File(GameConstants.Images.ORANGE_IMAGE));
+            redImage = ImageIO.read(new File(GameConstants.Images.RED_IMAGE));
+            swordImageRight = ImageIO.read(new File(GameConstants.Images.SWORD_RIGHT));
+            swordImageLeft = ImageIO.read(new File(GameConstants.Images.SWORD_LEFT));
+            playerImageRight = ImageIO.read(new File(GameConstants.Images.PLAYER_RIGHT));
+            playerImageLeft = ImageIO.read(new File(GameConstants.Images.PLAYER_LEFT));
 
             image = playerImageRight;
             swordImage = swordImageRight;
