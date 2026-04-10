@@ -138,12 +138,18 @@ public class Spike extends Thing {
     public void draw(Graphics2D g2d) {
         Shape oldClip = g2d.getClip();
         Composite oldComposite = g2d.getComposite();
+
+        g2d.translate(-GamePanel.cameraX, 0);
         g2d.setClip(spike);
+
         if (isTemp) {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, GamePanel.tempTransparency));
         }
+
         Rectangle bounds = spike.getBounds();
-        g2d.drawImage(image, bounds.x - GamePanel.cameraX, bounds.y, bounds.width, bounds.height, null);
+        g2d.drawImage(image, bounds.x, bounds.y, bounds.width, bounds.height, null);
+
+        g2d.translate(GamePanel.cameraX, 0);
         g2d.setClip(oldClip);
         g2d.setComposite(oldComposite);
     }

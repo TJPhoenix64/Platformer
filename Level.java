@@ -50,6 +50,10 @@ public class Level {
         }
     }
 
+    public int getWidth() {
+        return GameConstants.PANEL_WIDTH;
+    }
+
     public void addStartTile(StartTile tile) {
         startTile = tile;
     }

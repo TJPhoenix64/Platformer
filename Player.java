@@ -166,7 +166,6 @@ public class Player extends Rectangle {
             isJumping = true;
             currentYVelo = initialVeloY; // negative
             startJumpTime = startTime;
-
         }
     }
 
@@ -221,9 +220,9 @@ public class Player extends Rectangle {
     }
 
     public void handleOffScreenMovement() {
-        if (x > GameConstants.PANEL_WIDTH - width || x < 0) {
+        if (x > GamePanel.currentLevel.getWidth() - width || x < 0) {
 
-            if (x > GameConstants.PANEL_WIDTH - width) {
+            if (x > GamePanel.currentLevel.getWidth() - width) {
                 GamePanel.advanceLevel();
                 int startX;
                 int startY;
@@ -250,6 +249,10 @@ public class Player extends Rectangle {
                 }
                 teleport(startX, startY);
             }
+        }
+
+        if (y > GameConstants.PANEL_HEIGHT + 100) {
+            GamePanel.playerHurt = true;
         }
     }
 

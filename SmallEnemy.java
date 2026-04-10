@@ -14,7 +14,7 @@ public class SmallEnemy extends Enemy {
 
     private static BufferedImage loadImage() {
         try {
-            return ImageIO.read(new File("photos/PlayButton.png"));
+            return ImageIO.read(new File(GameConstants.Images.ORC_IMAGE));
         } catch (IOException e) {
             e.printStackTrace();
             return null;

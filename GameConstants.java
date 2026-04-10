@@ -10,7 +10,7 @@ public class GameConstants {
 
     static class Images {
 
-        static final String DIRT = "photos/dirt.png";
+        static final String DIRT = "photos/bradyBogan.jpg";
         static final String FLAG = "photos/flag.png";
         static final String PLAYER_RIGHT = "photos/playerImageRight.png";
         static final String PLAYER_LEFT = "photos/playerImageLeft.png";
@@ -20,16 +20,19 @@ public class GameConstants {
         static final String PAUSE_BUTTON = "photos/pauseButton.png";
         static final String PLAY_BUTTON = "photos/PlayButton.png";
         static final String SETTINGS_BUTTON = "photos/redImage.jpg";
-        static final String TITLE_IMAGE = "photos/Title.png";
+        static final String TITLE_IMAGE = "photos/bradyBogan.jpg";
         static final String ORANGE_IMAGE = "photos/orangeBackground.jpg";
         static final String BLUE_BACKGROUND = "photos/blueBackground.png";
+
         static final String PLATFORMER_BACKGROUND = "photos/platformerBackground.jpg";
         static final String GREY_BACKGROUND = "photos/greyBackground.jpg";
         static final String PAUSED_BACKGROUND = "photos/redImage.jpg";
         static final String RED_IMAGE = "photos/redImage.jpg";
         static final String COIN = "photos/coin.png";
         static final String DEFAULT_SPIKE_IMAGE = "photos/dirt.png";
-
+        static final String ORC_IMAGE = "photos/orc.png";
+        static final String LEADERBOARD_BACKRGOUND = "photos/dirt.png";
+        static final String LEADERBOARD_SLOTS = "photos/leaderboardSlots.png";
     }
 
     static class Music {

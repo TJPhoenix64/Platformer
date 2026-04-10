@@ -13,7 +13,11 @@ public class GameFrame extends JFrame {
         new Thread(() -> {
             try {
                 while (true) {
-                    System.out.println("is Loading:" + isLoading);
+                    if (isLoading) {
+                        System.out.println("Game loading");
+                    } else {
+                        System.out.println("Loading finished");
+                    }
                     if (!isLoading) {
                         break;
                     }

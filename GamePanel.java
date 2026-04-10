@@ -10,7 +10,7 @@ import javax.swing.*;
 import menuclasses.*;
 
 enum GameState {
-    MENU, PLAYING, PAUSED, EDITING
+    MENU, PLAYING, PAUSED, EDITING, LEADERBOARD, DEATH
 }
 
 enum DrawingType {
@@ -30,6 +30,9 @@ public final class GamePanel extends JPanel implements Runnable {
     BufferedImage plainBackground;
     BufferedImage greyBackground;
     BufferedImage pausedBackground;
+    BufferedImage leaderboardBackground;
+    BufferedImage leaderboardSlots;
+    BufferedImage deathBackround;
     BufferedImage heart;
     static Player tyler;
     static Level currentLevel = new Level();
@@ -37,7 +40,9 @@ public final class GamePanel extends JPanel implements Runnable {
     Level editingLevel = new Level();
     ArrayList<ImageRect> mainMenuButtons = new ArrayList<>();
     ArrayList<ImageRect> pauseMenuButtons = new ArrayList<>();
+    ArrayList<ImageRect> deathMenuButtons = new ArrayList<>();
     ImageRect pauseButton;
+    ImageRect refreshButton;
     static ArrayList<Level> levels = new ArrayList<>();
     static int currentLevelNum = 0;
     static int numHearts = 3;
@@ -76,6 +81,10 @@ public final class GamePanel extends JPanel implements Runnable {
 
     int enemyId = 0;
 
+    int currentLevelWidth;
+
+    ArrayList<String> leaderboardScores = new ArrayList<>();
+
     public GamePanel() {
 
         playMusic = (state == GameState.PLAYING);
@@ -105,18 +114,24 @@ public final class GamePanel extends JPanel implements Runnable {
     public void secondaryInitialization() {
         makePlayer();
         generateLevels();
+        currentLevelWidth = currentLevel.getWidth();
         tyler.teleport(currentLevel.getStartTile().x, currentLevel.getStartTile().y);
         lastTimeEffectStarted = System.currentTimeMillis();
         volumeSlider = new VolumeSlider(75, sliderRect, rectColor, 20, circleColor, 10, 150, ovalColor);
         pauseMenuButtons.clear();
         generatePauseMenu();
         generatePauseButton();
+        updateLeaderboard();
+        generateLeaderboardRefreshButton();
+        generateDeathMenu();
 
         try {
-            platformerBackground = ImageIO.read(new File(GameConstants.Images.PLATFORMER_BACKGROUND));
+            platformerBackground = ImageIO.read(new File(GameConstants.Images.TITLE_IMAGE));
             greyBackground = ImageIO.read(new File(GameConstants.Images.GREY_BACKGROUND));
             heart = ImageIO.read(new File(GameConstants.Images.HEART));
             pausedBackground = ImageIO.read(new File(GameConstants.Images.PAUSED_BACKGROUND));
+            leaderboardBackground = ImageIO.read(new File(GameConstants.Images.LEADERBOARD_BACKRGOUND));
+            leaderboardSlots = ImageIO.read(new File(GameConstants.Images.LEADERBOARD_SLOTS));
         } catch (IOException e) {
         }
     }
@@ -148,6 +163,8 @@ public final class GamePanel extends JPanel implements Runnable {
 
                 if (state == GameState.PLAYING) {
                     tyler.updatePosition();
+                    cameraX = tyler.x - GameConstants.PANEL_WIDTH / 2;
+                    cameraX = Math.max(0, cameraX);
                     tyler.updateAttack();
                     if (playerHurt) {
                         playerHurt = false;
@@ -159,9 +176,9 @@ public final class GamePanel extends JPanel implements Runnable {
 
             // print FPS every second
             if (System.currentTimeMillis() - timer >= 1000) {
-                System.out.println("FPS: " + frames);
+                // System.out.println("FPS: " + frames);
                 if (volumeSlider != null) {
-                    System.out.println("volume" + volumeSlider.getVolume());
+                    // System.out.println("volume" + volumeSlider.getVolume());
                 }
                 frames = 0;
                 timer += 1000;
@@ -254,6 +271,17 @@ public final class GamePanel extends JPanel implements Runnable {
         return (GameConstants.PANEL_WIDTH - width) / 2;
     }
 
+    public void generateLeaderboardRefreshButton() {
+        Image image = null;
+        try {
+            image = ImageIO.read(new File(GameConstants.Images.COIN));
+        } catch (IOException e) {
+        }
+        if (image != null) {
+            refreshButton = new ImageRect(image, 1100, 50, 50, 50);
+        }
+    }
+
     /**
      * generates the images for the main menu
      */
@@ -278,8 +306,31 @@ public final class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public void generateDeathMenu() {
+        Image menuButton = null;
+        Image leaderboardButton = null;
+        Image settingsButton = null;
+
+        try {
+            menuButton = ImageIO.read(new File(GameConstants.Images.ORANGE_IMAGE));
+            leaderboardButton = ImageIO.read(new File(GameConstants.Images.COIN));
+            settingsButton = ImageIO.read(new File(GameConstants.Images.PLATFORMER_BACKGROUND));
+        } catch (IOException e) {
+
+        }
+        if (menuButton != null) {
+            deathMenuButtons.add(new ImageRect(menuButton, centerX(342), 200, 342, 152));
+        }
+        if (leaderboardButton != null) {
+            deathMenuButtons.add(new ImageRect(leaderboardButton, centerX(342), 450, 342, 152));
+        }
+        if (settingsButton != null) {
+            deathMenuButtons.add(new ImageRect(settingsButton, centerX(342), 700, 342, 152));
+        }
+    }
+
     /**
-     * generates the images for the pause button on the playin screen
+     * generates the images for the pause button on the playing screen
      */
     public void generatePauseButton() {
         Image image = null;
@@ -366,6 +417,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
             } else {
                 MusicPlayer.playSound(GameConstants.Music.FAIL);
+                ScoreSender.sendScore("hello", tyler.numCoins);
             }
             tyler.teleport(tyler.lastCheckpointX, tyler.lastCheckpointY);
             currentLevelNum = tyler.lastCheckpointLevel;
@@ -384,7 +436,7 @@ public final class GamePanel extends JPanel implements Runnable {
      */
     public boolean handlePotentialLoss() {
         if (numHearts < 1) {
-            switchState(GameState.MENU);
+            switchState(GameState.DEATH);
             currentLevelNum = 0;
             numHearts = 3;
             return true;
@@ -404,6 +456,14 @@ public final class GamePanel extends JPanel implements Runnable {
         }
         if (pausedBackground != null && state == GameState.PAUSED) {
             g.drawImage(pausedBackground, 0, 0, getWidth(), getHeight(), null);
+        }
+
+        if (leaderboardBackground != null && state == GameState.LEADERBOARD) {
+            g.drawImage(leaderboardBackground, 0, 0, getWidth(), getHeight(), null);
+        }
+
+        if (deathBackround != null && state == GameState.DEATH) {
+            g.drawImage(deathBackround, 0, 0, getWidth(), getHeight(), null);
         }
     }
 
@@ -426,6 +486,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
             }
             case EDITING -> {
+                //System.out.println("camera x " + cameraX);
                 editingLevel.draw(g);
                 if (editingLevel.getStartTile() != null) {
                     editingLevel.drawStartTile(g);
@@ -449,6 +510,26 @@ public final class GamePanel extends JPanel implements Runnable {
                 g.drawString("Coins: " + tyler.numCoins, 50, 50);
             }
 
+            case LEADERBOARD -> {
+                g.drawImage(leaderboardSlots, centerX(400), 100, 400, 600, null);
+                for (int i = 0; i < leaderboardScores.size(); i++) {
+                    //only show top 5 instead of top 10
+                    if (i < 5) {
+                        g.drawString((i + 1) + ". " + leaderboardScores.get(i), centerX(300), (i * 120) + 160);
+                        //System.out.println((i + 1) + ". " + leaderboardScores.get(i));
+                    }
+                }
+                refreshButton.draw(g, this);
+            }
+
+            case DEATH -> {
+                for (ImageRect rect : deathMenuButtons) {
+                    rect.draw(g, this);
+                }
+
+                g.drawString("you Lost, score: " + tyler.numCoins, centerX(100), 500);
+            }
+
             default -> {
                 System.out.println("State is: " + state.toString());
             }
@@ -457,7 +538,7 @@ public final class GamePanel extends JPanel implements Runnable {
 
     public void drawGrid(int width, int height, Graphics g) {
         for (int i = 0; i < GameConstants.PANEL_WIDTH; i += GameConstants.TILE_SIZE) {
-            g.drawLine(i, 0, i, height);
+            g.drawLine(i - cameraX, 0, i - cameraX, height);
         }
 
         for (int i = 0; i < height; i += GameConstants.TILE_SIZE) {
@@ -552,6 +633,16 @@ public final class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public void updateLeaderboard() {
+        ScoreSender.getTopScores().thenAccept(scoreList -> {
+            // This code runs ONLY when the internet results come back
+            leaderboardScores.clear();
+            leaderboardScores.addAll(scoreList);
+            System.out.println("leaderboard updated");
+        });
+        System.out.println("updating");
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -613,7 +704,7 @@ public final class GamePanel extends JPanel implements Runnable {
                     tyler.passedCheckpointSinceButtonPress = false;
                 }
 
-                if (key == KeyEvent.VK_H) {
+                if (key == KeyEvent.VK_K) {
                     playerHurt = true;
                 }
 
@@ -649,17 +740,26 @@ public final class GamePanel extends JPanel implements Runnable {
                     System.out.println("coins: " + tyler.numCoins);
                 }
 
-                if (key == KeyEvent.VK_N) {
-                    System.out.println("numTiles: " + currentLevel.getNumObjects());
-                }
-
                 if (key == KeyEvent.VK_SHIFT) {
                     System.out.println("StartTile: " + currentLevel.getStartTile());
                 }
 
+                if (key == KeyEvent.VK_N) {
+                    System.out.println("numTiles: " + currentLevel.getNumObjects());
+                }
+
             } else if (state == GameState.EDITING) {
+
                 if (key == KeyEvent.VK_N) {
                     System.out.println("numTiles: " + editingLevel.getNumObjects());
+                }
+
+                if (key == KeyEvent.VK_I) {
+                    cameraX += 10;
+                }
+
+                if (key == KeyEvent.VK_O) {
+                    cameraX -= 10;
                 }
 
                 if (key == KeyEvent.VK_D) {
@@ -667,11 +767,11 @@ public final class GamePanel extends JPanel implements Runnable {
                     enemyId = 0;
                 }
 
-                if (key == KeyEvent.VK_2) {
+                if (key == KeyEvent.VK_T) {
                     type = type.next();
                 }
 
-                if (key == KeyEvent.VK_1) {
+                if (key == KeyEvent.VK_R) {
                     tempSpikeRotation += 90;
                     if (tempSpikeRotation == 360) {
                         tempSpikeRotation = 0;
@@ -684,7 +784,11 @@ public final class GamePanel extends JPanel implements Runnable {
                 printLevel("levels/LEVEL2");
             }
 
-            if (key == KeyEvent.VK_4) {
+            if (key == KeyEvent.VK_W) {
+                updateLeaderboard();
+            }
+
+            if (key == KeyEvent.VK_L) {
                 for (Spike[] spikes : currentLevel.getSpikes()) {
                     for (Spike spike : spikes) {
                         if (spike != null) {
@@ -707,7 +811,12 @@ public final class GamePanel extends JPanel implements Runnable {
 
             }
             if (key == KeyEvent.VK_ESCAPE && !GameFrame.isLoading) {
+                updateLeaderboard();
                 switchState(GameState.PAUSED);
+            }
+
+            if (key == KeyEvent.VK_U && !GameFrame.isLoading) {
+                switchState(GameState.LEADERBOARD);
             }
             if (key == KeyEvent.VK_M) {
                 switchState(GameState.MENU);
@@ -722,6 +831,48 @@ public final class GamePanel extends JPanel implements Runnable {
                 }
             }
 
+            if (key == KeyEvent.VK_H) {
+                if (state == GameState.EDITING) {
+                    printEditingCommands();
+                } else if (state == GameState.PLAYING) {
+                    printPlayingCommands();
+                }
+                printCommonCommands();
+            }
+
+        }
+
+        public void printEditingCommands() {
+            System.out.println("I: increase camera x");
+            System.out.println("O: decrease camera x");
+            System.out.println("D: delete current level");
+            System.out.println("T: change placement type");
+            System.out.println("R: rotate current spike");
+        }
+
+        public void printPlayingCommands() {
+            System.out.println("SHIFT: print start tiles");
+            System.out.println("C: print number of voins");
+            System.out.println("G: print nearby tiles");
+            System.out.println("T: print nearby points in solidtiles");
+            System.out.println("Z: attack");
+            System.out.println("D: decrease camera x");
+            System.out.println("A: increase camera x");
+            System.out.println("Q: advance level");
+            System.out.println("K: hurt player");
+            System.out.println("LEFT: move left");
+            System.out.println("RIGHT: move right");
+            System.out.println("UP: jump");
+        }
+
+        public void printCommonCommands() {
+            System.out.println("N: print number of tiles");
+            System.out.println("P: save the current level");
+            System.out.println("X: toggle music");
+            System.out.println("M: go to menu");
+            System.out.println("ESCAPE: pause game");
+            System.out.println("E: go to editing");
+            System.out.println("L: print all spikes in the current level");
         }
 
         @Override
@@ -753,44 +904,74 @@ public final class GamePanel extends JPanel implements Runnable {
             int x = e.getPoint().x;
             int y = e.getPoint().y;
 
-            if (state == GameState.MENU && !GameFrame.isLoading) {
-                for (ImageRect rect : mainMenuButtons) {
-                    if (rect.contains(x, y)) {
-                        Image playButton = null;
-                        try {
-                            playButton = ImageIO.read(new File(GameConstants.Images.PLAY_BUTTON));
-                        } catch (IOException a) {
+            switch (state) {
+                case GameState.MENU -> {
+                    if (!GameFrame.isLoading) {
+                        for (ImageRect rect : mainMenuButtons) {
+                            if (rect.contains(x, y)) {
+                                Image playButton = null;
+                                try {
+                                    playButton = ImageIO.read(new File(GameConstants.Images.PLAY_BUTTON));
+                                } catch (IOException a) {
+                                }
+                                if (playButton != null) {
+                                    if (rect.getBounds().equals(mainMenuButtons.get(0).getBounds())) {
+                                        switchState(GameState.PLAYING);
+                                    }
+                                    if (rect.getBounds().equals(mainMenuButtons.get(1).getBounds())) {
+                                        switchState(GameState.PAUSED);
+                                    }
+                                }
+                            }
                         }
-                        if (playButton != null) {
-                            if (rect.getBounds().equals(mainMenuButtons.get(0).getBounds())) {
+                    }
+                }
+                case PAUSED -> {
+                    for (ImageRect rect : pauseMenuButtons) {
+                        if (rect.contains(x, y)) {
+                            if (rect.getBounds().equals(pauseMenuButtons.get(0).getBounds())) {
                                 switchState(GameState.PLAYING);
                             }
-                            if (rect.getBounds().equals(mainMenuButtons.get(1).getBounds())) {
+                            if (rect.getBounds().equals(pauseMenuButtons.get(1).getBounds())) {
+                                switchState(GameState.MENU);
+                            }
+                        }
+                    }
+                }
+
+                case DEATH -> {
+                    for (ImageRect rect : deathMenuButtons) {
+                        if (rect.contains(x, y)) {
+                            if (rect.getBounds().equals(deathMenuButtons.get(0).getBounds())) {
+                                switchState(GameState.LEADERBOARD);
+                            }
+                            if (rect.getBounds().equals(deathMenuButtons.get(1).getBounds())) {
+                                switchState(GameState.MENU);
+                            }
+                            if (rect.getBounds().equals(deathMenuButtons.get(2).getBounds())) {
                                 switchState(GameState.PAUSED);
                             }
                         }
                     }
                 }
-            }
-
-            if (state == GameState.PAUSED) {
-                for (ImageRect rect : pauseMenuButtons) {
-                    if (rect.contains(x, y)) {
-                        if (rect.getBounds().equals(pauseMenuButtons.get(0).getBounds())) {
-                            switchState(GameState.PLAYING);
-                        }
-                        if (rect.getBounds().equals(pauseMenuButtons.get(1).getBounds())) {
-                            switchState(GameState.MENU);
-                        }
+                case PLAYING -> {
+                    if (pauseButton.contains(x, y)) {
+                        switchState(GameState.PAUSED);
                     }
                 }
+                case LEADERBOARD -> {
+                    if (refreshButton.contains(x, y)) {
+                        updateLeaderboard();
+                    }
+                }
+
+                case EDITING -> {
+                    //added so that it does not throw an error
+                }
+                default ->
+                    throw new AssertionError();
             }
 
-            if (state == GameState.PLAYING) {
-                if (pauseButton.contains(x, y)) {
-                    switchState(GameState.PAUSED);
-                }
-            }
         }
 
         @Override
@@ -799,7 +980,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 return;
             }
             //System.out.println("MousePressed");
-            int x = e.getPoint().x;
+            int x = e.getPoint().x - cameraX;
             int y = e.getPoint().y;
             int row = y / GameConstants.TILE_SIZE;
             int col = x / GameConstants.TILE_SIZE;
@@ -855,7 +1036,7 @@ public final class GamePanel extends JPanel implements Runnable {
                 return;
             }
 
-            int x = e.getPoint().x;
+            int x = e.getPoint().x - cameraX;
             int y = e.getPoint().y;
             int row = y / GameConstants.TILE_SIZE;
             int col = x / GameConstants.TILE_SIZE;
@@ -914,7 +1095,6 @@ public final class GamePanel extends JPanel implements Runnable {
             int x = e.getPoint().x;
             int y = e.getPoint().y;
             int row = y / GameConstants.TILE_SIZE;
-            int col = x / GameConstants.TILE_SIZE;
             if (state == GameState.PAUSED) {
                 if (volumeSlider.circleClicked(x, y)) {
                     //System.out.println("Circle clicked");
@@ -926,6 +1106,8 @@ public final class GamePanel extends JPanel implements Runnable {
             if (state != GameState.EDITING) {
                 return;
             }
+            x -= cameraX;
+            int col = x / GameConstants.TILE_SIZE;
             //System.out.println("Dragged");
 
             // System.out.println("col: " + col + " row: " + row);
