@@ -18,7 +18,7 @@ A fully playable 2D platformer game built in Java, featuring a custom-built leve
  
 - **Language:** Java
 - **UI/Rendering:** Java Swing (`GameFrame`, `GamePanel`)
-- **Architecture:** Object-Oriented Programming
+- **Architecture:** Object-Oriented Programming, Supabase, Postgresql
  
 ## Project Structure
  
