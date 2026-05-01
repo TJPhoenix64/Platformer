@@ -1,4 +1,4 @@
-package menuclasses;
+package main.java.com.tyler.platformer.menuclasses;
 
 import java.awt.Color;
 import java.awt.Graphics;

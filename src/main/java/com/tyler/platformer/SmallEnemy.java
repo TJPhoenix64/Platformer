@@ -1,3 +1,4 @@
+package main.java.com.tyler.platformer;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

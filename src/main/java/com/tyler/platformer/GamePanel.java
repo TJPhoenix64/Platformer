@@ -1,3 +1,4 @@
+package main.java.com.tyler.platformer;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import javax.imageio.*;
 import javax.swing.*;
-import menuclasses.*;
+import main.java.com.tyler.platformer.menuclasses.*;
 
 enum GameState {
     MENU, PLAYING, PAUSED, EDITING, LEADERBOARD, DEATH
@@ -105,7 +106,7 @@ public final class GamePanel extends JPanel implements Runnable {
         startTime = System.nanoTime();
 
         try {
-            plainBackground = ImageIO.read(new File(GameConstants.Images.BLUE_BACKGROUND));
+            plainBackground = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.BLUE_BACKGROUND));
         } catch (IOException e) {
         }
 
@@ -126,12 +127,13 @@ public final class GamePanel extends JPanel implements Runnable {
         generateDeathMenu();
 
         try {
-            platformerBackground = ImageIO.read(new File(GameConstants.Images.TITLE_IMAGE));
-            greyBackground = ImageIO.read(new File(GameConstants.Images.GREY_BACKGROUND));
-            heart = ImageIO.read(new File(GameConstants.Images.HEART));
-            pausedBackground = ImageIO.read(new File(GameConstants.Images.PAUSED_BACKGROUND));
-            leaderboardBackground = ImageIO.read(new File(GameConstants.Images.LEADERBOARD_BACKRGOUND));
-            leaderboardSlots = ImageIO.read(new File(GameConstants.Images.LEADERBOARD_SLOTS));
+
+            platformerBackground = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.PLATFORMER_BACKGROUND));
+            greyBackground = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.GREY_BACKGROUND));
+            heart = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.HEART));
+            pausedBackground = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.PAUSED_BACKGROUND));
+            leaderboardBackground = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.LEADERBOARD_BACKRGOUND));
+            leaderboardSlots = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.LEADERBOARD_SLOTS));
         } catch (IOException e) {
         }
     }
@@ -274,7 +276,7 @@ public final class GamePanel extends JPanel implements Runnable {
     public void generateLeaderboardRefreshButton() {
         Image image = null;
         try {
-            image = ImageIO.read(new File(GameConstants.Images.COIN));
+            image = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.REFRESH_BUTTON));
         } catch (IOException e) {
         }
         if (image != null) {
@@ -290,9 +292,9 @@ public final class GamePanel extends JPanel implements Runnable {
         Image settingsButton = null;
         Image titleImage = null;
         try {
-            playButton = ImageIO.read(new File(GameConstants.Images.PLAY_BUTTON));
-            settingsButton = ImageIO.read(new File(GameConstants.Images.SETTINGS_BUTTON));
-            titleImage = ImageIO.read(new File(GameConstants.Images.TITLE_IMAGE));
+            playButton = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.PLAY_BUTTON));
+            settingsButton = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.SETTINGS_BUTTON));
+            titleImage = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.TITLE_IMAGE));
         } catch (IOException e) {
         }
         if (playButton != null) {
@@ -312,9 +314,9 @@ public final class GamePanel extends JPanel implements Runnable {
         Image settingsButton = null;
 
         try {
-            menuButton = ImageIO.read(new File(GameConstants.Images.ORANGE_IMAGE));
-            leaderboardButton = ImageIO.read(new File(GameConstants.Images.COIN));
-            settingsButton = ImageIO.read(new File(GameConstants.Images.PLATFORMER_BACKGROUND));
+            menuButton = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.ORANGE_IMAGE));
+            leaderboardButton = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.COIN));
+            settingsButton = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.PLATFORMER_BACKGROUND));
         } catch (IOException e) {
 
         }
@@ -335,7 +337,7 @@ public final class GamePanel extends JPanel implements Runnable {
     public void generatePauseButton() {
         Image image = null;
         try {
-            image = ImageIO.read(new File(GameConstants.Images.PAUSE_BUTTON));
+            image = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.PAUSE_BUTTON));
         } catch (IOException e) {
         }
         if (image != null) {
@@ -351,8 +353,8 @@ public final class GamePanel extends JPanel implements Runnable {
         Image playButton = null;
         Image settingsButton = null;
         try {
-            playButton = ImageIO.read(new File(GameConstants.Images.PLAY_BUTTON));
-            settingsButton = ImageIO.read(new File(GameConstants.Images.ORANGE_IMAGE));
+            playButton = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.PLAY_BUTTON));
+            settingsButton = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.ORANGE_IMAGE));
         } catch (IOException e) {
         }
         if (playButton != null) {
@@ -911,7 +913,7 @@ public final class GamePanel extends JPanel implements Runnable {
                             if (rect.contains(x, y)) {
                                 Image playButton = null;
                                 try {
-                                    playButton = ImageIO.read(new File(GameConstants.Images.PLAY_BUTTON));
+                                    playButton = ImageIO.read(GamePanel.class.getResource(GameConstants.Images.PLAY_BUTTON));
                                 } catch (IOException a) {
                                 }
                                 if (playButton != null) {
