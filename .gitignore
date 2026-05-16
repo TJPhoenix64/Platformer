@@ -1,0 +1,18 @@
+# Build output
+/build/
+/bin/
+/dist/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+
+# Java compiled classes
+*.class
+
+# Packaging artifacts
+*.dmg
