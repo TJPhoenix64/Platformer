@@ -1,7 +1,6 @@
-package main.java.com.tyler.platformer;
+package com.tyler.platformer;
 
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
@@ -80,12 +79,12 @@ public class Player extends Rectangle {
         playerRect = new Rectangle(x, y, width, height);
 
         try {
-            orangeImage = ImageIO.read(new File(GameConstants.Images.ORANGE_IMAGE));
-            redImage = ImageIO.read(new File(GameConstants.Images.RED_IMAGE));
-            swordImageRight = ImageIO.read(new File(GameConstants.Images.SWORD_RIGHT));
-            swordImageLeft = ImageIO.read(new File(GameConstants.Images.SWORD_LEFT));
-            playerImageRight = ImageIO.read(new File(GameConstants.Images.PLAYER_RIGHT));
-            playerImageLeft = ImageIO.read(new File(GameConstants.Images.PLAYER_LEFT));
+            orangeImage = ImageIO.read(Player.class.getResource(GameConstants.Images.ORANGE_IMAGE));
+            redImage = ImageIO.read(Player.class.getResource(GameConstants.Images.RED_IMAGE));
+            swordImageRight = ImageIO.read(Player.class.getResource(GameConstants.Images.SWORD_RIGHT));
+            swordImageLeft = ImageIO.read(Player.class.getResource(GameConstants.Images.SWORD_LEFT));
+            playerImageRight = ImageIO.read(Player.class.getResource(GameConstants.Images.PLAYER_RIGHT));
+            playerImageLeft = ImageIO.read(Player.class.getResource(GameConstants.Images.PLAYER_LEFT));
 
             image = playerImageRight;
             swordImage = swordImageRight;

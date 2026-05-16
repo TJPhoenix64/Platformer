@@ -1,4 +1,4 @@
-package main.java.com.tyler.platformer;
+package com.tyler.platformer;
 
 import java.awt.*;
 import java.util.ArrayList;

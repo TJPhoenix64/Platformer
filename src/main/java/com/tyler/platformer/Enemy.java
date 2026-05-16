@@ -1,8 +1,7 @@
-package main.java.com.tyler.platformer;
+package com.tyler.platformer;
 
 import java.awt.*;
 import java.awt.image.*;
-import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -38,7 +37,8 @@ public class Enemy {
 
     private static BufferedImage loadDefaultImage() {
         try {
-            return ImageIO.read(new File(GameConstants.Images.PLATFORMER_BACKGROUND));
+            return ImageIO.read(Enemy.class.getResource(GameConstants.Images.PLATFORMER_BACKGROUND));
+
         } catch (IOException e) {
             e.printStackTrace();
             return null;

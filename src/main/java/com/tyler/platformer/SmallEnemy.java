@@ -1,7 +1,6 @@
-package main.java.com.tyler.platformer;
+package com.tyler.platformer;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -15,7 +14,7 @@ public class SmallEnemy extends Enemy {
 
     private static BufferedImage loadImage() {
         try {
-            return ImageIO.read(new File(GameConstants.Images.ORC_IMAGE));
+            return ImageIO.read(SmallEnemy.class.getResource(GameConstants.Images.ORC_IMAGE));
         } catch (IOException e) {
             e.printStackTrace();
             return null;

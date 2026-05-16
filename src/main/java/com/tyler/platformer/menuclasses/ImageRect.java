@@ -1,4 +1,4 @@
-package main.java.com.tyler.platformer.menuclasses;
+package com.tyler.platformer.menuclasses;
 
 import java.awt.*;
 

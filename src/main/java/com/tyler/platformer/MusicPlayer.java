@@ -1,6 +1,6 @@
-package main.java.com.tyler.platformer;
+package com.tyler.platformer;
 
-import java.io.File;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import javax.sound.sampled.*;
 
@@ -11,8 +11,10 @@ public class MusicPlayer {
     public void playMusic(String filePath, boolean loop, float volume) {
         close(); // close previous clip if any
 
-        try (AudioInputStream audioStream
-                = AudioSystem.getAudioInputStream(new File(filePath))) {
+        try {
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(
+                    new BufferedInputStream(MusicPlayer.class.getResourceAsStream(filePath))
+            );
 
             clip = AudioSystem.getClip();
             clip.open(audioStream);
@@ -52,8 +54,10 @@ public class MusicPlayer {
     }
 
     public static void playSound(String filePath) {
-        try (AudioInputStream audioStream
-                = AudioSystem.getAudioInputStream(new File(filePath))) {
+        try {
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(
+                    new BufferedInputStream(MusicPlayer.class.getResourceAsStream(filePath))
+            );
 
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);

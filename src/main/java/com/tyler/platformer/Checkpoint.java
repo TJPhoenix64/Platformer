@@ -1,6 +1,5 @@
-package main.java.com.tyler.platformer;
+package com.tyler.platformer;
 
-import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -9,7 +8,7 @@ public class Checkpoint extends Thing {
     public Checkpoint(int col, int row, boolean isTemp) {
         super(col, row, isTemp);
         try {
-            image = ImageIO.read(new File(GameConstants.Images.FLAG));
+            image = ImageIO.read(Checkpoint.class.getResource(GameConstants.Images.FLAG));
         } catch (IOException e) {
         }
     }

@@ -1,6 +1,5 @@
-package main.java.com.tyler.platformer;
+package com.tyler.platformer;
 
-import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -9,7 +8,8 @@ public class Tile extends Thing {
     public Tile(int col, int row, boolean isTemp) {
         super(col, row, isTemp);
         try {
-            image = ImageIO.read(new File(GameConstants.Images.DIRT));
+            image = ImageIO.read(Tile.class.getResource(GameConstants.Images.DIRT));
+
         } catch (IOException e) {
         }
     }

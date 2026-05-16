@@ -1,9 +1,8 @@
-package main.java.com.tyler.platformer;
+package com.tyler.platformer;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
-import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -40,7 +39,8 @@ public class Spike extends Thing {
 
         this.spike = new Polygon(xArr, yArr, 3);
         try {
-            image = ImageIO.read(new File(imagePath));
+
+            image = ImageIO.read(Spike.class.getResource(imagePath));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,7 +70,7 @@ public class Spike extends Thing {
         this.spike = new Polygon(xArr, yArr, 3);
         applyRotation();
         try {
-            image = ImageIO.read(new File(GameConstants.Images.DEFAULT_SPIKE_IMAGE));
+            image = ImageIO.read(Spike.class.getResource(GameConstants.Images.DEFAULT_SPIKE_IMAGE));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,7 +115,7 @@ public class Spike extends Thing {
         this.spike = new Polygon(xArr, yArr, 3);
         applyRotation();
         try {
-            image = ImageIO.read(new File(imagePath));
+            image = ImageIO.read(Spike.class.getResource(imagePath));
         } catch (IOException e) {
             e.printStackTrace();
         }

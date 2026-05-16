@@ -1,4 +1,4 @@
-package main.java.com.tyler.platformer;
+package com.tyler.platformer;
 
 import java.awt.*;
 
@@ -36,6 +36,8 @@ public class GameConstants {
         static final String ORC_IMAGE = "/photos/orc.png";
         static final String LEADERBOARD_BACKRGOUND = "/photos/dirt.png";
         static final String LEADERBOARD_SLOTS = "/photos/leaderboardSlots.png";
+        static final String START_TILE = "/photos/redImage.jpg";
+
     }
 
     static class Music {

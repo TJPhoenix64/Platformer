@@ -1,5 +1,6 @@
-package main.java.com.tyler.platformer;
+package com.tyler.platformer;
 
+import com.tyler.platformer.menuclasses.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -8,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import javax.imageio.*;
 import javax.swing.*;
-import main.java.com.tyler.platformer.menuclasses.*;
 
 enum GameState {
     MENU, PLAYING, PAUSED, EDITING, LEADERBOARD, DEATH

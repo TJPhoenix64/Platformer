@@ -1,4 +1,4 @@
-package main.java.com.tyler.platformer;
+package com.tyler.platformer;
 
 import java.awt.Color;
 import javax.swing.*;
@@ -27,6 +27,7 @@ public class GameFrame extends JFrame {
             } catch (InterruptedException e) {
             }
         }).start();
+
         panel = new GamePanel();
         this.add(panel);
         this.setTitle("Platformer");
