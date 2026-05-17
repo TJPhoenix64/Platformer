@@ -35,9 +35,9 @@ A fully playable 2D platformer game built in Java, featuring a custom-built leve
  
 ## How to Run
  
-1. Clone the repository
-2. Compile all `.java` files
-3. Run `PlatformerGame.java`
+1. Download the dmg release (no windows support yet)
+2. Drag to applications folder and authorize
+3. Run app!
  
 ```bash
 javac *.java
