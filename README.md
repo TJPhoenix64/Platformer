@@ -39,8 +39,3 @@ A fully playable 2D platformer game built in Java, featuring a custom-built leve
 2. Drag to applications folder and authorize
 3. Run app!
  
-```bash
-javac *.java
-java PlatformerGame
-```
- 
